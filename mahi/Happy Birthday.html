@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday</title>
+
+<link rel="stylesheet" href="Happy Birthday_files/bootstrap.css">
+<link rel="stylesheet" href="Happy Birthday_files/style.css">
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #FFDEE9, #B5FFFC);
+        overflow-x: hidden;
+        text-align: center;
+    }
+
+    .birthday-pic, .cake-img {
+        display: block;
+        margin: 0 auto;
+    }
+
+    .typed-cursor{
+        opacity: 1;
+        animation: typedjsBlink 0.7s infinite;
+    }
+
+    @keyframes typedjsBlink{
+        50% { opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Auto Play Music -->
+<audio id="bgMusic" autoplay loop>
+    <source src="Happy Birthday_files/music.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<!-- Confetti Canvas -->
+<canvas id="confetti" width="438" height="726"></canvas>
+
+<div class="container pt-5">
+    <!-- Banner -->
+    <div class="row">
+        <div class="col-12 col-xl-6 mx-auto">
+            <img src="Happy Birthday_files/banner.png" alt="" class="birthday-pic">
+        </div>
+    </div>
+
+    <!-- Name Typed -->
+    <div class="row">
+        <div class="col-12">
+            <div id="name" class="area">Mariam  Mahi</div>
+            <div class="type-wrap">
+                <div id="typed-strings" style="display:none;">
+                    <h2>Happy Birthday <i>Mariam  Mahi</i></h2>
+                    <h2>Have a wonderful day</h2>
+                    <h2>Filled with joy and happiness.</h2>
+                </div>
+                <span id="typed" style="white-space:pre;">Happy Birthday <i>Mariam  Mahi</i></span>
+                <span class="typed-cursor">|</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cake Image -->
+    <div class="row mt-3">
+        <div class="col-12 col-xl-6 mx-auto">
+            <img src="Happy Birthday_files/cake.gif" alt="" class="cake-img">
+        </div>
+    </div>
+</div>
+
+<!-- Balloons -->
+<img src="Happy Birthday_files/Balloon-Border.png" class="balloon-border" style="top: -500px;" width="100%">
+
+<!-- Scripts -->
+<script src="Happy Birthday_files/jquery.js"></script>
+<script src="Happy Birthday_files/typed.js"></script>
+<script src="Happy Birthday_files/snowflakes.js"></script>
+
+<script>
+// Initialize Typed.js
+var typed = new Typed('#typed', {
+    stringsElement: '#typed-strings',
+    typeSpeed: 50,
+    backSpeed: 25,
+    loop: true
+});
+
+// Play music automatically (for browsers that block autoplay)
+window.addEventListener('load', function(){
+    var music = document.getElementById('bgMusic');
+    music.play().catch(()=>console.log("Autoplay blocked. User interaction may be required."));
+});
+</script>
+
+</body>
+</html>

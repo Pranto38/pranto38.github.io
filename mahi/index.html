@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise</title>
+<style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Arial', sans-serif; }
+    body {
+        height: 100vh; display:flex; flex-direction:column; justify-content:center; align-items:center;
+        background: linear-gradient(135deg, #FFDEE9, #B5FFFC); overflow:hidden; position:relative;
+    }
+
+    /* Confetti */
+    .confetti { position:absolute; width:10px; height:10px; top:-10px; animation:fall 5s linear infinite; }
+    @keyframes fall { 0%{transform:translateY(0) rotate(0deg);} 100%{transform:translateY(100vh) rotate(360deg);} }
+
+    /* Birthday Girl */
+    .birthday-pic {
+        width: 200px; height:200px; border-radius:50%; object-fit:cover; border:5px solid #fff;
+        box-shadow:0 0 20px rgba(0,0,0,0.3); margin-bottom:20px; animation:bounce 2s infinite;
+    }
+    @keyframes bounce {0%,100%{transform:translateY(0);}50%{transform:translateY(-20px);}}
+
+    /* Question */
+    .question { font-size:1.5rem; font-weight:bold; color:#333; margin-bottom:20px; text-align:center; }
+
+    /* Buttons */
+    .buttons { display:flex; gap:20px; }
+    button {
+        padding:10px 25px; font-size:1rem; font-weight:bold; border:none; border-radius:8px; cursor:pointer; color:#fff;
+        transition:all 0.3s ease;
+    }
+    .yes-btn { background: linear-gradient(45deg, #FF6B6B, #FFD93D); }
+    .no-btn { background: linear-gradient(45deg, #6B6BFF, #93D3FF); position:absolute; }
+
+    /* Responsive */
+    @media (max-width:768px){
+        .birthday-pic { width:150px; height:150px; }
+        .question { font-size:1.2rem; }
+        button { padding:8px 20px; font-size:0.9rem; }
+    }
+</style>
+</head>
+<body>
+
+<!-- Confetti -->
+<script>
+for(let i=0;i<100;i++){
+    let confetti = document.createElement('div');
+    confetti.classList.add('confetti');
+    confetti.style.left = Math.random() * window.innerWidth + 'px';
+    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+    confetti.style.animationDuration = 2 + Math.random()*3 + 's';
+    document.body.appendChild(confetti);
+}
+</script>
+
+<!-- Birthday Girl Image -->
+<img src="mahi.png" alt="Birthday Girl" class="birthday-pic">
+
+<!-- Question -->
+<div class="question">Treat diba ki na bolo?</div>
+
+<!-- Buttons -->
+<div class="buttons">
+    <button class="yes-btn" onclick="window.location.href='Happy Birthday.html'">Yes</button>
+    <button class="no-btn" id="noBtn">No</button>
+</div>
+
+<script>
+const noBtn = document.getElementById('noBtn');
+
+function moveButton() {
+    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+}
+
+// Move No button when mouse gets near
+noBtn.addEventListener('mouseenter', moveButton);
+
+// Place initially in center-ish
+moveButton();
+</script>
+
+</body>
+</html>
