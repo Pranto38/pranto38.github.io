@@ -134,14 +134,14 @@
     <!-- Main Content -->
     <main id="main-content" class="relative z-10 flex items-center justify-center min-h-screen p-4 opacity-0 transition-opacity duration-1000">
         <div class="bg-white/50 backdrop-blur-xl p-6 md:p-10 rounded-2xl shadow-2xl text-center max-w-2xl w-full">
-            <!-- You can change 'Your Girlfriend's Name' to her actual name -->
+            <!-- You can change 'Biva' to her actual name -->
             <h1 class="font-great-vibes text-5xl md:text-7xl text-gray-800 fade-in">Happy Birthday, Biva!</h1>
             
             <p class="text-gray-600 mt-6 text-lg md:text-xl leading-relaxed fade-in-late">
                 <!-- This is where you can write your personal message! -->
                 Happy Birthday to the woman who fills my life with light, my beautiful love.<br>
 				You have this incredible way of making every day feel like a home I finally found. I pray that in all the journeys ahead,
-				Allah grants you strength, deep peace, and success in all your righteous endeavors. May He ease your path, answer your 
+				Allah grants you strength, deep peace, and success in all your righteous endeavors. May He ease your path, answer your 
 				secret prayers, and grant you the ability to fulfill every obligation with joy and ease.<br>
 				Your happiness, your success in this life and the next, is more important to me than anything. I love you deeply, and I pray for your beautiful journey always.
             </p>
@@ -192,6 +192,9 @@
                 // Hide the cover
                 cover.classList.add('hidden');
                 
+                // **FIX:** Re-enable scrolling on the body for the main content
+                document.body.style.overflow = 'auto';
+
                 // Show the main content after a slight delay
                 setTimeout(() => {
                     mainContent.style.opacity = '1';
