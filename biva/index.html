@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday, My Love!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the dreamy aesthetic and animations */
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden; /* Hide scrollbars to keep the focus on the animation */
+            cursor: default;
+        }
+
+        .font-great-vibes {
+            font-family: 'Great Vibes', cursive;
+        }
+
+        /* Animated gradient background */
+        .gradient-bg {
+            background: linear-gradient(-45deg, #f8cdda, #d0b7fa, #bde0fe, #a2d2ff);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating hearts animation */
+        .heart {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 105, 180, 0.4); /* Semi-transparent pink */
+            transform: rotate(45deg);
+            animation: float 10s infinite;
+            z-index: 0;
+        }
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 105, 180, 0.4);
+            border-radius: 50%;
+        }
+        .heart::before {
+            top: -10px;
+            left: 0;
+        }
+        .heart::after {
+            left: -10px;
+            top: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0) rotate(45deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-1500px) rotate(600deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Entrance animation for the main content */
+        .fade-in {
+            animation: fadeInAnimation 2s ease-in-out forwards;
+        }
+        
+        .fade-in-late {
+            opacity: 0;
+            animation: fadeInAnimation 2s 1s ease-in-out forwards;
+        }
+
+        @keyframes fadeInAnimation {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Initial cover screen styles */
+        #cover {
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+        #cover.hidden {
+            opacity: 0;
+            transform: scale(1.2);
+            pointer-events: none;
+        }
+        
+        /* Pulsing heart on button */
+        .pulsing-heart {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="gradient-bg">
+
+    <!-- Container for the floating hearts -->
+    <div id="hearts-container" class="absolute top-0 left-0 w-full h-full overflow-hidden z-0"></div>
+
+    <!-- Cover Screen to build anticipation -->
+    <div id="cover" class="fixed inset-0 z-20 flex flex-col items-center justify-center gradient-bg">
+        <div class="text-center text-white p-4">
+            <h1 class="font-great-vibes text-5xl md:text-7xl mb-4">A Special Message...</h1>
+            <p class="text-lg md:text-xl mb-8">Just for you.</p>
+            <button id="revealButton" class="bg-white text-pink-400 font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300 flex items-center gap-2">
+                <svg class="w-6 h-6 pulsing-heart" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path></svg>
+                Click to Reveal
+            </button>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="relative z-10 flex items-center justify-center min-h-screen p-4 opacity-0 transition-opacity duration-1000">
+        <div class="bg-white/50 backdrop-blur-xl p-6 md:p-10 rounded-2xl shadow-2xl text-center max-w-2xl w-full">
+            <!-- You can change 'Your Girlfriend's Name' to her actual name -->
+            <h1 class="font-great-vibes text-5xl md:text-7xl text-gray-800 fade-in">Happy Birthday, Biva!</h1>
+            
+            <p class="text-gray-600 mt-6 text-lg md:text-xl leading-relaxed fade-in-late">
+                <!-- This is where you can write your personal message! -->
+                Happy Birthday to the woman who fills my life with light, my beautiful love.<br>
+				You have this incredible way of making every day feel like a home I finally found. I pray that in all the journeys ahead,
+				Allah grants you strength, deep peace, and success in all your righteous endeavors. May He ease your path, answer your 
+				secret prayers, and grant you the ability to fulfill every obligation with joy and ease.<br>
+				Your happiness, your success in this life and the next, is more important to me than anything. I love you deeply, and I pray for your beautiful journey always.
+            </p>
+
+            <div class="mt-8 fade-in-late">
+                <p class="text-gray-600 text-lg md:text-xl">With all my love,</p>
+                <!-- Add your name here -->
+                <p class="font-great-vibes text-4xl md:text-5xl text-pink-500 mt-2">Pranto</p>
+            </div>
+            
+            <!-- Link to Memories Page -->
+            <div class="mt-10 fade-in-late" style="animation-delay: 1.5s;">
+                <a href="memories.html" class="inline-block bg-pink-400 text-white font-bold py-3 px-8 rounded-full shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    Take a walk down memory lane...
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const heartsContainer = document.getElementById('hearts-container');
+            const mainContent = document.getElementById('main-content');
+            const cover = document.getElementById('cover');
+            const revealButton = document.getElementById('revealButton');
+
+            // --- Hearts Animation ---
+            function createHeart() {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                
+                // Set random position and animation properties
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = Math.random() * 5 + 5 + 's'; // 5s to 10s duration
+                
+                // Append and remove after animation
+                heartsContainer.appendChild(heart);
+                setTimeout(() => {
+                    heart.remove();
+                }, 10000);
+            }
+
+            // Create hearts periodically
+            const heartInterval = setInterval(createHeart, 300);
+
+            // --- Reveal Content Logic ---
+            revealButton.addEventListener('click', () => {
+                // Hide the cover
+                cover.classList.add('hidden');
+                
+                // Show the main content after a slight delay
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                }, 500);
+
+                // Stop creating hearts after a while to not overload the browser
+                setTimeout(() => {
+                    clearInterval(heartInterval);
+                }, 20000);
+            });
+        });
+    </script>
+</body>
+</html>
+
