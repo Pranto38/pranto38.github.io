@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy Birthday Mahi</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            font-family: 'Nunito', sans-serif;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .phase {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.6s ease-in-out;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+        }
+
+        .phase.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .font-fun { font-family: 'Fredoka One', cursive; }
+
+        #phase-0 { background: linear-gradient(135deg, #a8c0ff 0%, #3f2b96 100%); color: white; }
+        
+        #phase-1 { background-color: #e2e8f0; }
+
+        .captcha-box {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 380px;
+            border: 1px solid #cbd5e1;
+            overflow: hidden;
+        }
+
+        .captcha-header {
+            background: #3b82f6;
+            color: white;
+            padding: 20px;
+        }
+
+        .captcha-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .captcha-item {
+            aspect-ratio: 1;
+            background: #f1f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(3.5rem, 12vw, 4.5rem);
+            border-radius: 8px;
+            cursor: pointer;
+            border: 4px solid transparent;
+            transition: all 0.2s;
+            user-select: none;
+        }
+
+        .captcha-item.selected {
+            border-color: #3b82f6;
+            background: #e0f2fe;
+            transform: scale(0.92);
+        }
+
+        #phase-2 {
+            background: linear-gradient(to bottom, #87CEEB 0%, #87CEEB 55%, #7CFC00 55%, #32CD32 100%);
+        }
+
+        .scene-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            height: 40vh;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding-bottom: 2vh;
+        }
+
+        .character {
+            font-size: clamp(3.5rem, 8vw, 6rem);
+            position: relative;
+            z-index: 5;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+        }
+
+        .pranto { animation: pull-hard 0.6s infinite alternate; }
+        .biva { animation: pull-hard 0.6s infinite alternate 0.1s; margin-left: -15px; }
+        
+        .rope {
+            width: clamp(60px, 15vw, 120px);
+            height: 6px;
+            background-color: #8b4513;
+            margin-bottom: clamp(25px, 6vw, 40px);
+            transform: rotate(5deg);
+            z-index: 4;
+        }
+
+        .cow {
+            font-size: clamp(4rem, 10vw, 7rem);
+            transform: scaleX(-1.3) scaleY(1.1); 
+            animation: cow-resist 0.5s infinite alternate;
+            margin-left: -10px;
+        }
+
+        @keyframes pull-hard {
+            0% { transform: translateX(0) rotate(-10deg); }
+            100% { transform: translateX(-5px) rotate(-20deg); }
+        }
+
+        @keyframes cow-resist {
+            0% { transform: scaleX(-1.3) scaleY(1.1) translateX(0) rotate(5deg); }
+            100% { transform: scaleX(-1.3) scaleY(1.1) translateX(-3px) rotate(-5deg); }
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: 110%;
+            left: 50%;
+            transform: translateX(-50%) scale(0) translateY(10px);
+            background: white;
+            color: #1e293b;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+            font-weight: 700;
+            white-space: normal;
+            min-width: 160px;
+            max-width: 200px;
+            text-align: center;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 20;
+        }
+        
+        .bubble::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -8px;
+            border-width: 8px;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+        
+        .bubble.show {
+            transform: translateX(-50%) scale(1) translateY(-10px);
+            opacity: 1;
+        }
+
+        #b-mahi { transform-origin: bottom center; }
+        
+        #b-mahi.show {
+            transform: translateX(-50%) scaleX(-0.76) scaleY(0.9) translateY(-10px);
+        }
+
+        #phase-3 {
+            background: radial-gradient(circle, #2a0845 0%, #6441A5 100%);
+            color: white;
+            /* Use flex-between to keep text top and cake bottom */
+            justify-content: space-between;
+            padding: 10vh 5vw;
+        }
+
+        .cake-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 5vh;
+        }
+
+        .cake {
+            position: relative;
+            width: clamp(160px, 45vw, 250px);
+            height: clamp(120px, 35vw, 200px);
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+        }
+
+        .tier { position: absolute; border-radius: 8px; box-shadow: inset 0 -5px 0 rgba(0,0,0,0.15); }
+        .t1 { height: 40%; width: 100%; bottom: 0; background: #ff7eb3; z-index: 3; }
+        .t2 { height: 35%; width: 80%; bottom: 40%; background: #ffdf99; z-index: 2; }
+        .t3 { height: 30%; width: 60%; bottom: 75%; background: #99e6e6; z-index: 1; }
+
+        .candle-wrapper {
+            position: absolute;
+            bottom: 105%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .candle {
+            width: 14px;
+            height: 45px;
+            background: repeating-linear-gradient(45deg, #fff, #fff 5px, #ef4444 5px, #ef4444 10px);
+            border-radius: 4px;
+        }
+
+        .flame-container {
+            height: 45px; 
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            margin-bottom: 2px;
+        }
+
+        .flame {
+            width: 20px;
+            height: 35px;
+            background: #fcd34d;
+            border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+            box-shadow: 0 0 15px #fde047, 0 0 30px #fbbf24;
+            animation: flicker 0.1s ease-in-out infinite alternate;
+            transform-origin: bottom;
+            transition: all 0.3s ease;
+            opacity: 1; 
+        }
+
+        .flame.blown-out {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-2deg); }
+            100% { transform: scale(1.05) rotate(3deg); }
+        }
+
+        #phase-4 {
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            color: #1e293b;
+        }
+        
+        canvas#confetti {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            max-width: 90%;
+            width: 550px;
+            z-index: 2;
+            position: relative;
+            border-top: 10px solid #f472b6;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="phase-0" class="phase active">
+        <div class="text-center px-6">
+            <h1 class="text-4xl md:text-5xl font-fun mb-6 drop-shadow-md">Ready for a Surprise?</h1>
+            <p class="text-lg md:text-xl mb-12 opacity-90 max-w-md mx-auto">
+                Please be excited, as it’s a sudden surprise! 🎉✨ 
+            </p>
+            <button type="button" id="btn-start" class="px-10 py-5 bg-pink-500 text-white font-bold rounded-full shadow-xl hover:bg-pink-400 active:scale-95 transition-transform text-xl w-full max-w-xs">
+                Start the Experience ✨
+            </button>
+            <p id="mic-error-text" class="text-sm mt-4 text-pink-200 hidden">Don't worry, you can still proceed even without mic access!</p>
+        </div>
+    </div>
+
+    <div id="phase-1" class="phase">
+        <div class="captcha-box">
+            <div class="captcha-header">
+                <p class="text-sm opacity-90 font-semibold mb-1">Security Check:</p>
+                <h2 class="text-xl md:text-2xl font-bold font-fun tracking-wide">Select all images containing the Birthday Girl</h2>
+            </div>
+            
+            <div class="captcha-grid" id="captcha-grid">
+                <div class="captcha-item" data-cow="true" onclick="toggleImg(this)">🐄</div>
+                <div class="captcha-item" data-cow="false" onclick="toggleImg(this)">🍣</div>
+                <div class="captcha-item" data-cow="false" onclick="toggleImg(this)">👸</div>
+                <div class="captcha-item" data-cow="true" onclick="toggleImg(this)">🐄</div>
+            </div>
+
+            <div class="p-5 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center bg-slate-50 gap-4">
+                <span class="text-xs text-slate-500 font-bold uppercase tracking-wider">Recaptcha Verification</span>
+                <button type="button" onclick="verifyCaptcha()" class="w-full md:w-auto px-8 py-3 bg-blue-500 text-white font-bold rounded-lg hover:bg-blue-600 transition-colors shadow-md">
+                    Verify
+                </button>
+            </div>
+            <p id="captcha-error" class="text-red-500 text-center text-sm pb-3 hidden font-bold">Try again! (Hint: Look for the 🐄)</p>
+        </div>
+    </div>
+
+    <div id="phase-2" class="phase">
+        <h1 class="absolute top-12 text-3xl md:text-5xl font-fun text-white drop-shadow-md text-center w-full z-20 px-4">
+            Mission: Feed the Cow
+        </h1>
+        
+        <div class="scene-container mt-20">
+            <div class="character pranto">
+                🧑🏽
+                <div class="bubble" id="b-pranto"></div>
+            </div>
+            <div class="character biva">
+                👩🏽
+                <div class="bubble" id="b-biva"></div>
+            </div>
+            <div class="rope"></div>
+            <div class="character cow">
+                🐄
+                <div class="bubble" id="b-mahi"></div>
+            </div>
+        </div>
+        
+        <button type="button" id="btn-next-2" class="absolute bottom-12 px-10 py-4 bg-white text-green-600 font-bold rounded-full shadow-xl opacity-0 transition-opacity duration-500 z-20 hover:bg-green-50 active:scale-95 hidden text-lg">
+            Go to the Cake 🎂
+        </button>
+    </div>
+
+    <div id="phase-3" class="phase">
+        <!-- Top Section for Instructions (Will not overlap cake) -->
+        <div class="w-full text-center z-20 mt-8">
+            <h1 class="text-4xl md:text-5xl font-fun text-pink-300 drop-shadow-md mb-4">
+                Come on, Mahi! Blow the candles fast, we’re running out of surprise time! 😂🎉
+            </h1>
+            <p class="text-purple-200 text-lg md:text-xl font-bold h-8 flex items-center justify-center animate-pulse" id="mic-status">
+                Blow into your mic to blow out the candle!
+            </p>
+            <button type="button" id="btn-fallback-blow" class="hidden mt-4 mx-auto px-8 py-3 bg-purple-500 text-white font-bold rounded-full shadow-lg hover:bg-purple-400 active:scale-95 transition-transform text-lg">
+                Tap here to Blow Out!
+            </button>
+        </div>
+
+        <!-- Bottom Section for Cake -->
+        <div class="cake-container w-full">
+            <div class="cake">
+                <div class="tier t1"></div>
+                <div class="tier t2"></div>
+                <div class="tier t3"></div>
+                <div class="candle-wrapper">
+                    <div class="flame-container">
+                        <div class="flame" id="flame"></div>
+                    </div>
+                    <div class="candle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="phase-4" class="phase">
+        <canvas id="confetti"></canvas>
+        <div class="card text-center transform scale-90 opacity-0 transition-all duration-700" id="finale-card">
+            <h1 class="text-3xl md:text-4xl font-fun text-pink-500 mb-6 drop-shadow-sm">
+                Happy Birthday to Mahi! 🎂
+            </h1>
+            <div class="space-y-5 text-slate-700 font-semibold text-lg md:text-xl leading-relaxed">
+                <p>You’re honestly the most amazing sister we could ever ask for! ❤️ Today is all about YOU, so get ready for lots of love, laughter, surprises, and of course, plenty of cake! 😂🎂
+
+Wishing you endless happiness, beautiful memories, exciting adventures, and all the success your heart desires. May this new year of your life bring you everything you’ve been wishing for and so much more! ✨❤️
+
+We’re so lucky to have you in our lives. Keep smiling, keep shining, and keep being the wonderful person you are! 🥰🎉</p>
+                <p class="text-pink-600 font-bold bg-pink-50 py-2 rounded-lg">Thank you so much for sending the money for the birthday treat! I really enjoyed it. ❤️</p>
+                <p class="text-base text-slate-500 italic mt-6 border-t pt-4">
+                    We figured since you're so grown up now, you don't really need a gift this year...😉
+                </p>
+            </div>
+            <p class="mt-8 font-fun text-2xl text-purple-600">Love,<br>Pranto & Biva (angry girl)</p>
+        </div>
+    </div>
+
+    <script>
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        
+        let globalMicStream = null;
+
+        function switchPhase(from, to) {
+            document.getElementById(`phase-${from}`).classList.remove('active');
+            setTimeout(() => {
+                document.getElementById(`phase-${to}`).classList.add('active');
+            }, 600);
+        }
+
+        // --- Phase 0: Mic Permission Start ---
+        document.getElementById('btn-start').addEventListener('click', async (e) => {
+            e.preventDefault();
+            const btn = e.target;
+            const errorTxt = document.getElementById('mic-error-text');
+            
+            btn.innerText = "Requesting Access...";
+            
+            try {
+                // Request mic upfront to avoid reloading later
+                globalMicStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                switchPhase(0, 1);
+            } catch (err) {
+                console.warn("Mic access denied or failed:", err);
+                errorTxt.classList.remove('hidden');
+                btn.innerText = "Continue anyway";
+                // Even if denied, let them continue after a short delay
+                setTimeout(() => {
+                    switchPhase(0, 1);
+                }, 1500);
+            }
+        });
+
+        // --- Phase 1: Captcha Logic ---
+        function toggleImg(el) {
+            el.classList.toggle('selected');
+        }
+
+        function verifyCaptcha() {
+            const items = document.querySelectorAll('.captcha-item');
+            let isCorrect = true;
+            
+            items.forEach(item => {
+                const isCow = item.getAttribute('data-cow') === 'true';
+                const isSelected = item.classList.contains('selected');
+                
+                if (isCow && !isSelected) isCorrect = false;
+                if (!isCow && isSelected) isCorrect = false;
+            });
+
+            if (isCorrect) {
+                document.getElementById('captcha-error').classList.add('hidden');
+                switchPhase(1, 2);
+                startPhase2();
+            } else {
+                document.getElementById('captcha-error').classList.remove('hidden');
+            }
+        }
+
+        // --- Phase 2: Extended Dialogue Sequence ---
+        async function startPhase2() {
+            await delay(1000);
+            
+            const p = document.getElementById('b-pranto');
+            const b = document.getElementById('b-biva');
+            const m = document.getElementById('b-mahi');
+            
+            const speak = async (el, text, duration) => {
+                el.innerText = text;
+                el.classList.add('show');
+                await delay(duration);
+                el.classList.remove('show');
+                await delay(500); 
+            };
+
+            // Extended dialogue
+            await speak(p, "Come on, Mahi! Eat your premium grass. Hand-picked, organic, and specially imported for your birthday!", 4000);
+await speak(m, "GRASS?! On my birthday?! I asked for SUSHI and CAKE!", 4000);
+await speak(b, "Sushi? In this economy?! Just look at this grass. It has excellent nutritional value.", 4000);
+await speak(m, "I didn't survive all those years just to celebrate my birthday by eating grass!", 4000);
+await speak(p, "Fine, fine! No grass. We'll get you sushi.", 3500);
+await speak(b, "Wait... who said we're paying for the sushi?", 3000);
+await speak(m, "You two are unbelievable. I'm calling a family meeting!", 3500);
+await speak(p, "Emergency meeting cancelled. There's cake. Everyone move!", 3000);
+await speak(m, "NOW you're speaking my language! 🎂", 2500);
+
+            const btn = document.getElementById('btn-next-2');
+            btn.classList.remove('hidden');
+            setTimeout(() => btn.classList.remove('opacity-0'), 50);
+            
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchPhase(2, 3);
+                startPhase3();
+            });
+        }
+
+        // --- Phase 3: Cake & Mic Blowing Logic ---
+        const btnFallback = document.getElementById('btn-fallback-blow');
+        const flame = document.getElementById('flame');
+        const statusTxt = document.getElementById('mic-status');
+        
+        let audioCtx, analyser, processInterval;
+        let isBlownOut = false;
+
+        async function startPhase3() {
+            if (globalMicStream) {
+                try {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContext();
+                    analyser = audioCtx.createAnalyser();
+                    const source = audioCtx.createMediaStreamSource(globalMicStream);
+                    
+                    source.connect(analyser);
+                    analyser.fftSize = 256;
+                    const bufferLength = analyser.frequencyBinCount;
+                    const dataArray = new Uint8Array(bufferLength);
+
+                    processInterval = setInterval(() => {
+                        if(isBlownOut) return;
+                        
+                        analyser.getByteFrequencyData(dataArray);
+                        let sum = 0;
+                        for(let i=0; i<bufferLength; i++) {
+                            sum += dataArray[i];
+                        }
+                        let avg = sum / bufferLength;
+                        
+                        // Detect blowing sound (threshold)
+                        if(avg > 50) { 
+                            triggerBlowOut();
+                        }
+                    }, 100);
+                } catch (err) {
+                    showFallback();
+                }
+            } else {
+                showFallback();
+            }
+
+            // Always allow tapping the flame as a hidden fallback
+            flame.parentElement.addEventListener('click', triggerBlowOut);
+        }
+
+        function showFallback() {
+            statusTxt.innerText = "Mic not found. Tap the button to blow out the candle!";
+            statusTxt.classList.remove('animate-pulse');
+            btnFallback.classList.remove('hidden');
+        }
+
+        btnFallback.addEventListener('click', (e) => {
+            e.preventDefault();
+            triggerBlowOut();
+        });
+
+        async function triggerBlowOut() {
+            if(isBlownOut) return;
+            isBlownOut = true;
+
+            // Stop audio processes
+            if(globalMicStream) globalMicStream.getTracks().forEach(t => t.stop());
+            if(processInterval) clearInterval(processInterval);
+            if(audioCtx && audioCtx.state !== 'closed') audioCtx.close();
+
+            flame.classList.add('blown-out');
+            statusTxt.innerText = "Yay! Happy Birthday!";
+            statusTxt.classList.remove('animate-pulse');
+            btnFallback.classList.add('hidden');
+            
+            await delay(2000);
+            switchPhase(3, 4);
+            startPhase4();
+        }
+
+        // --- Phase 4: Finale & Confetti ---
+        function startPhase4() {
+            setTimeout(() => {
+                const card = document.getElementById('finale-card');
+                card.classList.remove('scale-90', 'opacity-0');
+                initConfetti();
+            }, 800);
+        }
+
+        function initConfetti() {
+            const canvas = document.getElementById('confetti');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const particles = [];
+            const colors = ['#f472b6', '#3b82f6', '#22c55e', '#eab308', '#a855f7'];
+
+            for(let i=0; i<120; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 10 + 5,
+                    speedY: Math.random() * 4 + 2,
+                    speedX: Math.random() * 2 - 1,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rot: Math.random() * 360,
+                    rotSpeed: Math.random() * 6 - 3
+                });
+            }
+
+            function animate() {
+                requestAnimationFrame(animate);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach(p => {
+                    p.y += p.speedY;
+                    p.x += p.speedX;
+                    p.rot += p.rotSpeed;
+                    
+                    if(p.y > canvas.height) {
+                        p.y = -20;
+                        p.x = Math.random() * canvas.width;
+                    }
+
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rot * Math.PI / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size);
+                    ctx.restore();
+                });
+            }
+            animate();
+            
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+    </script>
+</body>
+</html>
