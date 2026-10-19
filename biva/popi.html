@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Biva's Cosmic Birthday</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-space: #020205;
+            --glass-bg: rgba(10, 15, 30, 0.92);
+            --glass-border: rgba(100, 200, 255, 0.25);
+            --text-main: #f8fafc;
+            --text-accent: #00e5ff;
+            --text-gold: #ffdf00;
+            --error: #ff3366;
+            --success: #00ff88;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-space);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Orbitron', sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .view-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; min-height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: scale(0.95);
+            overflow-y: auto;
+        }
+
+        .view-container.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1);
+        }
+
+        .planets-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .planet-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .planet-container:hover {
+            transform: scale(1.1);
+        }
+
+        .planet {
+            border-radius: 50%;
+            box-shadow: inset -15px -15px 30px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.1);
+            position: relative;
+        }
+
+        .planet.explored {
+            box-shadow: inset -15px -15px 30px rgba(0,0,0,0.8), 0 0 25px var(--success);
+        }
+
+        .planet-earth {
+            width: 90px; height: 90px;
+            background: radial-gradient(circle at 30% 30%, #4facfe, #0072ff, #000);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .planet-mars {
+            width: 75px; height: 75px;
+            background: radial-gradient(circle at 30% 30%, #ff758c, #ff7eb3, #3a0000);
+            animation: float 7s ease-in-out infinite reverse;
+        }
+
+        .planet-saturn {
+            width: 110px; height: 110px;
+            background: radial-gradient(circle at 30% 30%, #e8c37c, #c5a059, #3d2b0f);
+            animation: float 8s ease-in-out infinite;
+            margin-top: 15px;
+        }
+
+        .planet-saturn::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 160px; height: 32px;
+            border: 5px solid rgba(232, 195, 124, 0.45);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) rotate(-20deg);
+            box-shadow: 0 0 10px rgba(255,255,255,0.2), inset 0 0 10px rgba(255,255,255,0.2);
+            pointer-events: none;
+        }
+
+        .planet-label {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--text-accent);
+            text-shadow: 0 0 5px rgba(0,229,255,0.5);
+            font-size: 0.85rem;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: clamp(20px, 4vw, 30px);
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(255,255,255,0.05);
+            text-align: center;
+            margin: auto;
+        }
+
+        #view-finale .glass-panel {
+            max-width: 850px;
+            border-color: rgba(255, 223, 0, 0.4);
+            box-shadow: 0 0 40px rgba(255, 223, 0, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(90deg, rgba(0, 229, 255, 0.1), rgba(0, 229, 255, 0.2));
+            border: 1px solid var(--text-accent);
+            color: var(--text-main);
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            width: 100%;
+            margin-top: 15px;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.15);
+        }
+
+        .btn:hover:not(:disabled) {
+            background: rgba(0, 229, 255, 0.3);
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.5);
+            transform: translateY(-2px);
+            color: #fff;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            border-color: #555;
+            box-shadow: none;
+        }
+        
+        .btn.pulse {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 10px rgba(0,255,136,0.3); border-color: var(--success); }
+            50% { box-shadow: 0 0 25px rgba(0,255,136,0.8); border-color: var(--success); }
+            100% { box-shadow: 0 0 10px rgba(0,255,136,0.3); border-color: var(--success); }
+        }
+
+        .dashboard-grid {
+            display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 20px;
+        }
+
+        .mission-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+
+        .mission-card:hover { background: rgba(255,255,255,0.08); border-color: var(--text-accent); transform: scale(1.01); }
+        .mission-card.completed { border-color: var(--success); background: rgba(0, 255, 136, 0.05); pointer-events: none;}
+        
+        .mission-info { text-align: left; }
+        .mission-title { font-size: 1.05rem; font-weight: 700; color: var(--text-accent); margin-bottom: 4px; }
+        .completed .mission-title { color: var(--success); }
+        .mission-desc { font-size: 0.85rem; color: #b0c4de; }
+        .mission-status { font-size: 1.4rem; }
+
+        .memory-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0; perspective: 1000px;
+        }
+        .memory-card {
+            aspect-ratio: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px; display: flex; justify-content: center; align-items: center;
+            font-size: 2rem; cursor: pointer; transition: transform 0.6s; transform-style: preserve-3d; position: relative;
+        }
+        .memory-card.flipped, .memory-card.matched { transform: rotateY(180deg); }
+        .memory-card.matched { border-color: var(--success); box-shadow: 0 0 20px rgba(0,255,136,0.4); }
+        .card-front, .card-back {
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            display: flex; justify-content: center; align-items: center; border-radius: 10px;
+        }
+        .card-front { background: rgba(0, 229, 255, 0.05); color: var(--text-accent); font-family: 'Orbitron'; font-size: 1.3rem; }
+        .card-back { background: rgba(255,255,255,0.15); transform: rotateY(180deg); }
+
+        .lock-container { display: flex; justify-content: center; gap: 12px; margin: 20px 0; flex-wrap: wrap;}
+        .digit-group { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .digit-btn { 
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
+            color: var(--text-accent); font-size: 1.3rem; cursor: pointer; 
+            width: 38px; height: 38px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; transition: all 0.2s;
+        }
+        .digit-btn:hover { background: rgba(0, 229, 255, 0.2); color: #fff; transform: scale(1.1); }
+        .digit-display {
+            font-family: 'Orbitron', sans-serif; font-size: 2.3rem; font-weight: 900;
+            background: rgba(0,0,0,0.6); padding: 5px; border-radius: 10px;
+            border: 2px solid var(--glass-border); width: 55px; text-align: center; color: var(--text-main);
+        }
+
+        .video-wrapper {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto 20px auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.3);
+            border: 2px solid var(--text-accent);
+            background: #000;
+        }
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            border: none;
+        }
+        
+        .gift-options-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-top: 15px;
+        }
+        .gift-opt-card {
+            background: linear-gradient(135deg, rgba(255,223,0,0.06), rgba(255,255,255,0.02));
+            border: 1px solid rgba(255, 223, 0, 0.3); border-radius: 12px; padding: 18px 12px;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            cursor: pointer; transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .gift-opt-card:hover {
+            transform: translateY(-5px); box-shadow: 0 10px 25px rgba(255, 223, 0, 0.25); border-color: rgba(255, 223, 0, 0.8);
+        }
+        .gift-icon { font-size: 2.2rem; margin-bottom: 8px; }
+        .gift-title { font-family: 'Orbitron', sans-serif; font-size: 0.95rem; color: var(--text-gold); margin-bottom: 4px; }
+
+        .store-card {
+            background: rgba(0, 229, 255, 0.04);
+            border: 1px solid rgba(0, 229, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px;
+            text-align: left;
+        }
+        .store-card.recommended {
+            background: rgba(255, 223, 0, 0.06);
+            border-color: rgba(255, 223, 0, 0.5);
+        }
+
+        .custom-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(8px);
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s ease; padding: 20px;
+            overflow-y: auto;
+        }
+        .custom-modal.active { opacity: 1; pointer-events: auto; }
+        .custom-modal .glass-panel { transform: scale(0.8); transition: transform 0.3s; max-width: 550px; max-height: 90vh; overflow-y: auto; text-align: left;}
+        .custom-modal.active .glass-panel { transform: scale(1); }
+
+        .flash-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #fff; z-index: 100; opacity: 0; pointer-events: none; transition: opacity 2s ease-in;
+        }
+        
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container"><canvas id="starfield"></canvas></div>
+    <div class="flash-overlay" id="flash"></div>
+
+    <!-- Universal Modal -->
+    <div id="universal-modal" class="custom-modal" onclick="closeModal()">
+        <div class="glass-panel" onclick="event.stopPropagation()">
+            <div id="modal-icon" style="font-size: 2.3rem; margin-bottom: 10px; text-align: center;">🎁</div>
+            <h2 id="modal-title" style="color: var(--text-accent); font-size: 1.4rem; margin-bottom: 10px; text-align: center;">Title</h2>
+            <div id="modal-content-area" style="font-size: 1rem; color: var(--text-main); line-height: 1.5; margin-bottom: 20px;">Message</div>
+            <button class="btn" style="max-width: 180px; margin: 0 auto; display: block;" onclick="closeModal()">Continue</button>
+        </div>
+    </div>
+
+    <!-- Hint Modal for Pranto Choice -->
+    <div id="hint-modal" class="custom-modal">
+        <div class="glass-panel" style="text-align: center;">
+            <div style="font-size: 2.3rem; margin-bottom: 10px;">💡</div>
+            <h2 style="color: var(--text-gold); font-size: 1.3rem; margin-bottom: 10px;">Cosmic Secret Hint</h2>
+            <p style="color: #f8fafc; font-size: 1rem; line-height: 1.5; margin-bottom: 20px;">
+                Your main gift is hidden safely in your house! You may ask Mahi for a clue to find its exact hiding spot. 🏡✨
+            </p>
+            <button class="btn" style="background: rgba(0, 229, 255, 0.2);" onclick="proceedToPostalModal()">Proceed to Postal Challenge</button>
+        </div>
+    </div>
+
+    <!-- Postal Code Challenge Modal -->
+    <div id="postal-modal" class="custom-modal">
+        <div class="glass-panel" style="text-align: center;">
+            <div style="font-size: 2.3rem; margin-bottom: 10px;">📦</div>
+            <h2 style="color: var(--text-gold); font-size: 1.3rem; margin-bottom: 10px;">Postal Code Challenge</h2>
+            <p style="color: #b0c4de; font-size: 0.95rem; margin-bottom: 15px;">Enter the 4-digit postal code written on your gift box:</p>
+            
+            <div class="lock-container" style="margin: 15px 0;">
+                <div class="digit-group">
+                    <button class="digit-btn" onclick="changePostal(0, 1)">▲</button>
+                    <div class="digit-display" id="p-digit-0">0</div>
+                    <button class="digit-btn" onclick="changePostal(0, -1)">▼</button>
+                </div>
+                <div class="digit-group">
+                    <button class="digit-btn" onclick="changePostal(1, 1)">▲</button>
+                    <div class="digit-display" id="p-digit-1">0</div>
+                    <button class="digit-btn" onclick="changePostal(1, -1)">▼</button>
+                </div>
+                <div class="digit-group">
+                    <button class="digit-btn" onclick="changePostal(2, 1)">▲</button>
+                    <div class="digit-display" id="p-digit-2">0</div>
+                    <button class="digit-btn" onclick="changePostal(2, -1)">▼</button>
+                </div>
+                <div class="digit-group">
+                    <button class="digit-btn" onclick="changePostal(3, 1)">▲</button>
+                    <div class="digit-display" id="p-digit-3">0</div>
+                    <button class="digit-btn" onclick="changePostal(3, -1)">▼</button>
+                </div>
+            </div>
+            <div id="postal-feedback" style="opacity:0; height: 20px; font-weight:bold; margin-bottom: 10px;"></div>
+            <button class="btn" style="background: rgba(0, 229, 255, 0.2);" onclick="verifyPostalCode()">Unlock Gift</button>
+        </div>
+    </div>
+
+    <!-- Phase 1: Initial Planet View -->
+    <div class="view-container active" id="view-planets">
+        <div class="glass-panel" style="text-align: center; max-width: 750px;">
+            <h1 style="color: var(--text-gold); font-size: clamp(1.6rem, 3.5vw, 2.4rem); margin-bottom: 8px;">Happy Birthday, Biva!</h1>
+            <p style="font-size: 1rem; margin-bottom: 20px; color: #b0c4de;">Explore all 3 celestial planets below to calibrate your navigation system before commencing mission.</p>
+            
+            <div class="planets-wrapper">
+                <div class="planet-container" onclick="explorePlanet('Earth', 'You mean the world to me, Biva! My entire universe revolves around your radiant smile. 🌍❤️', 0)">
+                    <div class="planet planet-earth" id="p-0"></div>
+                    <div class="planet-label">Earth (0/1)</div>
+                </div>
+                <div class="planet-container" onclick="explorePlanet('Saturn', 'Even with all the rings in the galaxy, nothing shines brighter than you. 🪐✨', 1)">
+                    <div class="planet planet-saturn" id="p-1"></div>
+                    <div class="planet-label">Saturn (0/1)</div>
+                </div>
+                <div class="planet-container" onclick="explorePlanet('Mars', 'My love for you is fiercely out of this world! ☄️❤️', 2)">
+                    <div class="planet planet-mars" id="p-2"></div>
+                    <div class="planet-label">Mars (0/1)</div>
+                </div>
+            </div>
+
+            <button class="btn" id="commence-btn" disabled onclick="switchView('view-dashboard')">Commence Mission 🚀 (Explore All Planets First)</button>
+        </div>
+    </div>
+
+    <!-- Phase 2: Mission Control Dashboard -->
+    <div class="view-container" id="view-dashboard">
+        <div class="glass-panel" style="text-align: center;">
+            <h2 style="color: var(--text-accent); margin-bottom: 8px; font-size: 1.5rem;">Mission Control</h2>
+            <p style="color: #888; font-size: 0.9rem;">Complete all 3 sectors to unlock your Gift Vault.</p>
+            
+            <div class="dashboard-grid">
+                <div class="mission-card" id="card-riddle" onclick="startGame('riddle')">
+                    <div class="mission-info">
+                        <div class="mission-title">Sector 1: Cosmic Riddle</div>
+                        <div class="mission-desc">Solve an enigma of the universe.</div>
+                    </div>
+                    <div class="mission-status" id="status-riddle">🔒</div>
+                </div>
+                
+                <div class="mission-card" id="card-memory" onclick="startGame('memory')">
+                    <div class="mission-info">
+                        <div class="mission-title">Sector 2: Star Alignment</div>
+                        <div class="mission-desc">Match the celestial bodies.</div>
+                    </div>
+                    <div class="mission-status" id="status-memory">🔒</div>
+                </div>
+
+                <div class="mission-card" id="card-lock" onclick="startGame('lock')">
+                    <div class="mission-info">
+                        <div class="mission-title">Sector 3: The Vault Lock</div>
+                        <div class="mission-desc">Crack the 4-digit code (Hint included).</div>
+                    </div>
+                    <div class="mission-status" id="status-lock">🔒</div>
+                </div>
+            </div>
+
+            <button class="btn pulse" id="btn-warp" style="margin-top: 25px; display: none; background: rgba(0, 255, 136, 0.2); border-color: var(--success); font-weight: bold; font-size: 1.05rem;" onclick="initiateWarp()">INITIATE WARP SEQUENCE ✨</button>
+        </div>
+    </div>
+
+    <!-- Mini Game 1: Riddle -->
+    <div class="view-container" id="view-riddle">
+        <div class="glass-panel" style="text-align: center;">
+            <h2 style="color: var(--text-accent);">Sector 1: Riddle</h2>
+            <p id="riddle-text" style="font-size: 1.15rem; margin: 20px 0; font-weight: 600; line-height: 1.4;"></p>
+            <div id="riddle-options"></div>
+            <button class="btn" style="margin-top: 15px; background: transparent; border-color: #555;" onclick="switchView('view-dashboard')">Abort (Back to Control)</button>
+        </div>
+    </div>
+
+    <!-- Mini Game 2: Memory -->
+    <div class="view-container" id="view-memory">
+        <div class="glass-panel" style="text-align: center;">
+            <h2 style="color: var(--text-accent);">Sector 2: Alignment</h2>
+            <p style="color: #aaa; margin-top: 5px; font-size: 0.9rem;">Match all pairs to align navigation stars.</p>
+            <div class="memory-grid" id="memory-grid"></div>
+            <button class="btn" style="margin-top: 15px; background: transparent; border-color: #555;" onclick="switchView('view-dashboard')">Abort (Back to Control)</button>
+        </div>
+    </div>
+
+    <!-- Mini Game 3: 4-Digit Lock -->
+    <div class="view-container" id="view-lock">
+        <div class="glass-panel" style="text-align: center;">
+            <h2 style="color: var(--text-accent);">Sector 3: The Vault Lock</h2>
+            <p style="color: #b0c4de; margin: 10px 0 15px 0; font-size: 0.9rem; line-height: 1.4;">
+                🔒 <strong>Hint:</strong> Derived from Biva & Pranto's special roll numbers combination! (Code: 1349)
+            </p>
+            <div class="lock-container">
+                <div class="digit-group">
+                    <button class="digit-btn" onclick="changeDigit(0, 1)">▲</button>
+                    <div class="digit-display" id="digit-0">0</div>
+                    <button class="digit-btn" onclick="changeDigit(0, -1)">▼</button>
+                </div>
+                <div class="digit-group">
+                    <button class="digit-btn" onclick="changeDigit(1, 1)">▲</button>
+                    <div class="digit-display" id="digit-1">0</div>
+                    <button class="digit-btn" onclick="changeDigit(1, -1)">▼</button>
+                </div>
+                <div class="digit-group">
+                    <button class="digit-btn" onclick="changeDigit(2, 1)">▲</button>
+                    <div class="digit-display" id="digit-2">0</div>
+                    <button class="digit-btn" onclick="changeDigit(2, -1)">▼</button>
+                </div>
+                <div class="digit-group">
+                    <button class="digit-btn" onclick="changeDigit(3, 1)">▲</button>
+                    <div class="digit-display" id="digit-3">0</div>
+                    <button class="digit-btn" onclick="changeDigit(3, -1)">▼</button>
+                </div>
+            </div>
+            <div id="lock-feedback" style="opacity:0; height: 20px; font-weight:bold; margin-bottom: 10px;"></div>
+            <button class="btn" style="background: rgba(0, 229, 255, 0.2);" onclick="checkLock()">Attempt Unlock</button>
+            <button class="btn" style="margin-top: 10px; background: transparent; border-color: #555;" onclick="switchView('view-dashboard')">Abort (Back to Control)</button>
+        </div>
+    </div>
+
+    <!-- Phase 4: The Final Gift Vault -->
+    <div class="view-container" id="view-finale">
+        <div class="glass-panel" style="padding: 20px; text-align: center;">
+            <h1 style="color: var(--text-gold); margin-bottom: 15px; font-size: clamp(1.5rem, 3.2vw, 2.2rem); text-shadow: 0 0 15px rgba(255,223,0,0.5);">The Vault Unlocked!</h1>
+            
+            <div class="video-wrapper">
+                <div class="video-container">
+                    <iframe src="https://www.youtube-nocookie.com/embed/ofEDLtUO-0Q?autoplay=0&rel=0&modestbranding=1" title="Happy Birthday BV" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <a href="https://youtu.be/ofEDLtUO-0Q" target="_blank" style="color: var(--text-accent); font-size: 0.9rem; text-decoration: underline;">Having trouble viewing? Watch directly on YouTube ↗</a>
+            </div>
+
+            <h2 style="color: var(--text-main); font-size: 1.2rem; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px;">Who would you like to share your birthday celebration with?</h2>
+            <p style="color: #aaa; font-size: 0.9rem; margin-bottom: 15px;">Choose wisely to claim your cosmic gift package:</p>
+        
+            <div class="gift-options-grid">
+                <div class="gift-opt-card" onclick="selectGiftOption('alone')">
+                    <div class="gift-icon">🍕</div>
+                    <div class="gift-title">Eating Alone</div>
+                    <div style="font-size: 0.8rem; color: #b0c4de;">Solitary Route</div>
+                </div>
+                <div class="gift-opt-card" onclick="selectGiftOption('mahi')">
+                    <div class="gift-icon">👯‍♀️</div>
+                    <div class="gift-title">Enjoy with Mahi</div>
+                    <div style="font-size: 0.8rem; color: #b0c4de;">Sister Time</div>
+                </div>
+                <div class="gift-opt-card" onclick="selectGiftOption('pranto')">
+                    <div class="gift-icon">❤️</div>
+                    <div class="gift-title">Enjoy with Pranto</div>
+                    <div style="font-size: 0.8rem; color: #b0c4de;">Starlight Date</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+        let width, height, stars = [];
+        const numStars = 800;
+        let targetSpeed = 0.5, currentSpeed = 0.5;
+        
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        
+        class Star {
+            constructor() { this.reset(); this.z = Math.random() * width; }
+            reset() {
+                this.x = (Math.random() - 0.5) * width * 2;
+                this.y = (Math.random() - 0.5) * height * 2;
+                this.z = width; this.pz = this.z;
+            }
+            update() {
+                this.z -= currentSpeed;
+                if (this.z < 1) this.reset();
+            }
+            draw() {
+                let sx = (this.x / this.z) * 200 + width / 2;
+                let sy = (this.y / this.z) * 200 + height / 2;
+                let r = (1 - this.z / width) * 2.5;
+                let px = (this.x / this.pz) * 200 + width / 2;
+                let py = (this.y / this.pz) * 200 + height / 2;
+                this.pz = this.z;
+
+                ctx.beginPath();
+                if (currentSpeed > 3) {
+                    ctx.moveTo(px, py); ctx.lineTo(sx, sy);
+                    ctx.strokeStyle = `rgba(0, 229, 255, ${1 - this.z/width})`;
+                    ctx.lineWidth = r * 1.5; ctx.stroke();
+                } else {
+                    ctx.arc(sx, sy, r, 0, Math.PI * 2);
+                    let c = Math.random() > 0.8 ? '255, 223, 0' : (Math.random() > 0.5 ? '0, 229, 255' : '255, 255, 255');
+                    ctx.fillStyle = `rgba(${c}, ${1 - this.z/width})`; ctx.fill();
+                }
+            }
+        }
+
+        function initStars() {
+            resize();
+            stars = Array.from({length: numStars}, () => new Star());
+            animateStars();
+        }
+
+        function animateStars() {
+            currentSpeed += (targetSpeed - currentSpeed) * 0.03;
+            ctx.fillStyle = `rgba(2, 2, 5, ${currentSpeed > 3 ? 0.3 : 1})`;
+            ctx.fillRect(0, 0, width, height);
+            stars.forEach(s => { s.update(); s.draw(); });
+            requestAnimationFrame(animateStars);
+        }
+
+        // Planet Exploration Logic
+        const exploredPlanets = [false, false, false];
+
+        function explorePlanet(title, text, index) {
+            if (!exploredPlanets[index]) {
+                exploredPlanets[index] = true;
+                document.getElementById(`p-${index}`).classList.add('explored');
+                document.querySelectorAll('.planet-label')[index].innerText = `${title} (1/1 ✓)`;
+            }
+            
+            if (exploredPlanets.every(Boolean)) {
+                const btn = document.getElementById('commence-btn');
+                btn.disabled = false;
+                btn.classList.add('pulse');
+                btn.innerText = "Commence Mission 🚀 (Ready!)";
+            }
+
+            document.getElementById('modal-icon').innerText = index === 0 ? '🌍' : (index === 1 ? '🪐' : '☄️');
+            document.getElementById('modal-title').innerText = title + " Calibrated";
+            document.getElementById('modal-content-area').innerText = text;
+            document.getElementById('universal-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('universal-modal').classList.remove('active');
+        }
+
+        const gameState = { riddle: false, memory: false, lock: false };
+
+        function switchView(viewId) {
+            document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            window.scrollTo(0, 0);
+            checkOverallProgress();
+        }
+
+        function completeGame(gameId) {
+            gameState[gameId] = true;
+            document.getElementById(`card-${gameId}`).classList.add('completed');
+            document.getElementById(`status-${gameId}`).innerText = '✅';
+            targetSpeed = 8; 
+            setTimeout(() => { targetSpeed = 0.5; switchView('view-dashboard'); }, 1200);
+        }
+
+        function checkOverallProgress() {
+            if (gameState.riddle && gameState.memory && gameState.lock) {
+                document.getElementById('btn-warp').style.display = 'block';
+            }
+        }
+
+        function startGame(gameId) {
+            if (gameState[gameId]) return; 
+            switchView(`view-${gameId}`);
+            if (gameId === 'riddle') initRiddle();
+            if (gameId === 'memory') initMemory();
+            if (gameId === 'lock') initLock();
+        }
+
+        function initRiddle() {
+            const riddle = { q: "I have stars but no sky, I have space but no planets. What am I?", options: ["A Galaxy", "A Keyboard", "A Telescope"], a: 1 };
+            document.getElementById('riddle-text').innerText = riddle.q;
+            const optsContainer = document.getElementById('riddle-options');
+            optsContainer.innerHTML = '';
+            
+            riddle.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn'; btn.innerText = opt;
+                btn.onclick = () => {
+                    if (index === riddle.a) {
+                        btn.classList.add('success'); btn.innerText = "ACCEPTED ✨"; completeGame('riddle');
+                    } else {
+                        btn.classList.add('danger'); document.getElementById('view-riddle').querySelector('.glass-panel').classList.add('shake');
+                        setTimeout(() => { btn.classList.remove('danger'); document.getElementById('view-riddle').querySelector('.glass-panel').classList.remove('shake'); }, 800);
+                    }
+                };
+                optsContainer.appendChild(btn);
+            });
+        }
+
+        const emojis = ['🌍', '🪐', '☄️', '🌌'];
+        let flippedCards = [], matches = 0;
+
+        function initMemory() {
+            const grid = document.getElementById('memory-grid'); grid.innerHTML = '';
+            matches = 0; flippedCards = [];
+            let cards = [...emojis, ...emojis].sort(() => Math.random() - 0.5);
+            cards.forEach((emoji) => {
+                const card = document.createElement('div');
+                card.className = 'memory-card'; card.dataset.val = emoji;
+                card.innerHTML = `<div class="card-front">?</div><div class="card-back">${emoji}</div>`;
+                card.onclick = () => flipCard(card);
+                grid.appendChild(card);
+            });
+        }
+
+        function flipCard(card) {
+            if (flippedCards.length === 2 || card.classList.contains('flipped') || card.classList.contains('matched')) return;
+            card.classList.add('flipped'); flippedCards.push(card);
+            if (flippedCards.length === 2) setTimeout(checkMatch, 600);
+        }
+
+        function checkMatch() {
+            const [c1, c2] = flippedCards;
+            if (c1.dataset.val === c2.dataset.val) {
+                c1.classList.add('matched'); c2.classList.add('matched'); matches++;
+                if (matches === emojis.length) completeGame('memory');
+            } else {
+                c1.classList.remove('flipped'); c2.classList.remove('flipped');
+            }
+            flippedCards = [];
+        }
+
+        let lockDigits = [0, 0, 0, 0];
+        const targetCode = [1, 3, 4, 9]; 
+
+        function initLock() { lockDigits = [0, 0, 0, 0]; updateDisplay(); }
+
+        function changeDigit(index, delta) {
+            lockDigits[index] = (lockDigits[index] + delta + 10) % 10;
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            for(let i=0; i<4; i++) { document.getElementById(`digit-${i}`).innerText = lockDigits[i]; }
+        }
+
+        function checkLock() {
+            const feedback = document.getElementById('lock-feedback');
+            if (lockDigits.join('') === targetCode.join('')) {
+                feedback.style.color = 'var(--success)'; feedback.innerText = "ACCESS GRANTED"; feedback.style.opacity = '1';
+                setTimeout(() => completeGame('lock'), 500);
+            } else {
+                document.getElementById('view-lock').querySelector('.glass-panel').classList.add('shake');
+                feedback.style.color = 'var(--error)'; feedback.innerText = "ACCESS DENIED"; feedback.style.opacity = '1';
+                setTimeout(() => { document.getElementById('view-lock').querySelector('.glass-panel').classList.remove('shake'); feedback.style.opacity = '0'; }, 800);
+            }
+        }
+
+        function initiateWarp() {
+            document.getElementById('view-dashboard').classList.remove('active');
+            targetSpeed = 150;
+            
+            setTimeout(() => {
+                const flash = document.getElementById('flash');
+                flash.style.opacity = '1';
+                
+                setTimeout(() => {
+                    targetSpeed = 0.5; 
+                    switchView('view-finale');
+                    flash.style.opacity = '0';
+                }, 1500);
+                
+            }, 2500);
+        }
+
+        // Gift Partner Choosing Sequence with Trap & Postal Code Challenge
+        function selectGiftOption(optionType) {
+            if (optionType === 'alone') {
+                document.getElementById('modal-icon').innerText = '⚠️';
+                document.getElementById('modal-title').innerText = 'Error: Unauthorized!';
+                document.getElementById('modal-content-area').innerText = 'Eating alone on your birthday?! Absolutely not permitted in this galaxy! Try another option...';
+                document.getElementById('universal-modal').classList.add('active');
+            } else if (optionType === 'mahi') {
+                document.getElementById('modal-icon').innerText = '👯‍♀️';
+                document.getElementById('modal-title').innerText = 'Almost There!';
+                document.getElementById('modal-content-area').innerText = 'Hanging out with Mahi is wonderful, but your cosmic navigator says there is someone else waiting to celebrate with you too! Pick Pranto to unlock your main gift!';
+                document.getElementById('universal-modal').classList.add('active');
+            } else if (optionType === 'pranto') {
+                document.getElementById('hint-modal').classList.add('active');
+            }
+        }
+
+        function proceedToPostalModal() {
+            document.getElementById('hint-modal').classList.remove('active');
+            document.getElementById('postal-modal').classList.add('active');
+            initPostalCode();
+        }
+
+        let postalDigits = [0, 0, 0, 0];
+        const correctPostal = [1, 2, 0, 7];
+
+        function initPostalCode() {
+            postalDigits = [0, 0, 0, 0];
+            updatePostalDisplay();
+        }
+
+        function changePostal(index, delta) {
+            postalDigits[index] = (postalDigits[index] + delta + 10) % 10;
+            updatePostalDisplay();
+        }
+
+        function updatePostalDisplay() {
+            for(let i=0; i<4; i++) {
+                document.getElementById(`p-digit-${i}`).innerText = postalDigits[i];
+            }
+        }
+
+        function verifyPostalCode() {
+            const feedback = document.getElementById('postal-feedback');
+            if (postalDigits.join('') === correctPostal.join('')) {
+                feedback.style.color = 'var(--success)';
+                feedback.innerText = "POSTAL CODE VERIFIED! GIFTS UNLOCKED!";
+                feedback.style.opacity = '1';
+                setTimeout(() => {
+                    document.getElementById('postal-modal').classList.remove('active');
+                    feedback.style.opacity = '0';
+                    showGiftListDetails();
+                }, 800);
+            } else {
+                document.getElementById('postal-modal').querySelector('.glass-panel').classList.add('shake');
+                feedback.style.color = 'var(--error)';
+                feedback.innerText = "INCORRECT POSTAL CODE (Hint: It's 1207)";
+                feedback.style.opacity = '1';
+                setTimeout(() => {
+                    document.getElementById('postal-modal').querySelector('.glass-panel').classList.remove('shake');
+                }, 800);
+            }
+        }
+
+        function showGiftListDetails() {
+            document.getElementById('modal-icon').innerText = '🎁✨';
+            document.getElementById('modal-title').innerText = 'Your Special Birthday Gifts Unlocked!';
+            document.getElementById('modal-content-area').innerHTML = `
+                <p style="margin-bottom: 12px; font-weight: 600; color: var(--text-gold);">Here is your complete gift collection:</p>
+                
+                <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; margin-bottom: 15px;">
+                    <ul style="list-style-type: none; padding-left: 0; line-height: 1.6;">
+                        <li>⌚ <strong>A Watch</strong> (Scroll down for warranty & store info)</li>
+                        <li>🥣 <strong>A Snack Bowl</strong></li>
+                        <li>🪞 <strong>A Mirror</strong></li>
+                        <li>🍫 <strong>A Chocolate</strong></li>
+                    </ul>
+                </div>
+
+                <div style="border-top: 1px solid rgba(255,255,255,0.15); padding-top: 12px; margin-top: 10px;">
+                    <p style="font-weight: 600; color: var(--text-accent); margin-bottom: 6px;">⌚ Watch Warranty & Service Details:</p>
+                    <p style="font-size: 0.95rem; color: #b0c4de; margin-bottom: 12px;">
+                        • <strong>2-year international warranty</strong> on machine and battery.<br>
+                        • You can adjust the chain from any branch of Time Zone or Titan Store.
+                    </p>
+
+                    <p style="font-weight: 600; color: var(--text-gold); margin-bottom: 8px;">📍 Authorized Store & Service Locations:</p>
+                    
+                    <div class="store-card recommended">
+                        <strong>⭐ TOKYO SQUARE (Recommended / Closest to Iqbal Rd)</strong><br>
+                        Japan Garden City, Mohammadpur, Dhaka<br>
+                        📞 +8801678007488 | Open: 10:00am - 9:00pm | Weekend: Thursday
+                    </div>
+
+                    <div class="store-card recommended">
+                        <strong>⭐ RAPA PLAZA (Also in Dhaka 1207 / Close to Iqbal Rd)</strong><br>
+                        Rd No. 27, Dhaka 1207<br>
+                        📞 +8801678007464 | Open: 10:00am - 8:00pm | Weekend: Tuesday
+                    </div>
+
+                    <div class="store-card">
+                        <strong>TITAN STORE DHANMONDI 27</strong><br>
+                        Shop # G3 & G4, Plot # 28B, Road # 27(old), 16(new) Dhanmondi R/A, Dhaka<br>
+                        📞 +8801678007419 | Open: 10:00am - 10:00pm | Weekend: 7 Days Open
+                    </div>
+
+                    <div class="store-card">
+                        <strong>SHIMANTO SQUARE</strong><br>
+                        Level-2, Dhaka<br>
+                        📞 +8801678007453 | Open: 10:00am - 8:00pm | Weekend: Tuesday
+                    </div>
+
+                    <div class="store-card">
+                        <strong>THEME OMAR PLAZA (Rajshahi)</strong><br>
+                        Shop No-14-16, 60/1 Gourahanga, Newmarket, Rajshahi<br>
+                        📞 +8801678007431 | Open: 10:00am - 10:00pm | Weekend: Sunday
+                    </div>
+                </div>
+            `;
+            document.getElementById('universal-modal').classList.add('active');
+        }
+
+        window.onload = () => { initStars(); };
+    </script>
+</body>
+</html>
