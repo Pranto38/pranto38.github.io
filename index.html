@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M.M.H. Pranto - Portfolio</title>
-	<link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="icon" type="image/png" href="images/favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -19,6 +19,7 @@
 </head>
 <body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-slate-200 font-sans leading-relaxed transition-colors duration-300">
 
+    <!-- Navigation -->
     <nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm fixed w-full z-20 top-0 border-b border-gray-100 dark:border-slate-800 transition-colors duration-300">
         <div class="max-w-6xl mx-auto px-4">
             <div class="flex flex-wrap justify-between items-center py-3 gap-y-3">
@@ -34,7 +35,7 @@
                     <button class="nav-btn px-2 py-1" data-target="resume">Resume</button>
                     <button class="nav-btn px-2 py-1" data-target="contact">Contact</button>
                     
-                    <button id="theme-toggle" class="ml-2 p-2 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 transition">
+                    <button id="theme-toggle" class="ml-2 p-2 rounded-full bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-yellow-400 hover:bg-gray-200 dark:hover:bg-slate-700 transition" aria-label="Toggle Dark Mode">
                         <i id="theme-icon" class="fa-solid fa-moon"></i>
                     </button>
                 </div>
@@ -45,167 +46,187 @@
 
     <main class="max-w-5xl mx-auto pt-36 pb-16 px-6">
         
+        <!-- ========================================== -->
+        <!-- 1. HOME PAGE                               -->
+        <!-- ========================================== -->
         <section id="home" class="page-section fade-in">
-            <div class="text-center mb-10 mt-8">
+            <div class="text-center mb-10 mt-4">
                 <div class="relative inline-block mb-6">
-                    <img src="images/profile.png" alt="Pranto" class="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto object-cover border-4 border-blue-600 dark:border-blue-400 shadow-xl transform transition hover:scale-105 duration-300 bg-gray-200 flex items-center justify-center text-gray-400 font-semibold text-sm">
+                    <img src="images/profile.png" alt="Md Mahamudul Hasan Pranto" class="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto object-cover border-4 border-blue-600 dark:border-blue-400 shadow-xl transform transition hover:scale-105 duration-300 bg-gray-200 flex items-center justify-center text-gray-400 font-semibold text-sm">
                 </div>
                 
                 <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-3 tracking-tight">Md Mahamudul Hasan Pranto</h1>
-                <h2 class="text-xl text-blue-600 dark:text-blue-400 font-bold mb-6">Mechanical Engineering Graduate & Researcher</h2>
+                <h2 class="text-lg md:text-xl text-blue-600 dark:text-blue-400 font-bold mb-6">Lecturer, Dept. of Mechanical Engineering (BAUST Khulna)</h2>
                 
                 <p class="text-gray-600 dark:text-slate-400 max-w-3xl mx-auto mb-8 text-lg leading-relaxed bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
-                    Md Mahamudul Hasan Pranto earned his B.Sc. in Mechanical Engineering from Rajshahi University of Engineering & Technology (RUET), Bangladesh. 
-					His research focuses on nano-material-enhanced phase change materials (PCMs) and their applications in renewable energy systems, 
-					including PVT systems, solar stills, battery thermal management, and controlled environment agriculture. He also has growing research interests 
-					in advanced materials for electrochemical water splitting and renewable hydrogen production. 
-					He aims to advance UN Sustainable Development Goals 6 (Clean Water), 7 (Affordable Energy), and 13 (Climate Action).
+                    Md Mahamudul Hasan Pranto earned his B.Sc. in Mechanical Engineering from Rajshahi University of Engineering &amp; Technology (RUET), Bangladesh. 
+                    His research focuses on nano-material-enhanced phase change materials (PCMs) and their applications in renewable energy systems, 
+                    including PVT systems, solar stills, battery thermal management, and controlled environment agriculture. He also has growing research interests 
+                    in advanced materials for electrochemical water splitting and renewable hydrogen production. 
+                    He aims to advance UN Sustainable Development Goals 6 (Clean Water), 7 (Affordable Energy), and 13 (Climate Action).
                 </p>
                 
-                <div class="flex justify-center space-x-6 text-2xl text-gray-500 dark:text-slate-400">
-                    <a href="https://scholar.google.com/citations?user=pw2RlncAAAAJ&hl=en" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 transform hover:scale-110 transition"><i class="fa-brands fa-google"></i></a>
-                    <a href="https://orcid.org/0009-0007-8256-9004" target="_blank" class="hover:text-green-500 transform hover:scale-110 transition"><i class="fa-brands fa-orcid"></i></a>
-                    <a href="https://www.researchgate.net/profile/Md-Mahamudul-Hasan-Pranto" target="_blank" class="hover:text-teal-500 transform hover:scale-110 transition"><i class="fa-brands fa-researchgate"></i></a>
-                    <a href="https://github.com/Pranto38" target="_blank" class="hover:text-gray-900 dark:hover:text-white transform hover:scale-110 transition"><i class="fa-brands fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/pranto38/" target="_blank" class="hover:text-blue-700 dark:hover:text-blue-500 transform hover:scale-110 transition"><i class="fa-brands fa-linkedin"></i></a>
+                <div class="flex flex-wrap justify-center gap-6 text-2xl text-gray-500 dark:text-slate-400">
+                    <a href="https://scholar.google.com/citations?user=pw2RlncAAAAJ&hl=en" target="_blank" title="Google Scholar" class="hover:text-blue-600 dark:hover:text-blue-400 transform hover:scale-110 transition"><i class="fa-brands fa-google"></i></a>
+                    <a href="https://orcid.org/0009-0007-8256-9004" target="_blank" title="ORCID" class="hover:text-green-500 transform hover:scale-110 transition"><i class="fa-brands fa-orcid"></i></a>
+                    <a href="https://www.scopus.com/authid/detail.uri?authorId=59565800300" target="_blank" title="Scopus" class="hover:text-orange-500 transform hover:scale-110 transition"><i class="fa-solid fa-graduation-cap"></i></a>
+                    <a href="https://www.researchgate.net/profile/Md-Mahamudul-Hasan-Pranto" target="_blank" title="ResearchGate" class="hover:text-teal-500 transform hover:scale-110 transition"><i class="fa-brands fa-researchgate"></i></a>
+                    <a href="https://github.com/Pranto38" target="_blank" title="GitHub" class="hover:text-gray-900 dark:hover:text-white transform hover:scale-110 transition"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/pranto38/" target="_blank" title="LinkedIn" class="hover:text-blue-700 dark:hover:text-blue-500 transform hover:scale-110 transition"><i class="fa-brands fa-linkedin"></i></a>
                 </div>
             </div>
 
+            <!-- Recent Highlights (Auto-populated by script.js) -->
             <div class="mt-16 text-left border-t border-gray-200 dark:border-slate-700 pt-10">
                 <h3 class="text-2xl font-extrabold text-gray-900 dark:text-white mb-8 flex items-center"><i class="fa-solid fa-star text-yellow-500 mr-3"></i>Recent Highlights</h3>
                 
                 <h4 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 border-l-4 border-blue-500 pl-3">Latest Publications</h4>
                 <div id="recent-pubs-container" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10"></div>
 
-                <h4 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 border-l-4 border-teal-500 pl-3">Latest Project</h4>
+                <h4 class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-4 border-l-4 border-teal-500 pl-3">Latest Projects</h4>
                 <div id="recent-project-container" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
             </div>
         </section>
 
+        <!-- ========================================== -->
+        <!-- 2. RESEARCH HUB                            -->
+        <!-- ========================================== -->
         <section id="research-hub" class="page-section hidden fade-in">
             <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-8 text-center bg-gradient-to-r from-blue-600 to-teal-400 dark:from-blue-400 dark:to-teal-300 text-transparent bg-clip-text">Research Hub</h2>
             
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-800 rounded-2xl shadow-lg border border-blue-100 dark:border-slate-700 p-8 mb-16 flex justify-around text-center transform hover:-translate-y-1 transition duration-300">
-                <div><div class="text-4xl font-extrabold text-blue-700 dark:text-blue-400">120</div><div class="text-sm text-gray-600 dark:text-slate-400 uppercase tracking-widest font-bold mt-1">Citations</div></div>
-                <div><div class="text-4xl font-extrabold text-blue-700 dark:text-blue-400">5</div><div class="text-sm text-gray-600 dark:text-slate-400 uppercase tracking-widest font-bold mt-1">h-index</div></div>
-                <div><div class="text-4xl font-extrabold text-blue-700 dark:text-blue-400">3</div><div class="text-sm text-gray-600 dark:text-slate-400 uppercase tracking-widest font-bold mt-1">i10-index</div></div>
+            <!-- Metrics Banner -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-800 rounded-2xl shadow-lg border border-blue-100 dark:border-slate-700 p-6 md:p-8 mb-16 grid grid-cols-2 md:grid-cols-4 gap-6 text-center transform hover:-translate-y-1 transition duration-300">
+                <div><div class="text-3xl md:text-4xl font-extrabold text-blue-700 dark:text-blue-400">120</div><div class="text-xs md:text-sm text-gray-600 dark:text-slate-400 uppercase tracking-widest font-bold mt-1">Citations</div></div>
+                <div><div class="text-3xl md:text-4xl font-extrabold text-blue-700 dark:text-blue-400">5</div><div class="text-xs md:text-sm text-gray-600 dark:text-slate-400 uppercase tracking-widest font-bold mt-1">h-index</div></div>
+                <div><div class="text-3xl md:text-4xl font-extrabold text-blue-700 dark:text-blue-400">3</div><div class="text-xs md:text-sm text-gray-600 dark:text-slate-400 uppercase tracking-widest font-bold mt-1">i10-index</div></div>
+                <div><div class="text-3xl md:text-4xl font-extrabold text-teal-600 dark:text-teal-400">8</div><div class="text-xs md:text-sm text-gray-600 dark:text-slate-400 uppercase tracking-widest font-bold mt-1">Peer Reviews</div></div>
             </div>
 
-            <h3 class="text-2xl font-extrabold border-b-2 border-gray-200 dark:border-slate-700 pb-3 mb-6 text-gray-900 dark:text-white flex items-center"><i class="fa-solid fa-book text-blue-600 dark:text-blue-400 mr-3"></i>Publications</h3>
+            <!-- SECTION A: Journal & Conference Publications -->
+            <h3 class="text-2xl font-extrabold border-b-2 border-gray-200 dark:border-slate-700 pb-3 mb-6 text-gray-900 dark:text-white flex items-center"><i class="fa-solid fa-book text-blue-600 dark:text-blue-400 mr-3"></i>Peer-Reviewed Publications (9)</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
 
-				<div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
-                    <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/matre.jpg" alt="Journal Cover" class="w-full h-full object-cover">
-                     </div>
-                    <div class="flex flex-col justify-between">
-                        <div>
-                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Electrochemical water splitting for green hydrogen: Key material roles, persistent challenges, and outlook</h4>
-                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Materials Reports: Energy | 2026-08</p>
-                        </div>
-                        <a href="https://doi.org/10.1016/j.matre.2026.100450" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.matre.2026.100450</a>
-                    </div>
-                </div>
-                
+                <!-- [J1] Dec 2026 -->
                 <div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
                     <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/cleaner-production.jpg" alt="Journal Cover" class="w-full h-full object-cover">
-                     </div>
-                    <div class="flex flex-col justify-between">
-                        <div>
-                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Comprehensive 12E assessment of hybrid nano-PCM and metal-mesh PVT-integrated hexagonal solar still for sustainable desalination</h4>
-                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Journal of Cleaner Production | 2026-07</p>
-                        </div>
-                        <a href="https://doi.org/10.1016/j.jclepro.2026.148850" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.jclepro.2026.148850</a>
+                        <img src="images/energy-reports.jpg" alt="Energy Reports Cover" class="w-full h-full object-cover">
                     </div>
-                </div>
-
-				<div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
-                    <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/energy-reports.jpg" alt="Journal Cover" class="w-full h-full object-cover">
-                     </div>
                     <div class="flex flex-col justify-between">
                         <div>
-                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Comprehensive Experimental Assessment of Hexagonal Solar Stills (HSS) Using 12E-Based Performance and Sustainability Metrics</h4>
-                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Energy Reports | 2026-06</p>
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Comprehensive experimental assessment of hexagonal solar stills (HSS) using 12E-based performance and sustainability metrics</h4>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Energy Reports | Dec. 2026</p>
                         </div>
                         <a href="https://doi.org/10.1016/j.egyr.2026.109593" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.egyr.2026.109593</a>
                     </div>
                 </div>
 
-				<div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
+                <!-- [J2] Aug 2026 -->
+                <div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
                     <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/energy-reports.jpg" alt="Journal Cover" class="w-full h-full object-cover">
-                     </div>
+                        <img src="images/matre.jpg" alt="Materials Reports: Energy Cover" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Electrochemical water splitting for green hydrogen: Key material roles, persistent challenges, and outlook</h4>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Materials Reports: Energy | Aug. 2026</p>
+                        </div>
+                        <a href="https://doi.org/10.1016/j.matre.2026.100450" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.matre.2026.100450</a>
+                    </div>
+                </div>
+                
+                <!-- [J3] Jul 2026 -->
+                <div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
+                    <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
+                        <img src="images/cleaner-production.jpg" alt="Journal of Cleaner Production Cover" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Comprehensive 12E assessment of hybrid nano-PCM and metal-mesh PVT-integrated hexagonal solar still for sustainable desalination</h4>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Journal of Cleaner Production | Jul. 2026</p>
+                        </div>
+                        <a href="https://doi.org/10.1016/j.jclepro.2026.148850" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.jclepro.2026.148850</a>
+                    </div>
+                </div>
+
+                <!-- [J4] Jun 2026 -->
+                <div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
+                    <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
+                        <img src="images/energy-reports.jpg" alt="Energy Reports Cover" class="w-full h-full object-cover">
+                    </div>
                     <div class="flex flex-col justify-between">
                         <div>
                             <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Toward sustainable and cost-effective capacitive deionization: A comparative study of symmetric and hybrid asymmetric electrode systems</h4>
-                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Energy Reports | 2026-06</p>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Energy Reports | Jun. 2026</p>
                         </div>
                         <a href="https://doi.org/10.1016/j.egyr.2026.109285" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.egyr.2026.109285</a>
                     </div>
                 </div>
 
+                <!-- [J5] Apr 2026 -->
                 <div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
                     <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/next-energy.jpg" alt="Journal Cover" class="w-full h-full object-cover">
+                        <img src="images/next-energy.jpg" alt="Next Energy Cover" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-between">
                         <div>
                             <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Thermal management of lithium-ion batteries using fin-integrated nano-enhanced PCM under forced air convection: A CFD study</h4>
-                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Next Energy | 2026-04</p>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Next Energy | Apr. 2026</p>
                         </div>
                         <a href="https://doi.org/10.1016/j.nxener.2026.100561" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.nxener.2026.100561</a>
                     </div>
                 </div>
 
+                <!-- [C1] Nov 2025 -->
                 <div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
                     <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/scien.png" alt="Journal Cover" class="w-full h-full object-cover">
+                        <img src="images/scien.png" alt="SciEn Conference Series Cover" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-between">
                         <div>
                             <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Improving Thermal Management of Li-ion Batteries in Electric Vehicles: A CFD Study of a Hybrid System with Nanofluid and Peltier Module</h4>
-                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>SciEn Conference Series: Engineering | 2025-11</p>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-users-rectangle mr-1"></i>Proc. 8th ICMIEE 2024, SciEn Conf. Ser.: Eng. | Nov. 2025</p>
                         </div>
                         <a href="https://doi.org/10.38032/scse.2025.3.50" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.38032/scse.2025.3.50</a>
                     </div>
                 </div>
                 
+                <!-- [J6] Sep 2025 -->
                 <div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
                     <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/energy-nexus.jpg" alt="Journal Cover" class="w-full h-full object-cover">
+                        <img src="images/energy-nexus.jpg" alt="Energy Nexus Cover" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-between">
                         <div>
-                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">A comprehensive analysis of the PVT-integrated solar desalination technologies: Present condition, challenges and way forward</h4>
-                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Energy Nexus | 2025-09</p>
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">A Comprehensive Analysis of the PVT-Integrated Solar Desalination Technologies: Present Condition, Challenges and Way Forward</h4>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Energy Nexus | Sep. 2025</p>
                         </div>
                         <a href="https://doi.org/10.1016/j.nexus.2025.100479" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.nexus.2025.100479</a>
                     </div>
                 </div>
 
+                <!-- [J7] Jun 2025 -->
                 <div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
                     <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/future-batteries.jpg" alt="Journal Cover" class="w-full h-full object-cover">
+                        <img src="images/future-batteries.jpg" alt="Future Batteries Cover" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-between">
                         <div>
                             <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Advanced thermal management of lithium-ion battery using fin-enhanced PCM: A CFD study</h4>
-                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Future Batteries | 2025-06</p>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Future Batteries | Jun. 2025</p>
                         </div>
                         <a href="https://doi.org/10.1016/j.fub.2025.100076" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.fub.2025.100076</a>
                     </div>
                 </div>
 
+                <!-- [J8] Jun 2025 -->
                 <div class="pub-card bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
                     <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/renewable-energy.jpg" alt="Journal Cover" class="w-full h-full object-cover">
+                        <img src="images/renewable-energy.jpg" alt="Renewable Energy Cover" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-between">
                         <div>
                             <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Hybrid PVT integrated pyramid solar still: 11E, sustainability, and sustainable development goals assessment</h4>
-                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Renewable Energy | 2025-06</p>
+                            <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Renewable Energy | Jun. 2025</p>
                         </div>
                         <a href="https://doi.org/10.1016/j.renene.2025.122914" target="_blank" class="text-xs text-gray-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition"><i class="fa-solid fa-link mr-1"></i>DOI: 10.1016/j.renene.2025.122914</a>
                     </div>
@@ -213,34 +234,156 @@
 
             </div>
 
-            <h3 class="text-2xl font-extrabold border-b-2 border-gray-200 dark:border-slate-700 pb-3 mb-6 text-gray-900 dark:text-white flex items-center"><i class="fa-solid fa-glasses text-teal-500 mr-3"></i>Peer Review Roles</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- SECTION B: Book Chapters -->
+            <h3 class="text-2xl font-extrabold border-b-2 border-gray-200 dark:border-slate-700 pb-3 mb-6 text-gray-900 dark:text-white flex items-center"><i class="fa-solid fa-book-bookmark text-indigo-500 mr-3"></i>Book Chapters (5)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+
+                <!-- Chapter 1 (RSC) -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
+                    <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 flex items-center justify-center text-xs text-center text-gray-400 shadow-inner overflow-hidden">
+                        <img src="images/rsc.png" alt="Book Cover" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Degradation and Durability Challenges in Anion Exchange Membrane Water Electrolyzers</h4>
+                            <p class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Corrosion and Degradation in Water Electrolysis Systems | Ch. 9</p>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-slate-400 font-medium"><i class="fa-solid fa-building-columns mr-1"></i>Royal Society of Chemistry (RSC)</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 2 (Elsevier Ch. 1) -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
+                    <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 flex items-center justify-center text-xs text-center text-gray-400 shadow-inner overflow-hidden">
+                        <img src="images/elsa.png" alt="Book Cover" class="w-full h-full object-cover">
+
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Advanced Sustainable Energy Storage Systems: Overview of TES Systems, PCMs, and Their Role in Renewable Energy</h4>
+                            <p class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Nano-PCM Breakthroughs | Ch. 1</p>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-slate-400 font-medium"><i class="fa-solid fa-building-columns mr-1"></i>Elsevier &bull; ISBN: 9780443453458</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 3 (Elsevier Ch. 3) -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
+                    <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 flex items-center justify-center text-xs text-center text-gray-400 shadow-inner overflow-hidden">
+                        <img src="images/elsa.png" alt="Book Cover" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Nanotechnology-Based Thermal Energy Storage Technologies: Enhancements of PCMs Using Nanomaterials</h4>
+                            <p class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Nano-PCM Breakthroughs | Ch. 3</p>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-slate-400 font-medium"><i class="fa-solid fa-building-columns mr-1"></i>Elsevier &bull; ISBN: 9780443453458</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 4 (Elsevier Ch. 4) -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
+                    <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 flex items-center justify-center text-xs text-center text-gray-400 shadow-inner overflow-hidden">
+                        <img src="images/elsa.png" alt="Book Cover" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Hybrid Nano-PCMs: Fabrication, Characterization, and Applications</h4>
+                            <p class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Nano-PCM Breakthroughs | Ch. 4</p>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-slate-400 font-medium"><i class="fa-solid fa-building-columns mr-1"></i>Elsevier &bull; ISBN: 9780443453458</span>
+                    </div>
+                </div>
+
+                <!-- Chapter 5 (Elsevier Ch. 8) -->
+                <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
+                    <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 flex items-center justify-center text-xs text-center text-gray-400 shadow-inner overflow-hidden">
+                        <img src="images/elsa.png" alt="Book Cover" class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-2 leading-tight">Nano-PCM in Controlled Environment Agriculture Industry: Role of Nano-PCMs in Greenhouses and Vertical Farming</h4>
+                            <p class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 mb-1"><i class="fa-solid fa-book-open mr-1"></i>Nano-PCM Breakthroughs | Ch. 8</p>
+                        </div>
+                        <span class="text-xs text-gray-500 dark:text-slate-400 font-medium"><i class="fa-solid fa-building-columns mr-1"></i>Elsevier &bull; ISBN: 9780443453458</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECTION C: Peer Review Roles -->
+            <h3 class="text-2xl font-extrabold border-b-2 border-gray-200 dark:border-slate-700 pb-3 mb-6 text-gray-900 dark:text-white flex items-center"><i class="fa-solid fa-glasses text-teal-500 mr-3"></i>Peer Review Roles (8 Reviews in 2026)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
                 
                 <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
                     <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/jtice.jpg" alt="Journal Cover" class="w-full h-full object-cover">
+                        <img src="images/solar-energy.jpg" alt="Solar Energy Cover" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-center">
-                        <span class="inline-block px-3 py-1 bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-400 text-[10px] font-extrabold uppercase tracking-widest rounded-full mb-3 w-max border border-teal-200 dark:border-teal-800">Reviewer (3)</span>
-                        <h4 class="font-bold text-gray-900 dark:text-white text-lg mb-1 leading-tight">Journal of the Taiwan Institute of Chemical Engineers</h4>
-                        <p class="text-sm font-semibold text-gray-500 dark:text-slate-400 mb-1">Elsevier</p>
+                        <span class="inline-block px-3 py-1 bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-400 text-[10px] font-extrabold uppercase tracking-widest rounded-full mb-3 w-max border border-teal-200 dark:border-teal-800">Reviewer (5)</span>
+                        <h4 class="font-bold text-gray-900 dark:text-white text-lg mb-1 leading-tight">Solar Energy</h4>
+                        <p class="text-sm font-semibold text-gray-500 dark:text-slate-400 mb-1">Elsevier Editorial</p>
+                        <p class="text-xs text-gray-400 dark:text-slate-500">ISSN: 0038-092X</p>
                     </div>
                 </div>
 
                 <div class="bg-white dark:bg-slate-800 p-5 rounded-xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 flex gap-5 transform transition duration-300 hover:-translate-y-1">
                     <div class="w-24 h-32 bg-gray-100 dark:bg-slate-700 rounded-lg flex-shrink-0 shadow-inner overflow-hidden">
-                         <img src="images/solar-energy.jpg" alt="Journal Cover" class="w-full h-full object-cover">
+                        <img src="images/jtice.jpg" alt="JTICE Cover" class="w-full h-full object-cover">
                     </div>
                     <div class="flex flex-col justify-center">
-                        <span class="inline-block px-3 py-1 bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-400 text-[10px] font-extrabold uppercase tracking-widest rounded-full mb-3 w-max border border-teal-200 dark:border-teal-800">Reviewer (5)</span>
-                        <h4 class="font-bold text-gray-900 dark:text-white text-lg mb-1 leading-tight">Solar Energy</h4>
-                        <p class="text-sm font-semibold text-gray-500 dark:text-slate-400 mb-1">Elsevier</p>
+                        <span class="inline-block px-3 py-1 bg-teal-100 dark:bg-teal-900/50 text-teal-800 dark:text-teal-400 text-[10px] font-extrabold uppercase tracking-widest rounded-full mb-3 w-max border border-teal-200 dark:border-teal-800">Reviewer (3)</span>
+                        <h4 class="font-bold text-gray-900 dark:text-white text-lg mb-1 leading-tight">Journal of the Taiwan Institute of Chemical Engineers</h4>
+                        <p class="text-sm font-semibold text-gray-500 dark:text-slate-400 mb-1">Elsevier Editorial</p>
+                        <p class="text-xs text-gray-400 dark:text-slate-500">ISSN: 1876-1070</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECTION D: Experimental Photo Gallery -->
+            <h3 class="text-2xl font-extrabold border-b-2 border-gray-200 dark:border-slate-700 pb-3 mb-6 text-gray-900 dark:text-white flex items-center"><i class="fa-solid fa-images text-blue-600 dark:text-blue-400 mr-3"></i>Experimental Photo Gallery</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+                <!-- Gallery Item 1 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 overflow-hidden group transition duration-300 hover:-translate-y-1">
+                    <div class="h-48 bg-gray-100 dark:bg-slate-700 overflow-hidden">
+                        <img src="images/exp-1.png" alt="PV/T Integrated Hexagonal Solar Still Setup" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-1">PV/T Hexagonal Solar Still</h4>
+                        <p class="text-xs text-gray-500 dark:text-slate-400">3-panel fin/HNPCM collector coupled with 6-slope hexagonal solar still.</p>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 2 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 overflow-hidden group transition duration-300 hover:-translate-y-1">
+                    <div class="h-48 bg-gray-100 dark:bg-slate-700 overflow-hidden">
+                        <img src="images/exp-2.png" alt="Hybrid Nano-PCM Synthesis" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-1">Hybrid Nano-PCM Synthesis</h4>
+                        <p class="text-xs text-gray-500 dark:text-slate-400">Magnetic stirring &amp; 50 kHz ultrasonication of graphene/Al<sub>2</sub>O<sub>3</sub> PCM composites.</p>
+                    </div>
+                </div>
+
+                <!-- Gallery Item 3 -->
+                <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 overflow-hidden group transition duration-300 hover:-translate-y-1">
+                    <div class="h-48 bg-gray-100 dark:bg-slate-700 overflow-hidden">
+                        <img src="images/exp-3.png" alt="FLIR Thermography & Sensor DAQ" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4">
+                        <h4 class="font-bold text-gray-900 dark:text-white text-sm mb-1">Instrumentation &amp; Thermography</h4>
+                        <p class="text-xs text-gray-500 dark:text-slate-400">FLIR thermal imaging.</p>
                     </div>
                 </div>
 
             </div>
         </section>
 
+        <!-- ========================================== -->
+        <!-- 3. PROJECT HUB                             -->
+        <!-- ========================================== -->
         <section id="project-hub" class="page-section hidden fade-in">
             <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-8 text-center bg-gradient-to-r from-blue-600 to-teal-400 dark:from-blue-400 dark:to-teal-300 text-transparent bg-clip-text">Project Hub</h2>
             
@@ -251,165 +394,321 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-			
-			
                 
+                <!-- Project 1: BobCash App (Ongoing) -->
                 <div class="project-card ongoing bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 overflow-hidden transform transition duration-300 hover:-translate-y-2">
-    
                     <a href="https://drive.google.com/drive/folders/1j80p6OG0YqUvzmUJbv2w9IRyQZXtBdtF?usp=sharing" target="_blank" class="block h-48 overflow-hidden">
-                        <img src="images/bob-cash.png" alt="Thermal Management System" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                        <img src="images/bob-cash.png" alt="BobCash App" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </a>
-    
-                <div class="p-6 relative">
-                <span class="absolute top-6 right-6 px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-400 text-xs font-extrabold rounded border border-yellow-200 dark:border-yellow-800"><i class="fa-solid fa-spinner fa-spin mr-1"></i>Ongoing</span>
-        
-                <h3 class="font-extrabold text-xl mb-3 text-gray-900 dark:text-white leading-tight pr-24">
-                 <a href="https://drive.google.com/drive/folders/1j80p6OG0YqUvzmUJbv2w9IRyQZXtBdtF?usp=sharing" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 transition">
-                BobCash App
-                 </a>
-                </h3>
-        
-                <p class="text-sm text-gray-600 dark:text-slate-400 leading-relaxed mb-4">BobCash is a secure, lightweight budget app helping users design adaptive micro-allocation splits, set target caps, and prevent overspending. Built strictly offline-first to safeguard personal data.
-                                                                                        Key Features:
-                                                                                        🎨 Gender-personalized themes & Bangladesh natural watermarks
-                                                                                        💳 Flexible cash, bank, bKash & card tracking
-                                                                                        🤝 Smart borrowing, lending & repayment records
-                                                                                        🛡️ Biometric vault & secure local backups</p>
-        
-                 <a href="https://drive.google.com/drive/folders/1j80p6OG0YqUvzmUJbv2w9IRyQZXtBdtF?usp=sharing" target="_blank" class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center">
-                     View Project <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
-                </a>
+                    <div class="p-6 relative">
+                        <span class="absolute top-6 right-6 px-3 py-1 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-400 text-xs font-extrabold rounded border border-yellow-200 dark:border-yellow-800"><i class="fa-solid fa-spinner fa-spin mr-1"></i>Ongoing</span>
+                        <h3 class="font-extrabold text-xl mb-3 text-gray-900 dark:text-white leading-tight pr-24">
+                            <a href="https://drive.google.com/drive/folders/1j80p6OG0YqUvzmUJbv2w9IRyQZXtBdtF?usp=sharing" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 transition">BobCash App</a>
+                        </h3>
+                        <p class="text-sm text-gray-600 dark:text-slate-400 leading-relaxed mb-3">
+                            A secure, lightweight, offline-first personal budgeting app designed for adaptive micro-allocation splits, target caps, and overspending prevention.
+                        </p>
+                        <ul class="text-xs text-gray-600 dark:text-slate-400 space-y-1 mb-4">
+                            <li>🎨 Personalized themes &amp; Bangladesh natural watermarks</li>
+                            <li>💳 Flexible cash, bank, bKash &amp; card tracking</li>
+                            <li>🤝 Smart borrowing, lending &amp; repayment records</li>
+                            <li>🛡️ Biometric vault &amp; secure local backups</li>
+                        </ul>
+                        <a href="https://drive.google.com/drive/folders/1j80p6OG0YqUvzmUJbv2w9IRyQZXtBdtF?usp=sharing" target="_blank" class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center">
+                            View Project <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </a>
+                    </div>
                 </div>
-                </div>
-				
-				
                 
+                <!-- Project 2: PV/T Integrated Solar Desalination [P1] -->
                 <div class="project-card completed bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 overflow-hidden transform transition duration-300 hover:-translate-y-2">
-    
-                    <a href="https://doi.org/10.1016/j.renene.2025.122914" target="_blank" class="block h-48 overflow-hidden">
-                        <img src="images/pvt-ss.png" alt="PVT-SS" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                    <a href="https://doi.org/10.1016/j.jclepro.2026.148850" target="_blank" class="block h-48 overflow-hidden">
+                        <img src="images/pvt-ss.png" alt="PV/T Integrated Solar Desalination" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
                     </a>
-    
-                <div class="p-6 relative">
-                <span class="absolute top-6 right-6 px-3 py-1 bg-geen-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 text-xs font-extrabold rounded border border-green-200 dark:border-green-800"><i class="fa-solid fa-check-circle mr-1"></i>Completed</span>
-        
-                <h3 class="font-extrabold text-xl mb-3 text-gray-900 dark:text-white leading-tight pr-24">
-                 <a href="https://doi.org/10.1016/j.renene.2025.122914" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 transition">
-                Performance evaluation of a PVT integrated solar still system
-                 </a>
-                </h3>
-        
-                <p class="text-sm text-gray-600 dark:text-slate-400 leading-relaxed mb-4">Conducted under Kibria Research Lab. Funded by RUET & UGC. Methods involved hybrid nano-enhanced PCM & nanofluid preparation. Research project focusing on the design, fabrication, and data curation for PVT-integrated solar still systems.</p>
-        
-                 <a href="https://doi.org/10.1016/j.renene.2025.122914" target="_blank" class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center">
-                     View Project <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
-                </a>
+                    <div class="p-6 relative">
+                        <span class="absolute top-6 right-6 px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 text-xs font-extrabold rounded border border-green-200 dark:border-green-800"><i class="fa-solid fa-check-circle mr-1"></i>Completed</span>
+                        <h3 class="font-extrabold text-xl mb-2 text-gray-900 dark:text-white leading-tight pr-24">
+                            <a href="https://doi.org/10.1016/j.jclepro.2026.148850" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 transition">PV/T Integrated Solar Desalination Using Hybrid Nano-PCM</a>
+                        </h3>
+                        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">UGC Bangladesh Funded (FY 2024–2025)</p>
+                        <p class="text-sm text-gray-600 dark:text-slate-400 leading-relaxed mb-4">
+                            Synthesized 6 hybrid nano-enhanced PCM composites (+1062% thermal conductivity, 2.44 W/m&middot;K) characterized via DTC-25, DSC, TGA, FTIR, and FLIR. Fabricated an Arduino-instrumented 3-panel PV/T collector with a 6-slope hexagonal solar still achieving 19.78% peak electrical efficiency, 74.94% thermal efficiency, 3.20 L/m&sup2;/day yield, and 95.88% water cost reduction ($0.0105/L).
+                        </p>
+                        <a href="https://doi.org/10.1016/j.jclepro.2026.148850" target="_blank" class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center">
+                            View Publication <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </a>
+                    </div>
                 </div>
-                </div>
-			
-		    
-			
-			</div>
 
+                <!-- Project 3: Lithium-Ion BTMS [P2] -->
+                <div class="project-card completed bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 overflow-hidden transform transition duration-300 hover:-translate-y-2">
+                    <a href="https://doi.org/10.1016/j.nxener.2026.100561" target="_blank" class="block h-48 bg-gradient-to-br from-blue-600/10 to-teal-500/20 dark:from-slate-700 dark:to-slate-600 flex flex-col items-center justify-center text-blue-700 dark:text-blue-300">
+                        <i class="fa-solid fa-car-battery text-5xl mb-2 opacity-80"></i>
+                        <span class="text-xs font-bold uppercase tracking-widest">3D CFD Thermal Modeling</span>
+                    </a>
+                    <div class="p-6 relative">
+                        <span class="absolute top-6 right-6 px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 text-xs font-extrabold rounded border border-green-200 dark:border-green-800"><i class="fa-solid fa-check-circle mr-1"></i>Completed</span>
+                        <h3 class="font-extrabold text-xl mb-2 text-gray-900 dark:text-white leading-tight pr-24">
+                            <a href="https://doi.org/10.1016/j.nxener.2026.100561" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Lithium-Ion Battery Thermal Management Systems (BTMS)</a>
+                        </h3>
+                        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">UGC Bangladesh Funded (FY 2024–2025)</p>
+                        <p class="text-sm text-gray-600 dark:text-slate-400 leading-relaxed mb-4">
+                            Executed transient 3D conjugate heat transfer and melting/solidification CFD simulations in ANSYS Fluent integrating fin-enhanced hybrid nano-PCMs, forced air convection, nanofluids, and Peltier thermoelectric modules for EV battery packs.
+                        </p>
+                        <a href="https://doi.org/10.1016/j.nxener.2026.100561" target="_blank" class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center">
+                            View Publication <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Project 4: Capacitive Deionization [P3] -->
+                <div class="project-card completed bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-2xl dark:hover:shadow-blue-900/20 border border-gray-100 dark:border-slate-700 overflow-hidden transform transition duration-300 hover:-translate-y-2">
+                    <a href="https://doi.org/10.1016/j.egyr.2026.109285" target="_blank" class="block h-48 bg-gradient-to-br from-teal-500/10 to-indigo-500/20 dark:from-slate-700 dark:to-slate-600 flex flex-col items-center justify-center text-teal-700 dark:text-teal-300">
+                        <i class="fa-solid fa-droplet text-5xl mb-2 opacity-80"></i>
+                        <span class="text-xs font-bold uppercase tracking-widest">Electrochemical Desalination</span>
+                    </a>
+                    <div class="p-6 relative">
+                        <span class="absolute top-6 right-6 px-3 py-1 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-400 text-xs font-extrabold rounded border border-green-200 dark:border-green-800"><i class="fa-solid fa-check-circle mr-1"></i>Completed</span>
+                        <h3 class="font-extrabold text-xl mb-2 text-gray-900 dark:text-white leading-tight pr-24">
+                            <a href="https://doi.org/10.1016/j.egyr.2026.109285" target="_blank" class="hover:text-blue-600 dark:hover:text-blue-400 transition">Capacitive Flow Ion Deionization &amp; Electrochemical Flow Capacitors</a>
+                        </h3>
+                        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-3">UGC Bangladesh Funded (FY 2024–2025)</p>
+                        <p class="text-sm text-gray-600 dark:text-slate-400 leading-relaxed mb-4">
+                            Evaluated symmetric and hybrid asymmetric electrode architectures to optimize ion transport, energy efficiency, and cost-effectiveness in sustainable capacitive deionization (CDI) water desalination.
+                        </p>
+                        <a href="https://doi.org/10.1016/j.egyr.2026.109285" target="_blank" class="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center">
+                            View Publication <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            
+            </div>
         </section>
 
+        <!-- ========================================== -->
+        <!-- 4. RESUME                                  -->
+        <!-- ========================================== -->
         <section id="resume" class="page-section hidden fade-in">
             <div class="flex flex-col md:flex-row justify-between items-center border-b-2 border-gray-200 dark:border-slate-700 pb-6 mb-10 gap-4">
                 <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white bg-gradient-to-r from-blue-600 to-teal-400 dark:from-blue-400 dark:to-teal-300 text-transparent bg-clip-text">Curriculum Vitae</h2>
-                <a href="https://www.linkedin.com/in/pranto38/" target="_blank" class="bg-blue-600 dark:bg-blue-500 text-white px-6 py-2.5 rounded-full shadow-lg hover:bg-blue-700 transition font-bold"><i class="fa-brands fa-linkedin mr-2"></i>Connect on LinkedIn</a>
+                <div class="flex flex-wrap justify-center gap-3">
+                    <a href="mmhp-cv.pdf" download="mmhp-cv.pdf" class="bg-gradient-to-r from-teal-500 to-blue-600 text-white px-6 py-2.5 rounded-full shadow-lg hover:shadow-teal-500/30 hover:from-teal-600 hover:to-blue-700 transition font-bold">
+                        <i class="fa-solid fa-file-arrow-down mr-2"></i>Download CV
+                    </a>
+                    <a href="https://www.linkedin.com/in/pranto38/" target="_blank" class="bg-blue-600 dark:bg-blue-500 text-white px-6 py-2.5 rounded-full shadow-lg hover:bg-blue-700 transition font-bold">
+                        <i class="fa-brands fa-linkedin mr-2"></i>Connect on LinkedIn
+                    </a>
+                </div>
             </div>
 
+            <!-- Education -->
             <div class="mb-12">
                 <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-6 flex items-center"><i class="fa-solid fa-graduation-cap text-blue-600 dark:text-blue-400 mr-3"></i>Education</h3>
                 
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-4 transition">
                     <div class="flex flex-col md:flex-row justify-between items-start mb-2">
                         <div>
-                            <h4 class="font-bold text-lg text-gray-900 dark:text-white">BSc. Eng. in Mechanical Engineering</h4>
-                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Rajshahi University of Engineering & Technology</p>
+                            <h4 class="font-bold text-lg text-gray-900 dark:text-white">B.Sc. in Mechanical Engineering</h4>
+                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Rajshahi University of Engineering &amp; Technology (RUET), Bangladesh</p>
                         </div>
-                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">Jan 2020 - July 2025</span>
+                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">Jan 2020 – Jul 2025</span>
                     </div>
-                    <p class="text-sm text-gray-600 dark:text-slate-300 mt-3"><span class="font-bold text-gray-800 dark:text-gray-200">Thesis:</span> Performance Analysis of PVT Integrated Hexagonal Solar Still for Enhanced Energy and Freshwater Production.</p>
+                    <!--<p class="text-sm text-gray-600 dark:text-slate-300 mt-2">
+                        <span class="font-bold text-gray-800 dark:text-gray-200">Academic Standing:</span> CGPA 3.72/4.00 (First Class; 78.40% equiv.) &bull; Last 4 Semesters GPA: 3.76/4.00 &bull; Class Rank: 10/188 (Top 5.3%).
+                    </p>-->
+                    <p class="text-sm text-gray-600 dark:text-slate-300 mt-2">
+                        <span class="font-bold text-gray-800 dark:text-gray-200">Undergraduate Thesis:</span> &ldquo;Performance Analysis of PVT Integrated Hexagonal Solar Still for Enhanced Energy and Freshwater Production&rdquo; (Advisor: Md. Golam Kibria). Yielded 3 Q1 journal publications.
+                    </p>
                 </div>
 
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-4 transition">
                     <div class="flex flex-col md:flex-row justify-between items-start mb-2">
                         <div>
                             <h4 class="font-bold text-lg text-gray-900 dark:text-white">HSC (Grade 12)</h4>
-                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Sylhet Cadet College</p>
+                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Sylhet Cadet College &bull;</p>
                         </div>
-                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">May 2017 - May 2019</span>
+                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">May 2017 – May 2019</span>
                     </div>
                 </div>
             </div>
 
+            <!-- Academic, Research & Industry Experience -->
             <div class="mb-12">
-                <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-6 flex items-center"><i class="fa-solid fa-briefcase text-teal-500 mr-3"></i>Experience</h3>
+                <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-6 flex items-center"><i class="fa-solid fa-briefcase text-teal-500 mr-3"></i>Teaching, Research &amp; Industry Experience</h3>
 
-				<div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-4 relative overflow-hidden">
-                    <div class="absolute left-0 top-0 w-1.5 h-full bg-blue-500"></div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-4 relative overflow-hidden">
+                    <div class="absolute left-0 top-0 w-1.5 h-full bg-blue-600"></div>
                     <div class="flex flex-col md:flex-row justify-between items-start mb-2 pl-2">
                         <div>
-                            <h4 class="font-bold text-lg text-gray-900 dark:text-white">Lecturer</h4>
-                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Dept. of Mechanical Engineering, Bangladesh Army University of Science & Technology (Khulna)</p>
+                            <h4 class="font-bold text-lg text-gray-900 dark:text-white">Lecturer, Department of Mechanical Engineering</h4>
+                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Bangladesh Army University of Science &amp; Technology (BAUST), Khulna</p>
                         </div>
-                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">August 2026 - Present</span>
+                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">Aug 2026 – Present</span>
                     </div>
-                    <!--<p class="text-sm text-gray-600 dark:text-slate-300 mt-2 pl-2"></p>-->
+                    <p class="text-sm text-gray-600 dark:text-slate-300 mt-2 pl-2">
+                        Design laboratory sessions, CAD exercises, and assessments; mentor undergraduate capstone design teams and serve as Moderator (Mechanical) for the BAUST Khulna Robotics Club.
+                    </p>
                 </div>
 
-				<div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-4 relative overflow-hidden">
-                    <div class="absolute left-0 top-0 w-1.5 h-full bg-blue-500"></div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-4 relative overflow-hidden">
+                    <div class="absolute left-0 top-0 w-1.5 h-full bg-teal-500"></div>
                     <div class="flex flex-col md:flex-row justify-between items-start mb-2 pl-2">
                         <div>
-                            <h4 class="font-bold text-lg text-gray-900 dark:text-white">Executive (Product & Category Management)</h4>
-                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Rangs Industries Ltd.</p>
+                            <h4 class="font-bold text-lg text-gray-900 dark:text-white">Product Analyst</h4>
+                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Rangs Industries Ltd., Dhaka</p>
                         </div>
-                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">Feb 2026 - July 2026</span>
+                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">Feb 2026 – Jul 2026</span>
                     </div>
-                    <!--<p class="text-sm text-gray-600 dark:text-slate-300 mt-2 pl-2"></p>-->
+                    <p class="text-sm text-gray-600 dark:text-slate-300 mt-2 pl-2">Conducted technical product evaluations, specification benchmarking, and category performance analytics across electronics and home appliance lines.</p>
                 </div>
                 
-				<div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-4 relative overflow-hidden">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-4 relative overflow-hidden">
                     <div class="absolute left-0 top-0 w-1.5 h-full bg-blue-500"></div>
                     <div class="flex flex-col md:flex-row justify-between items-start mb-2 pl-2">
                         <div>
                             <h4 class="font-bold text-lg text-gray-900 dark:text-white">Research Assistant</h4>
                             <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Kibria Research Lab</p>
                         </div>
-                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">Feb 2024 - June 2025</span>
+                        <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">Feb 2024 – Jun 2025</span>
                     </div>
-                    <p class="text-sm text-gray-600 dark:text-slate-300 mt-2 pl-2">Fabrication of PVT-SS and BTMS systems, material characterization, and data curation.</p>
+                    <p class="text-sm text-gray-600 dark:text-slate-300 mt-2 pl-2">Synthesis and characterization of hybrid nano-PCMs, experimental fabrication of PV/T solar desalination systems, 3D CFD BTMS simulations, and CDI electrode evaluations.</p>
                 </div>
 
                 <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 mb-4 relative overflow-hidden">
-                    <div class="absolute left-0 top-0 w-1.5 h-full bg-blue-500"></div>
+                    <div class="absolute left-0 top-0 w-1.5 h-full bg-indigo-500"></div>
                     <div class="flex flex-col md:flex-row justify-between items-start mb-2 pl-2">
                         <div>
-                            <h4 class="font-bold text-lg text-gray-900 dark:text-white">Production Management Intern</h4>
-                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Walton Hi-Tech Industries PLC</p>
+                            <h4 class="font-bold text-lg text-gray-900 dark:text-white">Production Management Intern (Industrial Attachment)</h4>
+                            <p class="text-blue-600 dark:text-blue-400 font-bold text-sm">Walton Hi-Tech Industries PLC, Gazipur</p>
                         </div>
                         <span class="text-sm text-gray-500 dark:text-slate-400 font-semibold mt-2 md:mt-0 bg-gray-50 dark:bg-slate-700 px-3 py-1 rounded-full">Mar 2024</span>
                     </div>
-                    <p class="text-sm text-gray-600 dark:text-slate-300 mt-2 pl-2">Learned thermoforming, injection moulding, CNC machining, EDM, supply chain, and QA/QC management.</p>
+                    <p class="text-sm text-gray-600 dark:text-slate-300 mt-2 pl-2">Completed production process training across Refrigerator, Air Conditioner, Electrical Appliance, and Compressor lines covering thermoforming, injection molding, CNC machining, EDM, supply chain operations, and QA/QC.</p>
                 </div>
             </div>
 
+            <!-- Courses Taught -->
             <div class="mb-12">
-                <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-6 flex items-center"><i class="fa-solid fa-bolt text-yellow-500 mr-3"></i>Software Skills</h3>
-                <div class="flex flex-wrap gap-3">
-                    <span class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm font-semibold shadow-sm text-gray-700 dark:text-slate-300">SolidWorks</span>
-                    <span class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm font-semibold shadow-sm text-gray-700 dark:text-slate-300">Ansys</span>
-                    <span class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm font-semibold shadow-sm text-gray-700 dark:text-slate-300">MATLAB</span>
-                    <span class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm font-semibold shadow-sm text-gray-700 dark:text-slate-300">Design Expert</span>
-                    <span class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm font-semibold shadow-sm text-gray-700 dark:text-slate-300">Origin Pro</span>
-                    <span class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm font-semibold shadow-sm text-gray-700 dark:text-slate-300">MS Excel</span>
-                    <span class="px-4 py-2 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-full text-sm font-semibold shadow-sm text-gray-700 dark:text-slate-300">MS Power Point</span>
+                <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-6 flex items-center">
+                    <i class="fa-solid fa-chalkboard-user text-indigo-500 mr-3"></i>Courses Taught
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">ME 343</span>
+                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300">L3/T1</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 dark:text-white text-base">Mechanics of Solids</h4>
+                        <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">BAUST Khulna</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">ME 260</span>
+                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300">L2/T2</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 dark:text-white text-base">Engineering Drawing II</h4>
+                        <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">BAUST Khulna</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">ME 233</span>
+                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300">L2/T2</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 dark:text-white text-base">Manufacturing Technology</h4>
+                        <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">BAUST Khulna</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">ME 245</span>
+                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300">L2/T1</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 dark:text-white text-base">Engineering Mechanics II</h4>
+                        <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">BAUST Khulna</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-md transition">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-blue-600 dark:text-blue-400">ME 101</span>
+                            <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-slate-300">L1/T1</span>
+                        </div>
+                        <h4 class="font-bold text-gray-900 dark:text-white text-base">Introduction to Mechanical Engineering</h4>
+                        <p class="text-xs text-gray-500 dark:text-slate-400 mt-1">BAUST Khulna</p>
+                    </div>
+
                 </div>
             </div>
+
+            <!-- Technical & Experimental Skills -->
+            <div class="mb-12">
+                <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-6 flex items-center"><i class="fa-solid fa-bolt text-yellow-500 mr-3"></i>Technical &amp; Experimental Skills</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                        <h4 class="font-bold text-blue-600 dark:text-blue-400 text-sm uppercase tracking-wider mb-2"><i class="fa-solid fa-laptop-code mr-2"></i>Simulation &amp; Modeling</h4>
+                        <p class="text-sm text-gray-600 dark:text-slate-300">ANSYS Fluent (3D CFD, Conjugate Heat Transfer, Multiphase &amp; PCM Solidification/Melting), Design-Expert (RSM/ANOVA).</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                        <h4 class="font-bold text-teal-600 dark:text-teal-400 text-sm uppercase tracking-wider mb-2"><i class="fa-solid fa-flask mr-2"></i>Experimental &amp; Analytical</h4>
+                        <p class="text-sm text-gray-600 dark:text-slate-300">PerkinElmer DSC 8000, PerkinElmer TGA 4000, Shimadzu IRTracer-100 FTIR, DTC-25 Thermal Conductivity Tester (ASTM E1530), FLIR ONE Pro Thermography, Arduino Uno R3 DAQ (DS18B20), Hukseflux LP02 Pyranometry.</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                        <h4 class="font-bold text-indigo-600 dark:text-indigo-400 text-sm uppercase tracking-wider mb-2"><i class="fa-solid fa-drafting-compass mr-2"></i>CAD &amp; Mechanical Design</h4>
+                        <p class="text-sm text-gray-600 dark:text-slate-300">SolidWorks (3D Solid Modeling, Assemblies, Engineering Drawings), AutoCAD.</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                        <h4 class="font-bold text-amber-600 dark:text-amber-400 text-sm uppercase tracking-wider mb-2"><i class="fa-solid fa-chart-line mr-2"></i>Data Analysis &amp; Tools</h4>
+                        <p class="text-sm text-gray-600 dark:text-slate-300">OriginPro, Microsoft Excel.</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Honors & Awards -->
+            <!--<div class="mb-12">
+                <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-6 flex items-center"><i class="fa-solid fa-trophy text-amber-500 mr-3"></i>Honors &amp; Awards</h3>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                    <ul class="space-y-3 text-sm text-gray-600 dark:text-slate-300">
+                        <li class="flex items-start"><i class="fa-solid fa-award text-blue-500 mt-1 mr-3"></i><span><strong class="text-gray-900 dark:text-white">Dean's Award, RUET:</strong> Awarded in 4 semesters for achieving semester GPA above 3.75/4.00 (3.77, 3.79, 3.76, and 3.77).</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-award text-blue-500 mt-1 mr-3"></i><span><strong class="text-gray-900 dark:text-white">Research Grant Support, RUET &amp; UGC:</strong> Supported as Undergraduate Research Assistant on a RUET &amp; UGC-funded desalination grant (2024–2025).</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-award text-blue-500 mt-1 mr-3"></i><span><strong class="text-gray-900 dark:text-white">Leadership Award (Class Representative), RUET:</strong> Recognized by the Dept. of Mechanical Engineering for student leadership and academic coordination.</span></li>
+                        <li class="flex items-start"><i class="fa-solid fa-award text-blue-500 mt-1 mr-3"></i><span><strong class="text-gray-900 dark:text-white">Bangladesh Education Board Scholarship (SSC &amp; HSC):</strong> Merit scholarships from BISE Sylhet for achieving GPA 5.00/5.00 in both HSC (2019) and SSC (2017) at Sylhet Cadet College.</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Academic References -->
+            <!--<div class="mb-6">
+                <h3 class="text-xl font-extrabold text-gray-900 dark:text-white mb-6 flex items-center"><i class="fa-solid fa-user-tie text-blue-600 dark:text-blue-400 mr-3"></i>Academic References</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                        <h4 class="font-bold text-gray-900 dark:text-white text-base">Md. Golam Kibria</h4>
+                        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Thesis Supervisor &amp; Co-Author</p>
+                        <p class="text-xs text-gray-600 dark:text-slate-400 mb-2">Assistant Professor (On Leave), Dept. of ME, RUET<br>Ph.D. Student, CEE Lab, UC Davis</p>
+                        <p class="text-xs text-gray-500 dark:text-slate-400"><i class="fa-solid fa-envelope mr-1"></i>mdkibria@ucdavis.edu</p>
+                        <p class="text-xs text-gray-500 dark:text-slate-400"><i class="fa-solid fa-phone mr-1"></i>+1 (530) 376-9262</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                        <h4 class="font-bold text-gray-900 dark:text-white text-base">Dr. Monjur Mourshed</h4>
+                        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Research Mentor &amp; Co-Author</p>
+                        <p class="text-xs text-gray-600 dark:text-slate-400 mb-2">Associate Professor (On Leave), Dept. of ME, RUET<br>Postdoc Fellow, Arrhenius Lab, Stockholm U.</p>
+                        <p class="text-xs text-gray-500 dark:text-slate-400"><i class="fa-solid fa-envelope mr-1"></i>monjur.mourshed@su.se</p>
+                        <p class="text-xs text-gray-500 dark:text-slate-400"><i class="fa-solid fa-phone mr-1"></i>+46 76 449 50 41</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+                        <h4 class="font-bold text-gray-900 dark:text-white text-base">Dr. Shahajada Mahmudul Hasan</h4>
+                        <p class="text-xs font-semibold text-blue-600 dark:text-blue-400 mb-2">Head of Department</p>
+                        <p class="text-xs text-gray-600 dark:text-slate-400 mb-2">Professor, Dept. of ME,<br>RUET, Rajshahi-6204, Bangladesh</p>
+                        <p class="text-xs text-gray-500 dark:text-slate-400"><i class="fa-solid fa-envelope mr-1"></i>smhasan@me.ruet.ac.bd</p>
+                        <p class="text-xs text-gray-500 dark:text-slate-400"><i class="fa-solid fa-phone mr-1"></i>+880-1781-621509</p>
+                    </div> 					
+                </div>
+            </div>--> 
         </section>
 
+        <!-- ========================================== -->
+        <!-- 5. CONTACT                                 -->
+        <!-- ========================================== -->
         <section id="contact" class="page-section hidden fade-in max-w-3xl mx-auto">
             <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-10 text-center bg-gradient-to-r from-blue-600 to-teal-400 dark:from-blue-400 dark:to-teal-300 text-transparent bg-clip-text">Get in Touch</h2>
             
@@ -421,9 +720,16 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left max-w-xl mx-auto mb-8">
                     <div class="flex items-start">
+                        <i class="fa-solid fa-building-columns mt-1 text-teal-500 mr-4 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white">Affiliation</h4>
+                            <p class="text-gray-600 dark:text-slate-400 text-sm">Dept. of Mechanical Engineering,<br>BAUST, Khulna, Bangladesh</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
                         <i class="fa-solid fa-location-dot mt-1 text-blue-500 mr-4 text-xl"></i>
                         <div>
-                            <h4 class="font-bold text-gray-900 dark:text-white">Address</h4>
+                            <h4 class="font-bold text-gray-900 dark:text-white">Permanent Address</h4>
                             <p class="text-gray-600 dark:text-slate-400 text-sm">Ward 26, Gazipur City Corp.,<br>Gazipur-1700, Bangladesh</p>
                         </div>
                     </div>
@@ -431,7 +737,18 @@
                         <i class="fa-solid fa-phone mt-1 text-green-500 mr-4 text-xl"></i>
                         <div>
                             <h4 class="font-bold text-gray-900 dark:text-white">Phone</h4>
-                            <p class="text-gray-600 dark:text-slate-400 text-sm">+8801886381983</p>
+                            <p class="text-gray-600 dark:text-slate-400 text-sm">+880 1886-381983</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <i class="fa-solid fa-globe mt-1 text-indigo-500 mr-4 text-xl"></i>
+                        <div>
+                            <h4 class="font-bold text-gray-900 dark:text-white">Academic Profiles</h4>
+                            <p class="text-gray-600 dark:text-slate-400 text-sm">
+                                <a href="https://orcid.org/0009-0007-8256-9004" target="_blank" class="hover:text-blue-500 underline">ORCID</a> &bull;
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=59565800300" target="_blank" class="hover:text-blue-500 underline">Scopus</a> &bull;
+                                <a href="https://scholar.google.com/citations?user=pw2RlncAAAAJ&hl=en" target="_blank" class="hover:text-blue-500 underline">Scholar</a>
+                            </p>
                         </div>
                     </div>
                 </div>
