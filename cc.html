@@ -54,6 +54,26 @@
       display: block;
     }
 
+    /* 0ms instant visibility transitions on all protection shields (no fade-out delay) */
+    .instant-shield {
+      transition: none !important;
+      animation: none !important;
+    }
+
+    /* Interactive reading stage: block native scroll/zoom bounce when dragging the reading strip */
+    .reading-stage-lock {
+      touch-action: none;
+      overscroll-behavior: contain;
+    }
+
+    /* Reading Band dark heavily-blurred shutters */
+    .band-shutter {
+      background-color: rgba(2, 6, 23, 0.96);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      transition: none !important;
+    }
+
     /* Print protection: produce a completely blank page if printed */
     @media print {
       html, body, * {
@@ -91,7 +111,6 @@
         <p class="leading-snug">
           Time window &amp; online clock checks are bypassed, and built-in sample slides render if PDFs are missing.
           <strong class="font-semibold">Set <code class="font-mono bg-amber-100 px-1 rounded">PREVIEW_MODE: false</code> before publishing to GitHub Pages.</strong>
-          <span class="text-amber-800 ml-1">(Demo codes: <code class="font-mono font-semibold">101101</code> / <code class="font-mono font-semibold">343343</code>)</span>
         </p>
       </div>
       <button
@@ -214,9 +233,6 @@
           <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
             Select a Course
           </h2>
-          <p class="text-sm sm:text-base text-slate-600 mt-1">
-            Enter your 6-digit course passcode to view released lecture slides. Daily viewing window: <strong id="window-text-inline" class="text-slate-900">5:00 PM – 8:00 PM BDT</strong>.
-          </p>
         </div>
 
         <!-- Quick Policy Badge -->
@@ -224,7 +240,7 @@
           <svg class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
           </svg>
-          <span>Online view-only &bull; Watermarked &bull; No downloads or printing</span>
+          <span>Online view-only &bull; Watermarked &bull; Anti-capture protected</span>
         </div>
       </div>
 
@@ -290,10 +306,10 @@
     </section>
 
     <!-- ------------------------------------------------------------------- -->
-    <!-- VIEW 4: PROTECTED PDF-TO-CANVAS VIEWER                              -->
+    <!-- VIEW 4: PROTECTED PDF-TO-CANVAS VIEWER (UPGRADED ANTI-CAPTURE)      -->
     <!-- ------------------------------------------------------------------- -->
     <section id="view-viewer" class="hidden">
-      <!-- Viewer Toolbar -->
+      <!-- Viewer Top Toolbar (Strictly outside Hold-to-View stage) -->
       <div class="bg-slate-900 text-white rounded-t-2xl border border-slate-800 px-3 sm:px-5 py-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
         <!-- Left: Back & Title -->
         <div class="flex items-center gap-2.5 min-w-0">
@@ -322,10 +338,10 @@
           </div>
         </div>
 
-        <!-- Right: Page Controls, Zoom Controls, Lock/Exit -->
+        <!-- Right: Desktop/Tablet Page Controls, Zoom Controls, Lock/Exit -->
         <div class="flex flex-wrap items-center justify-between lg:justify-end gap-2">
-          <!-- Page Navigation -->
-          <div class="flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
+          <!-- Page Navigation (Hidden on very small mobile where sticky bottom bar handles it) -->
+          <div class="hidden md:flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
             <button
               id="btn-prev-page"
               type="button"
@@ -347,8 +363,8 @@
             </button>
           </div>
 
-          <!-- Zoom Controls -->
-          <div class="flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
+          <!-- Zoom Controls (Desktop/Tablet) -->
+          <div class="hidden md:flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
             <button
               id="btn-zoom-out"
               type="button"
@@ -379,7 +395,7 @@
           <button
             id="btn-viewer-exit"
             type="button"
-            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs sm:text-sm font-semibold transition cursor-pointer"
+            class="ml-auto md:ml-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs sm:text-sm font-semibold transition cursor-pointer"
             title="Lock Course and Exit"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -390,10 +406,10 @@
         </div>
       </div>
 
-      <!-- Canvas Stage -->
+      <!-- Canvas Stage Container -->
       <div
         id="viewer-stage"
-        class="stage-scroll relative bg-slate-800 border-x border-b border-slate-700 rounded-b-2xl min-h-[60vh] max-h-[78vh] overflow-auto flex flex-col items-center justify-center p-3 sm:p-6"
+        class="stage-scroll relative bg-slate-900 border-x border-b border-slate-700 rounded-b-2xl md:rounded-b-2xl min-h-[58vh] max-h-[76vh] overflow-auto flex flex-col items-center justify-center p-2.5 sm:p-5"
       >
         <!-- Loading State -->
         <div id="viewer-loading" class="hidden flex-col items-center justify-center text-slate-200 py-16">
@@ -402,7 +418,7 @@
         </div>
 
         <!-- Error State (Production 404 or unreadable PDF) -->
-        <div id="viewer-error" class="hidden max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-6 text-center text-slate-200 my-10">
+        <div id="viewer-error" class="hidden max-w-md bg-slate-950 border border-slate-700 rounded-2xl p-6 text-center text-slate-200 my-10">
           <div class="w-12 h-12 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center mx-auto mb-3">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
@@ -421,17 +437,144 @@
           </button>
         </div>
 
-        <!-- Protected Canvas Container (with transparent top shield against save/drag) -->
-        <div id="canvas-wrapper" class="relative hidden shadow-2xl rounded-lg overflow-hidden bg-white max-w-full">
-          <canvas id="slide-canvas"></canvas>
-          <div class="absolute inset-0 z-10 bg-transparent" aria-hidden="true"></div>
+        <!-- Protected Interactive Canvas Wrapper -->
+        <div
+          id="canvas-wrapper"
+          class="instant-shield reading-stage-lock relative hidden shadow-2xl rounded-xl overflow-hidden bg-slate-950 max-w-full cursor-pointer select-none"
+        >
+          <!-- Actual PDF / Sample Canvas (hidden via visibility:hidden until Hold-to-View is active) -->
+          <canvas id="slide-canvas" class="instant-shield"></canvas>
+
+          <!-- Transparent Top Interaction Shield (blocks long-press/save/drag directly over canvas) -->
+          <div id="canvas-touch-shield" class="absolute inset-0 z-10 bg-transparent" aria-hidden="true"></div>
+
+          <!-- READING BAND OVERLAY (Two heavily blurred opaque shutters + cyan guides + live ticking stamp) -->
+          <div id="reading-band-layer" class="instant-shield hidden absolute inset-0 z-20 pointer-events-none overflow-hidden">
+            <!-- Top Obscuring Shutter -->
+            <div
+              id="band-shutter-top"
+              class="band-shutter instant-shield absolute top-0 left-0 right-0 border-b-2 border-cyan-400/75"
+              style="height: 33%;"
+            ></div>
+
+            <!-- Live Ticking Second Watermark Strip inside the active clear reading band -->
+            <div
+              id="band-live-strip"
+              class="instant-shield absolute right-2 sm:right-3 px-2 py-0.5 rounded bg-slate-950/65 border border-cyan-400/35 text-cyan-200 font-mono text-[10px] sm:text-xs font-semibold tracking-tight shadow-sm"
+              style="top: 34%;"
+            >
+              ME • SES-000000 • --:--:-- BDT
+            </div>
+
+            <!-- Bottom Obscuring Shutter -->
+            <div
+              id="band-shutter-bottom"
+              class="band-shutter instant-shield absolute bottom-0 left-0 right-0 border-t-2 border-cyan-400/75"
+              style="height: 33%;"
+            ></div>
+          </div>
+
+          <!-- HOLD-TO-VIEW SOLID OPAQUE VEIL (0ms instant reveal/hide) -->
+          <div
+            id="hold-veil"
+            class="instant-shield hidden absolute inset-0 z-30 bg-[#020617] flex flex-col items-center justify-center p-5 sm:p-8 text-center text-white"
+          >
+            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-slate-900 border border-sky-500/40 text-sky-400 flex items-center justify-center mb-4 shadow-lg">
+              <svg class="w-7 h-7 sm:w-8 sm:h-8" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            </div>
+            <h4 class="text-base sm:text-xl font-bold tracking-tight text-white">
+              Press &amp; Hold to View Slide
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-300 mt-1.5 max-w-md leading-relaxed">
+              Slide finger/mouse vertically to move reading window &bull; Release hides immediately
+            </p>
+            <div class="mt-4 inline-flex flex-wrap items-center justify-center gap-2 text-[11px] sm:text-xs font-mono text-sky-300 bg-slate-900/90 border border-slate-700 px-3 py-1.5 rounded-xl">
+              <span>Desktop: Hold Left-Click or Spacebar</span>
+              <span class="text-slate-600">|</span>
+              <span>Mobile: 1-Finger Hold</span>
+            </div>
+          </div>
+
+          <!-- MULTI-TOUCH / 3-FINGER SCREENSHOT GESTURE LOCKDOWN VEIL (2-second block) -->
+          <div
+            id="multitouch-veil"
+            class="instant-shield hidden absolute inset-0 z-40 bg-[#020617] flex flex-col items-center justify-center p-6 text-center text-white"
+          >
+            <div class="w-14 h-14 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-400 flex items-center justify-center mb-3">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+              </svg>
+            </div>
+            <h4 class="text-base sm:text-lg font-bold text-rose-300">
+              Multi-touch / screenshot gesture blocked
+            </h4>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1 max-w-sm">
+              Use only a single finger to hold and read slides. Pausing briefly...
+            </p>
+          </div>
         </div>
       </div>
 
-      <!-- Subtle Keyboard / Touch Hint -->
-      <div class="mt-2.5 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 px-1">
-        <span>Use <strong class="text-slate-700">&larr; / &rarr;</strong> arrow keys or swipe horizontally to navigate pages.</span>
-        <span class="font-mono" id="viewer-watermark-info">Watermark Active</span>
+      <!-- DEDICATED MOBILE STICKY BOTTOM NAVIGATION BAR (Strictly outside hold-to-view stage) -->
+      <div
+        id="mobile-viewer-bar"
+        class="md:hidden sticky bottom-2 z-20 mt-3 bg-slate-900/95 backdrop-blur-md text-white border border-slate-700 rounded-2xl shadow-xl px-2.5 py-2 flex items-center justify-between gap-2"
+      >
+        <!-- Prev / Page Counter / Next -->
+        <div class="flex items-center gap-1.5">
+          <button
+            id="btn-mobile-prev"
+            type="button"
+            class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-xs font-bold text-slate-100 disabled:opacity-35 transition cursor-pointer"
+          >
+            &larr; Prev
+          </button>
+          <span id="mobile-page-counter" class="font-mono text-xs font-bold px-2 text-sky-300 select-none whitespace-nowrap">
+            1 / 1
+          </span>
+          <button
+            id="btn-mobile-next"
+            type="button"
+            class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 active:bg-slate-600 text-xs font-bold text-slate-100 disabled:opacity-35 transition cursor-pointer"
+          >
+            Next &rarr;
+          </button>
+        </div>
+
+        <!-- Mobile Zoom Controls -->
+        <div class="flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
+          <button
+            id="btn-mobile-zoom-out"
+            type="button"
+            class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-100 active:bg-slate-700 font-bold text-sm cursor-pointer"
+            aria-label="Zoom Out"
+          >
+            &minus;
+          </button>
+          <span id="mobile-zoom-label" class="font-mono text-[11px] font-semibold px-1.5 text-slate-200 select-none">
+            100%
+          </span>
+          <button
+            id="btn-mobile-zoom-in"
+            type="button"
+            class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-100 active:bg-slate-700 font-bold text-sm cursor-pointer"
+            aria-label="Zoom In"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <!-- Viewer Footer: Active Protection Status Pill & Session Info -->
+      <div class="mt-3 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 px-1">
+        <div id="protection-status-pill" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-900 text-sky-300 border border-slate-700 font-medium text-[11px]">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span id="protection-status-text">Hold-to-View &bull; Reading Band &bull; Anti-Capture Active</span>
+        </div>
+        <span class="font-mono text-slate-600" id="viewer-watermark-info">Watermark Active</span>
       </div>
     </section>
 
@@ -524,15 +667,15 @@
   </div>
 
   <!-- ===================================================================== -->
-  <!-- PRIVACY CURTAIN OVERLAY (Focus Loss / Screenshot / DevTools Shield)   -->
+  <!-- SOLID OPAQUE PRIVACY CURTAIN (0ms Instant Trigger, Zero Transparency) -->
   <!-- ===================================================================== -->
-  <div id="privacy-curtain" class="hidden fixed inset-0 z-[9999] bg-slate-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center text-white">
+  <div id="privacy-curtain" class="instant-shield hidden fixed inset-0 z-[9999] bg-[#020617] flex flex-col items-center justify-center p-6 text-center text-white">
     <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-700 flex items-center justify-center mb-5 shadow-lg">
       <svg class="w-8 h-8 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
       </svg>
     </div>
-    <h2 class="text-xl sm:text-2xl font-bold tracking-tight">Protected View — Content Hidden</h2>
+    <h2 class="text-xl sm:text-2xl font-bold tracking-tight">Protected View</h2>
     <p id="curtain-reason" class="text-sm sm:text-base text-slate-300 mt-2 max-w-md leading-relaxed">
       Viewing paused because the window lost focus or a restricted action was detected.
     </p>
@@ -566,8 +709,8 @@
      *   1. Export your PowerPoint slides as PDF and put them inside a folder
      *      named `slide/` next to this `index.html` file.
      *   2. Update the file paths, opening dates, and 6-digit passcodes below.
-     *   3. Change `PREVIEW_MODE` from `true` to `false`.
-     *   4. Commit & push `index.html` and the `slide/` folder to GitHub Pages.
+     *   3. Keep `PREVIEW_MODE: false` for live GitHub Pages deployment.
+     *   4. Toggle any individual anti-capture layer in `PROTECTION` as desired.
      * ======================================================================= */
     const TEACHER_CONFIG = {
       // Set to false before uploading to GitHub Pages. When true, bypasses the
@@ -589,6 +732,27 @@
         endMin: 0
       },
 
+      // Multi-layered Anti-Screenshot & Anti-Capture Protection Toggles
+      PROTECTION: {
+        // Slide stays hidden behind solid opaque veil until student presses & holds
+        HOLD_TO_VIEW: true,
+
+        // Only a movable horizontal strip of the slide is visible at once
+        READING_BAND_MODE: true,
+
+        // Clear reading window height as percentage of slide height
+        BAND_HEIGHT_PERCENT: 34,
+
+        // Instantly black out slide if 2+ fingers touch screen (blocks 3-finger Android screenshot)
+        BLOCK_MULTITOUCH: true,
+
+        // Instantly raise 0ms opaque curtain on Meta/Win/Cmd/Alt/Ctrl/PrintScreen/F12 or mouseleave
+        INSTANT_MODIFIER_SHIELD: true,
+
+        // Dual-tone baked-in canvas watermark (white halo + strong dark fill ~0.24 opacity)
+        HEAVY_DUAL_WATERMARK: true
+      },
+
       // Course catalog: add or edit courses and their PDF decks inside slide/
       // Date format for `opens`: "YYYY-MM-DD" (opens 00:00 BDT) or "YYYY-MM-DDTHH:MM" (BDT)
       COURSES: [
@@ -596,7 +760,6 @@
           id: "me101",
           code: "ME 101",
           title: "Introduction to Mechanical Engineering",
- 
           password: "381983",
           slides: [
             {
@@ -629,7 +792,6 @@
           id: "me343",
           code: "ME 343",
           title: "Mechanics of Solids",
-          
           password: "381976",
           slides: [
             {
@@ -676,6 +838,7 @@
       // Constants for Bangladesh Standard Time (UTC+6)
       const BDT_OFFSET_MS = 6 * 60 * 60 * 1000;
       const BDT_TZ_OFFSET_MINUTES = -360; // JS getTimezoneOffset() for UTC+6 is -360
+      const PROT = TEACHER_CONFIG.PROTECTION;
 
       // Internal application state
       const state = {
@@ -698,12 +861,19 @@
         renderTask: null,
         isRendering: false,
         renderQueued: false,
-        // Protection state
-        curtainReason: null,        // null | 'blur' | 'screenshot' | 'devtools' | 'print'
+        canvasWiped: false,
+        // Anti-capture / Hold-to-View / Reading Band state
+        isHoldingMouse: false,
+        isHoldingTouch: false,
+        isHoldingSpace: false,
+        multitouchLocked: false,
+        multitouchTimer: null,
+        bandCenterRatio: 0.35,      // Vertical center position [0..1] of reading band
+        lastMouseClientY: null,
+        // Privacy Curtain state
+        curtainReason: null,        // null | 'blur' | 'screenshot' | 'devtools' | 'print' | 'modifier' | 'mouseleave'
         devToolsOpen: false,
-        toastTimer: null,
-        touchStartX: 0,
-        touchStartY: 0
+        toastTimer: null
       };
 
       // DOM element references
@@ -752,14 +922,30 @@
         btnZoomReset: document.getElementById('btn-zoom-reset'),
         btnZoomIn: document.getElementById('btn-zoom-in'),
         btnViewerExit: document.getElementById('btn-viewer-exit'),
+
+        btnMobilePrev: document.getElementById('btn-mobile-prev'),
+        btnMobileNext: document.getElementById('btn-mobile-next'),
+        mobilePageCounter: document.getElementById('mobile-page-counter'),
+        btnMobileZoomOut: document.getElementById('btn-mobile-zoom-out'),
+        btnMobileZoomIn: document.getElementById('btn-mobile-zoom-in'),
+        mobileZoomLabel: document.getElementById('mobile-zoom-label'),
+
         viewerStage: document.getElementById('viewer-stage'),
         viewerLoading: document.getElementById('viewer-loading'),
         viewerError: document.getElementById('viewer-error'),
         viewerErrorTitle: document.getElementById('viewer-error-title'),
         viewerErrorMsg: document.getElementById('viewer-error-msg'),
         btnErrorBack: document.getElementById('btn-error-back'),
+
         canvasWrapper: document.getElementById('canvas-wrapper'),
         canvas: document.getElementById('slide-canvas'),
+        readingBandLayer: document.getElementById('reading-band-layer'),
+        bandShutterTop: document.getElementById('band-shutter-top'),
+        bandShutterBottom: document.getElementById('band-shutter-bottom'),
+        bandLiveStrip: document.getElementById('band-live-strip'),
+        holdVeil: document.getElementById('hold-veil'),
+        multitouchVeil: document.getElementById('multitouch-veil'),
+        protectionStatusText: document.getElementById('protection-status-text'),
         viewerWatermarkInfo: document.getElementById('viewer-watermark-info'),
 
         modalPassword: document.getElementById('modal-password'),
@@ -785,29 +971,27 @@
        * 3. BANGLADESH TIME (UTC+6) & DATE UTILITIES
        * ===================================================================== */
 
-      /** Returns the authoritative current UTC epoch milliseconds. */
+      /** Returns authoritative UTC epoch ms synced with server offset. */
       function getNowUtcMs() {
         return Date.now() + state.serverOffsetMs;
       }
 
-      /** Returns a Date object shifted so its UTC getters represent BDT (UTC+6). */
+      /** Returns a Date shifted so UTC getters represent BDT (UTC+6). */
       function getBdtShiftedDate(utcMs = getNowUtcMs()) {
         return new Date(utcMs + BDT_OFFSET_MS);
       }
 
-      /** Pads an integer to 2 digits. */
       function pad2(n) {
         return String(n).padStart(2, '0');
       }
 
-      /** Formats 24h hour/minute into 12-hour readable string (e.g., "5:00 PM"). */
       function format12Hour(hour, minute) {
         const suffix = hour >= 12 ? 'PM' : 'AM';
         const h12 = hour % 12 === 0 ? 12 : hour % 12;
         return `${h12}:${pad2(minute)} ${suffix}`;
       }
 
-      /** Formats current BDT time as "HH:MM:SS PM BDT" for the header clock. */
+      /** Formats current BDT time as "HH:MM:SS AM/PM BDT". */
       function formatLiveBdtClock(utcMs = getNowUtcMs()) {
         const d = getBdtShiftedDate(utcMs);
         const h = d.getUTCHours();
@@ -816,6 +1000,12 @@
         const suffix = h >= 12 ? 'PM' : 'AM';
         const h12 = h % 12 === 0 ? 12 : h % 12;
         return `${pad2(h12)}:${pad2(m)}:${pad2(s)} ${suffix} BDT`;
+      }
+
+      /** Formats 24-hour ticking time with seconds for the reading-band live strip. */
+      function formatBdtSeconds24(utcMs = getNowUtcMs()) {
+        const d = getBdtShiftedDate(utcMs);
+        return `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())}:${pad2(d.getUTCSeconds())} BDT`;
       }
 
       /** Formats BDT timestamp for baked-in watermark: "YYYY-MM-DD HH:MM BDT". */
@@ -827,10 +1017,7 @@
         );
       }
 
-      /**
-       * Parses a slide's `opens` string ("YYYY-MM-DD" or "YYYY-MM-DDTHH:MM")
-       * explicitly as Bangladesh Standard Time (UTC+6) and returns UTC epoch ms.
-       */
+      /** Parses `opens` string ("YYYY-MM-DD" or "YYYY-MM-DDTHH:MM") explicitly as BDT (UTC+6). */
       function parseBdtOpenStringToUtcMs(str) {
         if (!str || typeof str !== 'string') return 0;
         const trimmed = str.trim();
@@ -842,11 +1029,9 @@
         const hour = match[4] !== undefined ? parseInt(match[4], 10) : 0;
         const min = match[5] !== undefined ? parseInt(match[5], 10) : 0;
         const sec = match[6] !== undefined ? parseInt(match[6], 10) : 0;
-        // Convert BDT wall-clock components to real UTC timestamp
         return Date.UTC(year, month, day, hour, min, sec) - BDT_OFFSET_MS;
       }
 
-      /** Formats an `opens` date string nicely (e.g., "Dec 5, 2026" or "Dec 12, 2026, 5:00 PM BDT"). */
       function formatOpenDateLabel(str) {
         const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const match = (str || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/);
@@ -862,12 +1047,10 @@
         return `${month} ${day}, ${year}`;
       }
 
-      /** Checks if a given slide deck is open right now in BDT. */
       function isSlideOpen(slide, utcMs = getNowUtcMs()) {
         return utcMs >= parseBdtOpenStringToUtcMs(slide.opens);
       }
 
-      /** Checks if current BDT time is inside TEACHER_CONFIG.DAILY_WINDOW. */
       function isWithinDailyWindow(utcMs = getNowUtcMs()) {
         const d = getBdtShiftedDate(utcMs);
         const curMins = d.getUTCHours() * 60 + d.getUTCMinutes();
@@ -876,7 +1059,6 @@
         return curMins >= startMins && curMins < endMins;
       }
 
-      /** Returns a human-readable string describing when the daily window opens next. */
       function getNextWindowOpenLabel(utcMs = getNowUtcMs()) {
         const d = getBdtShiftedDate(utcMs);
         const curMins = d.getUTCHours() * 60 + d.getUTCMinutes();
@@ -888,7 +1070,6 @@
         return `Tomorrow at ${startStr} BDT`;
       }
 
-      /** Generates a random session ID like "SES-7K4M9P" on course login. */
       function generateSessionCode() {
         const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
         let out = 'SES-';
@@ -898,8 +1079,16 @@
         return out;
       }
 
+      function isViewerActive() {
+        return !el.viewViewer.classList.contains('hidden');
+      }
+
+      function isHoldingActive() {
+        return state.isHoldingMouse || state.isHoldingTouch || state.isHoldingSpace;
+      }
+
       /* =====================================================================
-       * 4. UI HELPERS (Toasts, View Switching, Header Clock)
+       * 4. UI HELPERS (Toasts, View Switching, Header Clock, Status Pill)
        * ===================================================================== */
 
       function showToast(message) {
@@ -927,9 +1116,30 @@
         if (viewName === 'viewer') el.viewViewer.classList.remove('hidden');
       }
 
+      function updateProtectionStatusPill() {
+        const labels = [];
+        if (PROT.HOLD_TO_VIEW) labels.push('Hold-to-View');
+        if (PROT.READING_BAND_MODE) labels.push(`Reading Band (${PROT.BAND_HEIGHT_PERCENT}%)`);
+        if (PROT.INSTANT_MODIFIER_SHIELD || PROT.BLOCK_MULTITOUCH) labels.push('Anti-Capture Active');
+        if (labels.length === 0) labels.push('Standard Watermarked View');
+        el.protectionStatusText.textContent = labels.join(' • ');
+      }
+
+      function updateReadingBandLiveStrip(utcMs = getNowUtcMs()) {
+        if (!state.activeCourse) return;
+        const code = state.activeCourse.code;
+        const ses = state.sessionCodes[state.activeCourse.id] || 'SES-000000';
+        el.bandLiveStrip.textContent = `${code} • ${ses} • ${formatBdtSeconds24(utcMs)}`;
+      }
+
       function updateHeaderClockAndBadge() {
         const nowMs = getNowUtcMs();
         el.liveClock.textContent = formatLiveBdtClock(nowMs);
+
+        // Also update ticking second inside the reading band strip
+        if (isViewerActive()) {
+          updateReadingBandLiveStrip(nowMs);
+        }
 
         const startStr = format12Hour(TEACHER_CONFIG.DAILY_WINDOW.startHour, TEACHER_CONFIG.DAILY_WINDOW.startMin);
         const endStr = format12Hour(TEACHER_CONFIG.DAILY_WINDOW.endHour, TEACHER_CONFIG.DAILY_WINDOW.endMin);
@@ -959,7 +1169,6 @@
           el.windowStatusText.textContent = `Open (${startStr}–${endStr})`;
         }
 
-        // Keep lockout time display live if currently visible
         if (!el.viewLockout.classList.contains('hidden')) {
           el.lockoutCurrentBdt.textContent = formatLiveBdtClock(nowMs);
           el.lockoutNextOpen.textContent = getNextWindowOpenLabel(nowMs);
@@ -972,7 +1181,7 @@
 
       function triggerLockout(reason) {
         state.lockoutReason = reason;
-        // Immediately wipe canvas and close any active viewer/modal
+        releaseAllHolds();
         wipeCanvas();
         destroyActivePdf();
         closePasswordModal();
@@ -993,7 +1202,6 @@
             'Turn on automatic date, time, and Bangladesh time zone (UTC+6) in your device settings, then reload.';
           el.lockoutTimePanel.classList.add('hidden');
         } else {
-          // 'window'
           el.lockoutIconWrap.className = 'w-16 h-16 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center mx-auto mb-5';
           el.lockoutTitle.textContent = 'Access Window Closed';
           el.lockoutMessage.textContent =
@@ -1007,12 +1215,7 @@
         updateHeaderClockAndBadge();
       }
 
-      /**
-       * Verifies online server UTC time, device clock drift, Bangladesh timezone,
-       * and daily access window. Runs on startup and every 20 seconds.
-       */
       async function verifyTimeAndAccess(isInitial = false) {
-        // Preview Mode handling
         if (state.previewMode) {
           state.serverOffsetMs = 0;
           state.timeVerified = true;
@@ -1030,13 +1233,11 @@
           return true;
         }
 
-        // Production Mode: Block immediately if browser reports offline
         if (!navigator.onLine) {
           triggerLockout('offline');
           return false;
         }
 
-        // Fetch authoritative UTC time from the server's HTTP Date header
         if (TEACHER_CONFIG.REQUIRE_SERVER_TIME) {
           try {
             const response = await fetch(location.href, {
@@ -1059,7 +1260,6 @@
             state.serverOffsetMs = serverUtcMs - localUtcMs;
             state.timeVerified = true;
 
-            // Check device clock drift (> 2 min) OR non-Bangladesh timezone (must be UTC+6 => -360)
             const tzOffset = new Date().getTimezoneOffset();
             if (driftMs > TEACHER_CONFIG.MAX_CLOCK_DRIFT_MS || tzOffset !== BDT_TZ_OFFSET_MINUTES) {
               triggerLockout('clock');
@@ -1070,25 +1270,21 @@
             return false;
           }
         } else {
-          // Even if REQUIRE_SERVER_TIME is false, enforce Bangladesh timezone
           if (new Date().getTimezoneOffset() !== BDT_TZ_OFFSET_MINUTES) {
             triggerLockout('clock');
             return false;
           }
         }
 
-        // Enforce daily access window (5:00 PM – 8:00 PM BDT)
         if (!isWithinDailyWindow(getNowUtcMs())) {
           triggerLockout('window');
           return false;
         }
 
-        // All checks passed
         if (state.lockoutReason !== null || isInitial) {
           state.lockoutReason = null;
           restoreUnlockedOrLandingView();
         } else if (state.activeCourse && !el.viewCourseDetail.classList.contains('hidden')) {
-          // Refresh slide availability counts in case an opening timestamp just passed
           renderCourseDetail();
         }
         updateHeaderClockAndBadge();
@@ -1143,9 +1339,7 @@
               <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
                 ${escapeHtml(course.title)}
               </h3>
-              <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
-                ${escapeHtml(course.subtitle || '')}
-              </p>
+              ${course.subtitle ? `<p class="text-sm text-slate-600 mt-1.5 leading-relaxed">${escapeHtml(course.subtitle)}</p>` : ''}
             </div>
 
             <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
@@ -1209,7 +1403,6 @@
         el.modalError.classList.add('hidden');
 
         if (entered === String(targetCourse.password)) {
-          // Success: generate session code for watermark traceability
           state.unlockedCourseIds.add(targetCourse.id);
           if (!state.sessionCodes[targetCourse.id]) {
             state.sessionCodes[targetCourse.id] = generateSessionCode();
@@ -1217,7 +1410,7 @@
           closePasswordModal();
           openCourseDetail(targetCourse);
         } else {
-          // Brief 500ms delay on wrong attempt to deter rapid guessing
+          // 500ms delay on wrong passcode attempt
           setTimeout(() => {
             el.btnModalSubmit.disabled = false;
             el.btnModalSubmit.textContent = 'Unlock Course';
@@ -1297,12 +1490,12 @@
               </button>
             `;
 
-            // Bind click handler strictly in JS closure (no PDF path in DOM attributes)
+            // Bind click handler strictly via JS closure (zero PDF path exposure in DOM)
             row.querySelector('.view-slide-btn').addEventListener('click', () => {
               openSlideViewer(index);
             });
           } else {
-            // Locked slide: keep real title hidden until release
+            // Locked slide: keep real title completely hidden until opening date arrives
             row.className =
               'bg-slate-100/80 border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 opacity-90';
             row.innerHTML = `
@@ -1343,7 +1536,196 @@
       }
 
       /* =====================================================================
-       * 8. PROTECTED PDF-TO-CANVAS VIEWER & BAKED-IN WATERMARK
+       * 8. HOLD-TO-VIEW, READING BAND & MULTI-TOUCH STAGE CONTROLLER
+       * ===================================================================== */
+
+      /** Synchronizes 0ms visibility of the canvas, hold veil, and reading band. */
+      function syncStageProtectionUI() {
+        if (!isViewerActive()) return;
+
+        // If privacy curtain is up or multitouch lockdown is active, force slide completely invisible in 0ms
+        if (state.curtainReason || state.multitouchLocked) {
+          el.canvas.style.visibility = 'hidden';
+          el.readingBandLayer.classList.add('hidden');
+          if (PROT.HOLD_TO_VIEW) {
+            el.holdVeil.classList.remove('hidden');
+          }
+          return;
+        }
+
+        const canSeeSlide = !PROT.HOLD_TO_VIEW || isHoldingActive();
+
+        if (canSeeSlide) {
+          el.canvas.style.visibility = 'visible';
+          el.holdVeil.classList.add('hidden');
+          if (PROT.READING_BAND_MODE) {
+            el.readingBandLayer.classList.remove('hidden');
+            applyReadingBandPosition();
+          } else {
+            el.readingBandLayer.classList.add('hidden');
+          }
+        } else {
+          // 0ms hide behind solid opaque shield
+          el.canvas.style.visibility = 'hidden';
+          el.readingBandLayer.classList.add('hidden');
+          el.holdVeil.classList.remove('hidden');
+        }
+      }
+
+      /** Computes and applies top/bottom shutter heights and live timestamp strip position. */
+      function applyReadingBandPosition() {
+        if (!PROT.READING_BAND_MODE) return;
+        const rect = el.canvasWrapper.getBoundingClientRect();
+        const totalH = rect.height;
+        if (totalH <= 0) return;
+
+        const bandPct = Math.min(85, Math.max(15, Number(PROT.BAND_HEIGHT_PERCENT) || 34));
+        const bandH = totalH * (bandPct / 100);
+        const rawTop = state.bandCenterRatio * totalH - bandH / 2;
+        const clampedTop = Math.max(0, Math.min(totalH - bandH, rawTop));
+        const bottomH = Math.max(0, totalH - (clampedTop + bandH));
+
+        el.bandShutterTop.style.height = `${clampedTop}px`;
+        el.bandShutterBottom.style.height = `${bottomH}px`;
+        el.bandLiveStrip.style.top = `${clampedTop + 8}px`;
+      }
+
+      /** Updates the reading band center ratio from a clientY coordinate. */
+      function updateBandFromClientY(clientY, isTouch = false) {
+        const rect = el.canvasWrapper.getBoundingClientRect();
+        if (rect.height <= 0) return;
+        let localY = clientY - rect.top;
+
+        // On mobile touchscreens, shift reading window ABOVE the finger so the thumb never obscures text
+        if (isTouch) {
+          const bandPct = Math.min(85, Math.max(15, Number(PROT.BAND_HEIGHT_PERCENT) || 34));
+          const bandH = rect.height * (bandPct / 100);
+          localY -= Math.max(54, bandH * 0.48);
+        }
+
+        state.bandCenterRatio = Math.max(0, Math.min(1, localY / rect.height));
+        applyReadingBandPosition();
+      }
+
+      /** Immediately releases all hold states and hides the slide in 0ms. */
+      function releaseAllHolds() {
+        state.isHoldingMouse = false;
+        state.isHoldingTouch = false;
+        state.isHoldingSpace = false;
+        syncStageProtectionUI();
+      }
+
+      /** Triggers 2-second blackout lockdown when 2+ fingers touch the screen simultaneously. */
+      function triggerMultitouchLockdown() {
+        if (!PROT.BLOCK_MULTITOUCH) return;
+        state.isHoldingTouch = false;
+        state.isHoldingMouse = false;
+        state.isHoldingSpace = false;
+        state.multitouchLocked = true;
+        el.canvas.style.visibility = 'hidden';
+        el.readingBandLayer.classList.add('hidden');
+        el.multitouchVeil.classList.remove('hidden');
+        showToast('Multi-touch / screenshot gesture blocked.');
+
+        clearTimeout(state.multitouchTimer);
+        state.multitouchTimer = setTimeout(() => {
+          state.multitouchLocked = false;
+          el.multitouchVeil.classList.add('hidden');
+          syncStageProtectionUI();
+        }, 2000);
+      }
+
+      // Stage Touch Events (1-finger hold & drag reading band; 2+ finger instant blackout)
+      el.canvasWrapper.addEventListener('touchstart', (e) => {
+        if (!isViewerActive() || state.curtainReason) return;
+
+        if (PROT.BLOCK_MULTITOUCH && e.touches.length >= 2) {
+          e.preventDefault();
+          triggerMultitouchLockdown();
+          return;
+        }
+
+        if (state.multitouchLocked) {
+          e.preventDefault();
+          return;
+        }
+
+        if (e.touches.length === 1 && (PROT.HOLD_TO_VIEW || PROT.READING_BAND_MODE)) {
+          e.preventDefault();
+          state.isHoldingTouch = true;
+          updateBandFromClientY(e.touches[0].clientY, true);
+          syncStageProtectionUI();
+        }
+      }, { passive: false });
+
+      el.canvasWrapper.addEventListener('touchmove', (e) => {
+        if (!isViewerActive() || state.curtainReason) return;
+
+        if (PROT.BLOCK_MULTITOUCH && e.touches.length >= 2) {
+          e.preventDefault();
+          triggerMultitouchLockdown();
+          return;
+        }
+
+        if (state.multitouchLocked) {
+          e.preventDefault();
+          return;
+        }
+
+        if (e.touches.length === 1 && (state.isHoldingTouch || PROT.READING_BAND_MODE)) {
+          e.preventDefault();
+          updateBandFromClientY(e.touches[0].clientY, true);
+        }
+      }, { passive: false });
+
+      el.canvasWrapper.addEventListener('touchend', (e) => {
+        if (e.touches.length === 0) {
+          state.isHoldingTouch = false;
+          syncStageProtectionUI();
+        }
+      }, { passive: true });
+
+      el.canvasWrapper.addEventListener('touchcancel', () => {
+        state.isHoldingTouch = false;
+        syncStageProtectionUI();
+      }, { passive: true });
+
+      // Global multi-touch guard anywhere on the page while viewer is open (catches 3-finger swipes starting outside canvas)
+      document.addEventListener('touchstart', (e) => {
+        if (isViewerActive() && PROT.BLOCK_MULTITOUCH && e.touches.length >= 2) {
+          e.preventDefault();
+          triggerMultitouchLockdown();
+        }
+      }, { passive: false, capture: true });
+
+      // Desktop Mouse Hold-to-View & Reading Band Tracking
+      el.canvasWrapper.addEventListener('mousedown', (e) => {
+        if (e.button !== 0 || !isViewerActive() || state.curtainReason || state.multitouchLocked) return;
+        e.preventDefault();
+        state.isHoldingMouse = true;
+        state.lastMouseClientY = e.clientY;
+        updateBandFromClientY(e.clientY, false);
+        syncStageProtectionUI();
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        state.lastMouseClientY = e.clientY;
+        if (!isViewerActive() || state.curtainReason || state.multitouchLocked) return;
+
+        if (PROT.READING_BAND_MODE && (!PROT.HOLD_TO_VIEW || state.isHoldingMouse || state.isHoldingSpace)) {
+          updateBandFromClientY(e.clientY, false);
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (state.isHoldingMouse) {
+          state.isHoldingMouse = false;
+          syncStageProtectionUI();
+        }
+      });
+
+      /* =====================================================================
+       * 9. PROTECTED PDF-TO-CANVAS VIEWER & HEAVY DUAL-TONE WATERMARK
        * ===================================================================== */
 
       function destroyActivePdf() {
@@ -1368,6 +1750,7 @@
         }
         el.canvas.width = 1;
         el.canvas.height = 1;
+        state.canvasWiped = true;
       }
 
       async function openSlideViewer(slideIndex) {
@@ -1375,33 +1758,46 @@
         if (!course || !course.slides[slideIndex]) return;
         const slide = course.slides[slideIndex];
 
-        // Double-check release time right before opening
         if (!isSlideOpen(slide, getNowUtcMs())) {
           showToast('This slide deck is not open yet.');
           renderCourseDetail();
           return;
         }
 
+        releaseAllHolds();
         destroyActivePdf();
         state.activeSlideIndex = slideIndex;
         state.currentPage = 1;
         state.totalPages = 1;
         state.zoom = 1.0;
+        state.bandCenterRatio = 0.35;
+        state.canvasWiped = false;
 
         el.viewerCourseBadge.textContent = course.code;
         el.viewerSlideTitle.textContent = `${slide.lecture}: ${slide.title}`;
         el.viewerFallbackBadge.classList.add('hidden');
         el.viewerError.classList.add('hidden');
         el.canvasWrapper.classList.add('hidden');
+        el.canvasWrapper.style.visibility = 'visible';
         el.viewerLoading.classList.remove('hidden');
         el.viewerLoading.classList.add('flex');
+
+        // Configure touch-action lock only when Hold-to-View or Reading Band is active
+        if (PROT.HOLD_TO_VIEW || PROT.READING_BAND_MODE) {
+          el.canvasWrapper.classList.add('reading-stage-lock');
+        } else {
+          el.canvasWrapper.classList.remove('reading-stage-lock');
+        }
+
+        updateProtectionStatusPill();
         updateViewerControls();
         showOnlyView('viewer');
 
         const sessionCode = state.sessionCodes[course.id] || 'SES-000000';
         el.viewerWatermarkInfo.textContent = `${course.code} • ${sessionCode}`;
+        updateReadingBandLiveStrip();
 
-        // Fetch PDF as ArrayBuffer (never via iframe/embed/src)
+        // Fetch PDF as ArrayBuffer (zero iframe/embed/src exposure)
         try {
           if (!window.pdfjsLib) {
             throw new Error('PDF.js library unavailable');
@@ -1425,8 +1821,8 @@
           el.canvasWrapper.classList.remove('hidden');
           updateViewerControls();
           await renderCurrentPage();
+          syncStageProtectionUI();
         } catch (err) {
-          // If Preview Mode is ON, gracefully render built-in sample engineering slides
           if (state.previewMode) {
             state.fallbackDeck = buildSampleEngineeringDeck(course.code, slide.lecture, slide.title);
             state.totalPages = state.fallbackDeck.length;
@@ -1438,8 +1834,8 @@
             el.canvasWrapper.classList.remove('hidden');
             updateViewerControls();
             await renderCurrentPage();
+            syncStageProtectionUI();
           } else {
-            // Production Mode: show clean missing PDF message
             el.viewerLoading.classList.add('hidden');
             el.viewerLoading.classList.remove('flex');
             el.viewerErrorTitle.textContent = 'PDF file not found in slide/ folder';
@@ -1451,16 +1847,24 @@
       }
 
       function updateViewerControls() {
-        el.viewerPageCounter.textContent = `Page ${state.currentPage} / ${state.totalPages}`;
+        const pageStr = `Page ${state.currentPage} / ${state.totalPages}`;
+        const shortPageStr = `${state.currentPage} / ${state.totalPages}`;
+        const zoomStr = `${Math.round(state.zoom * 100)}%`;
+
+        el.viewerPageCounter.textContent = pageStr;
         el.btnPrevPage.disabled = state.currentPage <= 1;
         el.btnNextPage.disabled = state.currentPage >= state.totalPages;
-        el.btnZoomReset.textContent = `${Math.round(state.zoom * 100)}%`;
+        el.btnZoomReset.textContent = zoomStr;
+
+        // Sync sticky mobile bottom bar
+        el.mobilePageCounter.textContent = shortPageStr;
+        el.btnMobilePrev.disabled = state.currentPage <= 1;
+        el.btnMobileNext.disabled = state.currentPage >= state.totalPages;
+        el.mobileZoomLabel.textContent = zoomStr;
       }
 
-      /** Renders the active page (PDF or Preview Sample) and paints the baked-in watermark. */
       async function renderCurrentPage() {
-        // Do not render if privacy curtain is active or viewer is hidden
-        if (state.curtainReason || el.viewViewer.classList.contains('hidden')) return;
+        if (state.curtainReason || !isViewerActive()) return;
         if (!state.pdfDoc && !state.fallbackDeck) return;
 
         if (state.isRendering) {
@@ -1476,12 +1880,11 @@
 
         try {
           const dpr = Math.min(window.devicePixelRatio || 1, 2);
-          const stageWidth = Math.max(300, el.viewerStage.clientWidth - 36);
+          const stageWidth = Math.max(290, el.viewerStage.clientWidth - 28);
 
           if (state.pdfDoc) {
             const page = await state.pdfDoc.getPage(state.currentPage);
             const baseViewport = page.getViewport({ scale: 1 });
-            // Fit nicely to container width at 100% zoom, then apply user zoom
             const fitScale = Math.min(stageWidth / baseViewport.width, 1.5);
             const cssScale = Math.max(0.35, fitScale * state.zoom);
             const viewport = page.getViewport({ scale: cssScale * dpr });
@@ -1499,13 +1902,12 @@
             await state.renderTask.promise;
             state.renderTask = null;
 
-            // Paint baked-in diagonal tiled watermark directly into canvas pixels
             paintBakedInWatermark(ctx, el.canvas.width, el.canvas.height, dpr);
           } else if (state.fallbackDeck) {
             const baseW = 1120;
-            const baseH = 630; // 16:9 widescreen academic slide
+            const baseH = 630;
             const fitScale = Math.min(stageWidth / baseW, 1.0);
-            const cssScale = Math.max(0.3, fitScale * state.zoom);
+            const cssScale = Math.max(0.28, fitScale * state.zoom);
             const cssW = Math.floor(baseW * cssScale);
             const cssH = Math.floor(baseH * cssScale);
 
@@ -1520,9 +1922,11 @@
             drawSampleSlidePage(ctx, state.fallbackDeck[state.currentPage - 1], state.currentPage, state.totalPages);
             ctx.restore();
 
-            // Paint baked-in diagonal tiled watermark directly into canvas pixels
             paintBakedInWatermark(ctx, el.canvas.width, el.canvas.height, dpr);
           }
+
+          state.canvasWiped = false;
+          syncStageProtectionUI();
         } catch (err) {
           if (err && err.name !== 'RenderingCancelledException') {
             showToast('Unable to render slide page.');
@@ -1537,8 +1941,10 @@
       }
 
       /**
-       * Draws a semi-transparent diagonal tiled watermark directly onto the canvas 2D
-       * context so removing DOM elements via Inspect Element cannot strip it.
+       * Paints the diagonal tiled watermark directly into the rendered 2D canvas pixels.
+       * When HEAVY_DUAL_WATERMARK is true, strokes a semi-transparent white halo first
+       * and then fills with dark slate (~0.24 opacity) so it remains unmistakable over
+       * both white paper and dark diagrams/photos.
        */
       function paintBakedInWatermark(ctx, width, height, dpr) {
         const courseCode = state.activeCourse ? state.activeCourse.code : 'ME';
@@ -1547,9 +1953,9 @@
         const text = `${courseCode} • ${sessionCode} • ${timestamp}`;
 
         ctx.save();
-        const fontSize = Math.max(13, Math.round(Math.min(width, height) * 0.022));
-        ctx.font = `600 ${fontSize}px "JetBrains Mono", monospace`;
-        ctx.fillStyle = 'rgba(15, 23, 42, 0.13)';
+        const heavy = Boolean(PROT.HEAVY_DUAL_WATERMARK);
+        const fontSize = Math.max(13, Math.round(Math.min(width, height) * (heavy ? 0.025 : 0.022)));
+        ctx.font = `700 ${fontSize}px "JetBrains Mono", monospace`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
@@ -1558,13 +1964,26 @@
         ctx.rotate(angle);
 
         const textWidth = ctx.measureText(text).width;
-        const stepX = Math.max(textWidth + 90 * dpr, 320 * dpr);
-        const stepY = Math.max(fontSize * 5.2, 110 * dpr);
+        const stepX = Math.max(textWidth + (heavy ? 64 : 90) * dpr, (heavy ? 270 : 320) * dpr);
+        const stepY = Math.max(fontSize * (heavy ? 3.9 : 5.2), (heavy ? 88 : 110) * dpr);
         const diag = Math.hypot(width, height);
+
+        if (heavy) {
+          ctx.lineJoin = 'round';
+          ctx.miterLimit = 2;
+          ctx.lineWidth = Math.max(2.5, fontSize * 0.17);
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.42)';
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.24)';
+        } else {
+          ctx.fillStyle = 'rgba(15, 23, 42, 0.13)';
+        }
 
         for (let y = -diag; y <= diag; y += stepY) {
           const offsetX = Math.abs(Math.round(y / stepY)) % 2 === 0 ? 0 : stepX / 2;
           for (let x = -diag; x <= diag; x += stepX) {
+            if (heavy) {
+              ctx.strokeText(text, x + offsetX, y);
+            }
             ctx.fillText(text, x + offsetX, y);
           }
         }
@@ -1572,7 +1991,7 @@
       }
 
       /* =====================================================================
-       * 9. BUILT-IN SAMPLE ENGINEERING SLIDES (Preview Mode Fallback Only)
+       * 10. BUILT-IN SAMPLE ENGINEERING SLIDES (Preview Mode Fallback Only)
        * ===================================================================== */
 
       function buildSampleEngineeringDeck(courseCode, lecture, title) {
@@ -1623,7 +2042,6 @@
           ];
         }
 
-        // Default: ME 101 sample slides
         return [
           {
             courseCode,
@@ -1670,24 +2088,19 @@
         ];
       }
 
-      /** Draws a crisp, high-contrast academic slide (1120x630 logical space) onto the canvas. */
       function drawSampleSlidePage(ctx, slide, pageNum, totalPages) {
         const W = 1120;
         const H = 630;
 
-        // Crisp white slide background
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, W, H);
 
-        // Top navy header bar
         ctx.fillStyle = '#0f172a';
         ctx.fillRect(0, 0, W, 92);
 
-        // Accent bar
         ctx.fillStyle = '#0284c7';
         ctx.fillRect(0, 92, W, 5);
 
-        // Header text
         ctx.fillStyle = '#38bdf8';
         ctx.font = '700 16px Inter, sans-serif';
         ctx.fillText(`${slide.courseCode}  •  ${slide.lecture.toUpperCase()}`, 44, 34);
@@ -1696,12 +2109,10 @@
         ctx.font = '700 26px "Times New Roman", Georgia, serif';
         ctx.fillText(slide.heading, 44, 70);
 
-        // Subheading
         ctx.fillStyle = '#0f172a';
         ctx.font = '700 22px "Times New Roman", Georgia, serif';
         ctx.fillText(slide.subheading, 44, 142);
 
-        // Key Equation Box
         ctx.fillStyle = '#f8fafc';
         ctx.strokeStyle = '#cbd5e1';
         ctx.lineWidth = 1.5;
@@ -1710,30 +2121,25 @@
         ctx.font = '700 19px "Times New Roman", Georgia, serif';
         ctx.fillText(slide.equation, 64, 197);
 
-        // Bullet points (left column)
         ctx.fillStyle = '#1e293b';
         ctx.font = '400 18px "Times New Roman", Georgia, serif';
         let yCursor = 258;
         slide.bullets.forEach((b) => {
-          // Bullet dot
           ctx.fillStyle = '#0284c7';
           ctx.beginPath();
           ctx.arc(54, yCursor - 6, 4.5, 0, Math.PI * 2);
           ctx.fill();
 
-          // Wrapped bullet text
           ctx.fillStyle = '#1e293b';
           yCursor = drawWrappedText(ctx, b, 72, yCursor, 580, 26) + 18;
         });
 
-        // Right-hand Technical Diagram Box
         ctx.fillStyle = '#f8fafc';
         ctx.strokeStyle = '#cbd5e1';
         ctx.lineWidth = 1.5;
         roundRect(ctx, 684, 152, 392, 396, 12, true, true);
         drawTechnicalDiagram(ctx, slide.diagram, 684, 152, 392, 396);
 
-        // Footer bar
         ctx.strokeStyle = '#e2e8f0';
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -1749,19 +2155,15 @@
         ctx.textAlign = 'left';
       }
 
-      /** Draws clean schematic engineering diagrams in the right panel of sample slides. */
       function drawTechnicalDiagram(ctx, type, x, y, w, h) {
         ctx.save();
         ctx.translate(x, y);
-
-        // Caption header
         ctx.fillStyle = '#475569';
         ctx.font = '700 13px Inter, sans-serif';
         ctx.textAlign = 'center';
 
         if (type === 'stress_strain') {
           ctx.fillText('Fig. Typical Ductile Stress–Strain Curve', w / 2, 32);
-          // Axes
           ctx.strokeStyle = '#0f172a';
           ctx.lineWidth = 2;
           ctx.beginPath();
@@ -1770,31 +2172,24 @@
           ctx.moveTo(58, 330);
           ctx.lineTo(350, 330);
           ctx.stroke();
-
-          // Axis labels
           ctx.fillStyle = '#0f172a';
           ctx.font = 'italic 700 16px "Times New Roman", serif';
           ctx.fillText('σ', 40, 82);
           ctx.fillText('ε', 350, 354);
-
-          // Curve
           ctx.strokeStyle = '#0284c7';
           ctx.lineWidth = 3;
           ctx.beginPath();
           ctx.moveTo(58, 330);
-          ctx.lineTo(118, 175); // Elastic linear region
-          ctx.bezierCurveTo(135, 165, 165, 172, 185, 155); // Yielding
-          ctx.bezierCurveTo(220, 115, 255, 105, 285, 128); // Ultimate strength
-          ctx.lineTo(322, 172); // Fracture
+          ctx.lineTo(118, 175);
+          ctx.bezierCurveTo(135, 165, 165, 172, 185, 155);
+          ctx.bezierCurveTo(220, 115, 255, 105, 285, 128);
+          ctx.lineTo(322, 172);
           ctx.stroke();
-
-          // Key points
-          const pts = [
+          [
             { px: 118, py: 175, label: 'σ_y (Yield)' },
             { px: 256, py: 112, label: 'σ_u (Ultimate)' },
             { px: 322, py: 172, label: 'Fracture' }
-          ];
-          pts.forEach((p) => {
+          ].forEach((p) => {
             ctx.fillStyle = '#dc2626';
             ctx.beginPath();
             ctx.arc(p.px, p.py, 4.5, 0, Math.PI * 2);
@@ -1805,14 +2200,11 @@
           });
         } else if (type === 'beam') {
           ctx.fillText('Fig. Simply Supported Beam with Point Load P', w / 2, 32);
-          // Beam body
           ctx.fillStyle = '#cbd5e1';
           ctx.strokeStyle = '#0f172a';
           ctx.lineWidth = 2;
           ctx.fillRect(55, 175, 282, 22);
           ctx.strokeRect(55, 175, 282, 22);
-
-          // Pin support (left)
           ctx.fillStyle = '#0f172a';
           ctx.beginPath();
           ctx.moveTo(70, 197);
@@ -1820,8 +2212,6 @@
           ctx.lineTo(86, 226);
           ctx.closePath();
           ctx.fill();
-
-          // Roller support (right)
           ctx.beginPath();
           ctx.arc(322, 211, 13, 0, Math.PI * 2);
           ctx.stroke();
@@ -1829,8 +2219,6 @@
           ctx.moveTo(302, 226);
           ctx.lineTo(342, 226);
           ctx.stroke();
-
-          // Point load arrow P
           ctx.strokeStyle = '#dc2626';
           ctx.fillStyle = '#dc2626';
           ctx.lineWidth = 3;
@@ -1845,8 +2233,6 @@
           ctx.fill();
           ctx.font = '700 18px "Times New Roman", serif';
           ctx.fillText('P', 196, 84);
-
-          // Bending moment preview triangle below
           ctx.strokeStyle = '#0284c7';
           ctx.lineWidth = 2;
           ctx.fillStyle = 'rgba(2, 132, 199, 0.12)';
@@ -1865,7 +2251,6 @@
           const cx = 200;
           const cy = 205;
           const r = 92;
-          // Axes
           ctx.strokeStyle = '#475569';
           ctx.lineWidth = 1.5;
           ctx.beginPath();
@@ -1874,15 +2259,11 @@
           ctx.moveTo(120, 72);
           ctx.lineTo(120, 345);
           ctx.stroke();
-
-          // Circle
           ctx.strokeStyle = '#0284c7';
           ctx.lineWidth = 3;
           ctx.beginPath();
           ctx.arc(cx, cy, r, 0, Math.PI * 2);
           ctx.stroke();
-
-          // Diameter line (2 theta)
           const px1 = cx + r * Math.cos(-0.65);
           const py1 = cy + r * Math.sin(-0.65);
           const px2 = cx - r * Math.cos(-0.65);
@@ -1893,8 +2274,6 @@
           ctx.moveTo(px1, py1);
           ctx.lineTo(px2, py2);
           ctx.stroke();
-
-          // Center & principal labels
           ctx.fillStyle = '#0f172a';
           ctx.font = '700 14px "Times New Roman", serif';
           ctx.fillText('σ₁', cx + r + 16, cy + 5);
@@ -1904,7 +2283,6 @@
           ctx.fillText('τ', 108, 82);
         } else if (type === 'piston') {
           ctx.fillText('Fig. Closed Piston–Cylinder System', w / 2, 32);
-          // Cylinder walls
           ctx.strokeStyle = '#0f172a';
           ctx.lineWidth = 4;
           ctx.beginPath();
@@ -1913,28 +2291,19 @@
           ctx.lineTo(276, 310);
           ctx.lineTo(276, 95);
           ctx.stroke();
-
-          // Gas fill
           ctx.fillStyle = 'rgba(2, 132, 199, 0.14)';
           ctx.fillRect(118, 178, 156, 130);
-
-          // Piston head
           ctx.fillStyle = '#64748b';
           ctx.fillRect(119, 150, 154, 28);
           ctx.strokeStyle = '#0f172a';
           ctx.lineWidth = 2;
           ctx.strokeRect(119, 150, 154, 28);
-
-          // Piston rod
           ctx.fillStyle = '#94a3b8';
           ctx.fillRect(186, 75, 20, 75);
           ctx.strokeRect(186, 75, 20, 75);
-
-          // Gas label & Heat arrow
           ctx.fillStyle = '#0369a1';
           ctx.font = '700 15px Inter, sans-serif';
           ctx.fillText('Ideal Gas (P, V, T)', 196, 250);
-
           ctx.strokeStyle = '#dc2626';
           ctx.fillStyle = '#dc2626';
           ctx.lineWidth = 3;
@@ -1954,7 +2323,6 @@
           ctx.fillStyle = '#0f172a';
           ctx.fillText('Gear (N₂, ω₂)', 258, 336);
         } else {
-          // Engineering design cycle
           ctx.fillText('Fig. Iterative Mechanical Design Process', w / 2, 32);
           const steps = ['1. Problem Definition', '2. Conceptual Design', '3. Analysis & CAD', '4. Prototyping & Testing'];
           steps.forEach((label, idx) => {
@@ -1965,7 +2333,6 @@
             ctx.fillStyle = '#ffffff';
             ctx.font = '600 14px Inter, sans-serif';
             ctx.fillText(label, bx + 130, by + 29);
-
             if (idx < steps.length - 1) {
               ctx.strokeStyle = '#64748b';
               ctx.lineWidth = 2;
@@ -1996,7 +2363,6 @@
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
-
         ctx.beginPath();
         ctx.arc(cx, cy, r * 0.3, 0, Math.PI * 2);
         ctx.stroke();
@@ -2043,15 +2409,28 @@
       }
 
       /* =====================================================================
-       * 10. BROWSER-LEVEL RESTRICTIONS, ANTI-SCREENSHOT & DEVTOOLS GUARD
+       * 11. INSTANT MODIFIER SHIELD, PRIVACY CURTAIN & DEVTOOLS GUARD
        * ===================================================================== */
 
-      function showPrivacyCurtain(reason, message, showResumeBtn = false) {
+      /**
+       * Raises the 0ms solid opaque #020617 privacy curtain and immediately hides
+       * the slide wrapper/canvas. Optionally wipes canvas pixels on hard triggers.
+       */
+      function showPrivacyCurtain(reason, message, showResumeBtn = false, hardWipe = false) {
         state.curtainReason = reason;
-        // Immediately wipe rendered slide pixels when curtain activates
-        if (!el.viewViewer.classList.contains('hidden')) {
-          wipeCanvas();
+        state.isHoldingMouse = false;
+        state.isHoldingTouch = false;
+        state.isHoldingSpace = false;
+
+        if (isViewerActive()) {
+          el.canvas.style.visibility = 'hidden';
+          el.canvasWrapper.style.visibility = 'hidden';
+          el.readingBandLayer.classList.add('hidden');
+          if (hardWipe) {
+            wipeCanvas();
+          }
         }
+
         el.curtainReason.textContent = message;
         if (showResumeBtn) {
           el.btnCurtainResume.classList.remove('hidden');
@@ -2062,21 +2441,25 @@
       }
 
       function hidePrivacyCurtain() {
-        // Never dismiss if DevTools is actively detected in production mode
         if (state.devToolsOpen && !state.previewMode) return;
         state.curtainReason = null;
         el.privacyCurtain.classList.add('hidden');
-        // Re-render current slide cleanly if inside the viewer
-        if (!el.viewViewer.classList.contains('hidden') && (state.pdfDoc || state.fallbackDeck)) {
-          renderCurrentPage();
+
+        if (isViewerActive() && (state.pdfDoc || state.fallbackDeck)) {
+          el.canvasWrapper.style.visibility = 'visible';
+          if (state.canvasWiped) {
+            renderCurrentPage();
+          } else {
+            syncStageProtectionUI();
+          }
         }
       }
 
-      /** Clears clipboard on PrintScreen and flashes privacy shield. */
       function handleScreenshotAttempt() {
         showPrivacyCurtain(
           'screenshot',
-          'Screenshot shortcut detected. Slide content has been obscured and clipboard clearing was triggered.',
+          'Screenshot key detected. Slide content was immediately hidden and clipboard clearing was triggered.',
+          true,
           true
         );
         try {
@@ -2087,7 +2470,7 @@
         showToast('Screenshots are restricted on this portal.');
       }
 
-      // Disable right-click, dragging, selection, and clipboard operations
+      // Disable right-click, dragging, text selection, and clipboard actions
       document.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         showToast('Right-click is disabled in Protected View.');
@@ -2107,12 +2490,13 @@
         });
       });
 
-      // Block restricted keyboard shortcuts & handle slide arrow navigation
+      // Keyboard Guard: Instant Modifier Shield + Shortcut Blocking + Spacebar Hold-to-View
       document.addEventListener('keydown', (e) => {
         const key = (e.key || '').toLowerCase();
         const mod = e.ctrlKey || e.metaKey;
+        const viewerOpen = isViewerActive();
 
-        // Screenshot keys: PrintScreen, Cmd+Shift+3/4/5, Win+Shift+S / Meta+Shift+S
+        // 1. PrintScreen & OS screenshot chords (everywhere)
         if (
           e.key === 'PrintScreen' ||
           e.keyCode === 44 ||
@@ -2123,7 +2507,32 @@
           return;
         }
 
-        // DevTools & View Source & Print & Save & Find & Copy shortcuts
+        // 2. INSTANT MODIFIER SHIELD while inside the slide viewer (0ms solid opaque curtain)
+        if (viewerOpen && PROT.INSTANT_MODIFIER_SHIELD) {
+          const isModifierOrGuardKey =
+            e.key === 'Meta' ||
+            e.key === 'OS' ||
+            e.key === 'Alt' ||
+            e.key === 'Control' ||
+            e.key === 'F12' ||
+            e.metaKey ||
+            e.altKey ||
+            e.ctrlKey;
+
+          if (isModifierOrGuardKey) {
+            e.preventDefault();
+            e.stopPropagation();
+            showPrivacyCurtain(
+              'modifier',
+              'Restricted modifier or system shortcut key detected (Win/Cmd, Alt, Ctrl, or F12). Content was instantly obscured.',
+              true,
+              false
+            );
+            return;
+          }
+        }
+
+        // 3. Global restricted browser shortcuts (DevTools, Save, Print, Copy, View Source, Find)
         if (
           e.key === 'F12' ||
           e.key === 'F3' ||
@@ -2136,41 +2545,88 @@
           return;
         }
 
-        // Slide page navigation with Left / Right arrow keys when viewer is open
-        if (
-          !el.viewViewer.classList.contains('hidden') &&
-          !state.curtainReason &&
-          el.modalPassword.classList.contains('hidden')
-        ) {
+        // 4. Viewer controls (Spacebar Hold-to-View, Arrow page navigation)
+        if (viewerOpen && !state.curtainReason && !state.multitouchLocked && el.modalPassword.classList.contains('hidden')) {
+          if ((e.code === 'Space' || e.key === ' ') && PROT.HOLD_TO_VIEW) {
+            e.preventDefault();
+            if (!state.isHoldingSpace) {
+              state.isHoldingSpace = true;
+              if (state.lastMouseClientY !== null) {
+                updateBandFromClientY(state.lastMouseClientY, false);
+              }
+              syncStageProtectionUI();
+            }
+            return;
+          }
+
           if (e.key === 'ArrowRight') {
             e.preventDefault();
             goToPage(state.currentPage + 1);
           } else if (e.key === 'ArrowLeft') {
             e.preventDefault();
             goToPage(state.currentPage - 1);
+          } else if (e.key === 'ArrowDown' && PROT.READING_BAND_MODE && (!PROT.HOLD_TO_VIEW || state.isHoldingSpace)) {
+            e.preventDefault();
+            state.bandCenterRatio = Math.min(1, state.bandCenterRatio + 0.08);
+            applyReadingBandPosition();
+          } else if (e.key === 'ArrowUp' && PROT.READING_BAND_MODE && (!PROT.HOLD_TO_VIEW || state.isHoldingSpace)) {
+            e.preventDefault();
+            state.bandCenterRatio = Math.max(0, state.bandCenterRatio - 0.08);
+            applyReadingBandPosition();
           }
         }
       }, true);
 
-      // Catch PrintScreen on keyup as well (many OSes fire PrintScreen only on keyup)
       document.addEventListener('keyup', (e) => {
         if (e.key === 'PrintScreen' || e.keyCode === 44) {
           handleScreenshotAttempt();
+          return;
+        }
+
+        // Immediately hide slide in 0ms when Spacebar is released
+        if (e.code === 'Space' || e.key === ' ') {
+          if (state.isHoldingSpace) {
+            state.isHoldingSpace = false;
+            syncStageProtectionUI();
+          }
         }
       }, true);
 
-      // Print event handler: wipe canvas immediately before browser print dialog
-      window.addEventListener('beforeprint', () => {
-        showPrivacyCurtain('print', 'Printing lecture slides is disabled.', true);
+      // Mouse leaving browser viewport (e.g., moving toward Snipping Tool or taskbar)
+      document.documentElement.addEventListener('mouseleave', () => {
+        if (isViewerActive() && PROT.INSTANT_MODIFIER_SHIELD && el.modalPassword.classList.contains('hidden')) {
+          // Do not downgrade stronger curtains like screenshot/devtools/modifier
+          if (!state.curtainReason) {
+            showPrivacyCurtain(
+              'mouseleave',
+              'Cursor left the protected browser window. Move your cursor back inside to resume viewing.',
+              true,
+              false
+            );
+          }
+        }
       });
 
-      // Tab visibility & window focus protection
+      document.documentElement.addEventListener('mouseenter', () => {
+        // Auto-dismiss ONLY if curtain was triggered by mouseleave
+        if (state.curtainReason === 'mouseleave') {
+          hidePrivacyCurtain();
+        }
+      });
+
+      // Print event handler: wipe canvas immediately before browser print dialog
+      window.addEventListener('beforeprint', () => {
+        showPrivacyCurtain('print', 'Printing lecture slides is disabled.', true, true);
+      });
+
+      // Tab visibility & window focus loss protection (0ms solid opaque curtain + canvas wipe)
       document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
           showPrivacyCurtain(
             'blur',
             'Slide content is hidden while this tab is inactive.',
-            false
+            false,
+            true
           );
         } else if (state.curtainReason === 'blur') {
           hidePrivacyCurtain();
@@ -2178,12 +2634,14 @@
       });
 
       window.addEventListener('blur', () => {
-        // Avoid triggering blur curtain if simply clicking inside the same document
-        showPrivacyCurtain(
-          'blur',
-          'Slide content is hidden while the browser window is out of focus.',
-          true
-        );
+        if (!state.curtainReason || state.curtainReason === 'mouseleave') {
+          showPrivacyCurtain(
+            'blur',
+            'Slide content is hidden while the browser window is out of focus.',
+            true,
+            true
+          );
+        }
       });
 
       window.addEventListener('focus', () => {
@@ -2192,9 +2650,8 @@
         }
       });
 
-      // Desktop DevTools size-gap heuristic (outerWidth/innerWidth or outerHeight/innerHeight > 160px)
+      // Desktop DevTools size-gap heuristic
       function checkDevToolsHeuristic() {
-        // Suppress in Preview Mode or embedded split-screen iframes where outerWidth differs from iframe width
         if (state.previewMode || window.self !== window.top) {
           state.devToolsOpen = false;
           return;
@@ -2209,7 +2666,8 @@
             showPrivacyCurtain(
               'devtools',
               'Developer Tools appear to be open. Close Developer Tools to continue viewing slides.',
-              false
+              false,
+              true
             );
           } else if (!detected && state.devToolsOpen) {
             state.devToolsOpen = false;
@@ -2221,7 +2679,7 @@
       }
 
       /* =====================================================================
-       * 11. EVENT LISTENERS & NAVIGATION CONTROLS
+       * 12. NAVIGATION & CONTROL EVENT LISTENERS
        * ===================================================================== */
 
       function goToPage(targetPage) {
@@ -2240,6 +2698,7 @@
       }
 
       function lockAndExitActiveCourse() {
+        releaseAllHolds();
         if (state.activeCourse) {
           state.unlockedCourseIds.delete(state.activeCourse.id);
           delete state.sessionCodes[state.activeCourse.id];
@@ -2289,20 +2748,19 @@
       });
       el.btnLockCourse.addEventListener('click', lockAndExitActiveCourse);
 
-      // Viewer toolbar controls
-      el.btnViewerBack.addEventListener('click', () => {
+      // Viewer toolbar controls (Desktop + Mobile)
+      function returnToCourseFromViewer() {
+        releaseAllHolds();
         wipeCanvas();
         destroyActivePdf();
         renderCourseDetail();
         showOnlyView('detail');
-      });
-      el.btnErrorBack.addEventListener('click', () => {
-        wipeCanvas();
-        destroyActivePdf();
-        renderCourseDetail();
-        showOnlyView('detail');
-      });
+      }
+
+      el.btnViewerBack.addEventListener('click', returnToCourseFromViewer);
+      el.btnErrorBack.addEventListener('click', returnToCourseFromViewer);
       el.btnViewerExit.addEventListener('click', lockAndExitActiveCourse);
+
       el.btnPrevPage.addEventListener('click', () => goToPage(state.currentPage - 1));
       el.btnNextPage.addEventListener('click', () => goToPage(state.currentPage + 1));
       el.btnZoomOut.addEventListener('click', () => adjustZoom(-0.2));
@@ -2313,23 +2771,11 @@
         renderCurrentPage();
       });
 
-      // Touch swipe navigation on mobile devices inside the slide stage
-      el.viewerStage.addEventListener('touchstart', (e) => {
-        if (e.changedTouches && e.changedTouches.length === 1) {
-          state.touchStartX = e.changedTouches[0].screenX;
-          state.touchStartY = e.changedTouches[0].screenY;
-        }
-      }, { passive: true });
-
-      el.viewerStage.addEventListener('touchend', (e) => {
-        if (!e.changedTouches || e.changedTouches.length !== 1) return;
-        const dx = e.changedTouches[0].screenX - state.touchStartX;
-        const dy = e.changedTouches[0].screenY - state.touchStartY;
-        if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4) {
-          if (dx < 0) goToPage(state.currentPage + 1);
-          else goToPage(state.currentPage - 1);
-        }
-      }, { passive: true });
+      // Mobile sticky bottom bar controls
+      el.btnMobilePrev.addEventListener('click', () => goToPage(state.currentPage - 1));
+      el.btnMobileNext.addEventListener('click', () => goToPage(state.currentPage + 1));
+      el.btnMobileZoomOut.addEventListener('click', () => adjustZoom(-0.2));
+      el.btnMobileZoomIn.addEventListener('click', () => adjustZoom(0.2));
 
       // Curtain Resume button
       el.btnCurtainResume.addEventListener('click', hidePrivacyCurtain);
@@ -2353,33 +2799,30 @@
         checkDevToolsHeuristic();
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => {
-          if (!el.viewViewer.classList.contains('hidden') && !state.curtainReason) {
+          if (isViewerActive() && !state.curtainReason) {
             renderCurrentPage();
           }
         }, 180);
       });
 
       /* =====================================================================
-       * 12. INITIALIZATION
+       * 13. INITIALIZATION
        * ===================================================================== */
       async function init() {
         if (state.previewMode) {
           el.previewBanner.classList.remove('hidden');
         }
 
-        // Start 1-second live Bangladesh Time clock
+        updateProtectionStatusPill();
         updateHeaderClockAndBadge();
         setInterval(updateHeaderClockAndBadge, 1000);
 
-        // Initial time & window verification
         await verifyTimeAndAccess(true);
 
-        // Re-verify server time, clock drift & 5–8 PM BDT window every 20 seconds
         setInterval(() => {
           verifyTimeAndAccess(false);
         }, 20000);
 
-        // Periodic DevTools heuristic check (production desktop only)
         setInterval(checkDevToolsHeuristic, 1000);
       }
 
