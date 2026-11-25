@@ -1,0 +1,2390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>ME Lecture Slides</title>
+
+  <!-- Fonts: Inter for crisp academic UI, JetBrains Mono for time/passcode/session IDs -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'SFMono-Regular', 'monospace']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- PDF.js (Canvas-only PDF rendering without iframe/embed/text layer) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <style>
+    /* Block text selection, callouts, and image dragging across the portal */
+    html, body {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      overflow-x: hidden;
+    }
+
+    /* Permit typing inside the passcode input field only */
+    input.allow-input {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      user-select: text;
+    }
+
+    /* Prevent mobile long-press save or drag on the rendered slide canvas */
+    #slide-canvas {
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-drag: none;
+      display: block;
+    }
+
+    /* Print protection: produce a completely blank page if printed */
+    @media print {
+      html, body, * {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+      }
+    }
+
+    /* Subtle custom scrollbar for the slide stage */
+    .stage-scroll::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    .stage-scroll::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    .stage-scroll::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- ===================================================================== -->
+  <!-- PREVIEW MODE BANNER (Visible only when TEACHER_CONFIG.PREVIEW_MODE=true) -->
+  <!-- ===================================================================== -->
+  <div id="preview-banner" class="hidden bg-amber-50 border-b border-amber-300 text-amber-950 px-4 py-2.5 text-xs sm:text-sm">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <div class="flex items-start sm:items-center gap-2">
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold bg-amber-200 text-amber-900 shrink-0">
+          PREVIEW MODE
+        </span>
+        <p class="leading-snug">
+          Time window &amp; online clock checks are bypassed, and built-in sample slides render if PDFs are missing.
+          <strong class="font-semibold">Set <code class="font-mono bg-amber-100 px-1 rounded">PREVIEW_MODE: false</code> before publishing to GitHub Pages.</strong>
+          <span class="text-amber-800 ml-1">(Demo codes: <code class="font-mono font-semibold">101101</code> / <code class="font-mono font-semibold">343343</code>)</span>
+        </p>
+      </div>
+      <button
+        id="btn-toggle-sim-closed"
+        type="button"
+        class="shrink-0 inline-flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-900 text-amber-50 hover:bg-amber-800 transition cursor-pointer"
+      >
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6l4 2m6-2a10 10 0 11-20 0 10 10 0 0120 0z" />
+        </svg>
+        <span id="sim-closed-label">Simulate Closed Window (Outside 5–8 PM)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- TOP NAVIGATION HEADER                                                 -->
+  <!-- ===================================================================== -->
+  <header class="bg-slate-900 text-white border-b border-slate-800 shadow-sm sticky top-0 z-30">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <!-- Brand / Portal Identity -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center shrink-0">
+          <svg class="w-5 h-5 text-sky-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight text-white leading-tight">
+            Department of Mechanical Engineering
+          </h1>
+          <p class="text-xs text-slate-400">
+            Lecture Slide Portal
+          </p>
+        </div>
+      </div>
+
+      <!-- Live Bangladesh Time Clock & Daily Window Status Badge -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+        <div class="flex items-center gap-2 bg-slate-800/90 border border-slate-700 rounded-xl px-3 py-1.5">
+          <svg class="w-4 h-4 text-slate-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span id="live-bdt-clock" class="font-mono text-xs sm:text-sm font-semibold text-slate-100">
+            --:--:-- BDT
+          </span>
+        </div>
+        <div id="window-status-badge" class="inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold border border-slate-700 bg-slate-800 text-slate-200">
+          <span id="window-status-dot" class="w-2 h-2 rounded-full bg-slate-400"></span>
+          <span id="window-status-text">Checking time...</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN APPLICATION CONTAINER                                            -->
+  <!-- ===================================================================== -->
+  <main class="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+
+    <!-- ------------------------------------------------------------------- -->
+    <!-- VIEW 0: LOADING / VERIFYING TIME                                    -->
+    <!-- ------------------------------------------------------------------- -->
+    <section id="view-loading" class="py-20 flex flex-col items-center justify-center text-center">
+      <div class="w-10 h-10 border-4 border-slate-200 border-t-slate-900 rounded-full animate-spin mb-4"></div>
+      <h2 class="text-base font-semibold text-slate-800">Verifying Server Time &amp; Access Window...</h2>
+      <p class="text-sm text-slate-500 mt-1">Synchronizing with Bangladesh Standard Time (UTC+6)</p>
+    </section>
+
+    <!-- ------------------------------------------------------------------- -->
+    <!-- VIEW 1: LOCKOUT SCREEN (Closed Window / Clock Drift / Offline)      -->
+    <!-- ------------------------------------------------------------------- -->
+    <section id="view-lockout" class="hidden py-8 sm:py-14">
+      <div class="max-w-xl mx-auto bg-white border border-slate-200 rounded-2xl shadow-sm p-6 sm:p-8 text-center">
+        <div id="lockout-icon-wrap" class="w-16 h-16 rounded-2xl bg-slate-100 text-slate-700 flex items-center justify-center mx-auto mb-5">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h2 id="lockout-title" class="text-xl sm:text-2xl font-bold text-slate-900">
+          Portal Currently Closed
+        </h2>
+        <p id="lockout-message" class="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
+          Slides are accessible only during the scheduled daily study window.
+        </p>
+
+        <!-- Dynamic Time Details Panel -->
+        <div id="lockout-time-panel" class="mt-6 bg-slate-50 border border-slate-200 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
+          <div>
+            <div class="text-xs font-medium uppercase tracking-wider text-slate-500">Current Bangladesh Time</div>
+            <div id="lockout-current-bdt" class="font-mono text-sm sm:text-base font-bold text-slate-900 mt-0.5">--:--:-- BDT</div>
+          </div>
+          <div>
+            <div class="text-xs font-medium uppercase tracking-wider text-slate-500">Next Access Opens</div>
+            <div id="lockout-next-open" class="font-mono text-sm sm:text-base font-bold text-sky-700 mt-0.5">5:00 PM BDT</div>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button
+            id="btn-lockout-retry"
+            type="button"
+            class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 transition cursor-pointer"
+          >
+            Reload &amp; Re-Verify
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------------------- -->
+    <!-- VIEW 2: COURSE SELECTION LANDING                                    -->
+    <!-- ------------------------------------------------------------------- -->
+    <section id="view-courses" class="hidden">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-7">
+        <div>
+          <span class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-sky-700 bg-sky-50 border border-sky-200 px-2.5 py-1 rounded-full mb-2">
+            Active Courses
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            Select a Course
+          </h2>
+          <p class="text-sm sm:text-base text-slate-600 mt-1">
+            Enter your 6-digit course passcode to view released lecture slides. Daily viewing window: <strong id="window-text-inline" class="text-slate-900">5:00 PM – 8:00 PM BDT</strong>.
+          </p>
+        </div>
+
+        <!-- Quick Policy Badge -->
+        <div class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs text-slate-600 flex items-center gap-2.5 shadow-xs">
+          <svg class="w-4 h-4 text-slate-500 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+          <span>Online view-only &bull; Watermarked &bull; No downloads or printing</span>
+        </div>
+      </div>
+
+      <!-- Course Cards Grid -->
+      <div id="course-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+    </section>
+
+    <!-- ------------------------------------------------------------------- -->
+    <!-- VIEW 3: COURSE SLIDE LIST                                           -->
+    <!-- ------------------------------------------------------------------- -->
+    <section id="view-course-detail" class="hidden">
+      <!-- Top Bar -->
+      <div class="bg-white border border-slate-200 rounded-2xl shadow-xs p-5 sm:p-6 mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div class="flex items-start gap-3">
+            <button
+              id="btn-back-courses"
+              type="button"
+              class="mt-0.5 p-2 rounded-xl border border-slate-200 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition cursor-pointer shrink-0"
+              title="Back to Courses"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <span id="detail-course-code" class="inline-flex items-center px-2.5 py-0.5 rounded-lg text-xs font-bold bg-slate-900 text-white">
+                  ME 101
+                </span>
+                <!-- Slide Count Summary Badge -->
+                <span id="detail-slide-summary" class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                  0 slides added &bull; 0 open now
+                </span>
+              </div>
+              <h2 id="detail-course-title" class="text-xl sm:text-2xl font-bold text-slate-900 mt-1.5">
+                Course Title
+              </h2>
+            </div>
+          </div>
+
+          <!-- Session Code & Lock Button -->
+          <div class="flex flex-wrap items-center gap-2.5 sm:justify-end">
+            <span id="detail-session-pill" class="font-mono text-xs bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-1.5 rounded-lg">
+              SES-000000
+            </span>
+            <button
+              id="btn-lock-course"
+              type="button"
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-semibold hover:bg-slate-100 transition cursor-pointer"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              Lock &amp; Exit
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lecture Slide Deck List -->
+      <div id="slide-list" class="space-y-3"></div>
+    </section>
+
+    <!-- ------------------------------------------------------------------- -->
+    <!-- VIEW 4: PROTECTED PDF-TO-CANVAS VIEWER                              -->
+    <!-- ------------------------------------------------------------------- -->
+    <section id="view-viewer" class="hidden">
+      <!-- Viewer Toolbar -->
+      <div class="bg-slate-900 text-white rounded-t-2xl border border-slate-800 px-3 sm:px-5 py-3 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+        <!-- Left: Back & Title -->
+        <div class="flex items-center gap-2.5 min-w-0">
+          <button
+            id="btn-viewer-back"
+            type="button"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 text-xs sm:text-sm font-semibold transition cursor-pointer shrink-0"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span class="hidden sm:inline">Back to Course</span>
+          </button>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span id="viewer-course-badge" class="text-[11px] font-bold uppercase tracking-wider bg-sky-500/20 text-sky-300 border border-sky-500/30 px-2 py-0.5 rounded-md shrink-0">
+                ME 101
+              </span>
+              <h3 id="viewer-slide-title" class="text-sm sm:text-base font-semibold text-white truncate">
+                Lecture Title
+              </h3>
+            </div>
+            <div id="viewer-fallback-badge" class="hidden text-[11px] text-amber-300 font-medium mt-0.5">
+              Sample Preview Slide (upload PDF to <code class="font-mono">slide/</code>)
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Page Controls, Zoom Controls, Lock/Exit -->
+        <div class="flex flex-wrap items-center justify-between lg:justify-end gap-2">
+          <!-- Page Navigation -->
+          <div class="flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
+            <button
+              id="btn-prev-page"
+              type="button"
+              class="px-2.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-200 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+              title="Previous Page (Left Arrow)"
+            >
+              &larr; Prev
+            </button>
+            <span id="viewer-page-counter" class="font-mono text-xs sm:text-sm font-semibold px-3 text-slate-100 select-none">
+              Page 1 / 1
+            </span>
+            <button
+              id="btn-next-page"
+              type="button"
+              class="px-2.5 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-slate-200 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer"
+              title="Next Page (Right Arrow)"
+            >
+              Next &rarr;
+            </button>
+          </div>
+
+          <!-- Zoom Controls -->
+          <div class="flex items-center bg-slate-800 rounded-xl p-1 border border-slate-700">
+            <button
+              id="btn-zoom-out"
+              type="button"
+              class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-200 hover:bg-slate-700 transition cursor-pointer font-bold"
+              title="Zoom Out"
+            >
+              &minus;
+            </button>
+            <button
+              id="btn-zoom-reset"
+              type="button"
+              class="px-2 h-8 rounded-lg font-mono text-xs font-semibold text-slate-200 hover:bg-slate-700 transition cursor-pointer"
+              title="Reset Zoom"
+            >
+              100%
+            </button>
+            <button
+              id="btn-zoom-in"
+              type="button"
+              class="w-8 h-8 rounded-lg flex items-center justify-center text-slate-200 hover:bg-slate-700 transition cursor-pointer font-bold"
+              title="Zoom In"
+            >
+              +
+            </button>
+          </div>
+
+          <!-- Lock / Exit Button -->
+          <button
+            id="btn-viewer-exit"
+            type="button"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs sm:text-sm font-semibold transition cursor-pointer"
+            title="Lock Course and Exit"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            <span>Lock</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Canvas Stage -->
+      <div
+        id="viewer-stage"
+        class="stage-scroll relative bg-slate-800 border-x border-b border-slate-700 rounded-b-2xl min-h-[60vh] max-h-[78vh] overflow-auto flex flex-col items-center justify-center p-3 sm:p-6"
+      >
+        <!-- Loading State -->
+        <div id="viewer-loading" class="hidden flex-col items-center justify-center text-slate-200 py-16">
+          <div class="w-9 h-9 border-4 border-slate-600 border-t-sky-400 rounded-full animate-spin mb-3"></div>
+          <p class="text-sm font-medium">Rendering protected slide...</p>
+        </div>
+
+        <!-- Error State (Production 404 or unreadable PDF) -->
+        <div id="viewer-error" class="hidden max-w-md bg-slate-900 border border-slate-700 rounded-2xl p-6 text-center text-slate-200 my-10">
+          <div class="w-12 h-12 rounded-xl bg-rose-500/15 text-rose-400 flex items-center justify-center mx-auto mb-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+            </svg>
+          </div>
+          <h4 id="viewer-error-title" class="text-base font-bold text-white">PDF file not found in slide/ folder</h4>
+          <p id="viewer-error-msg" class="text-xs sm:text-sm text-slate-400 mt-1.5">
+            The requested lecture slide deck is not available yet. Please check back later or contact your course instructor.
+          </p>
+          <button
+            id="btn-error-back"
+            type="button"
+            class="mt-4 px-4 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-semibold transition cursor-pointer"
+          >
+            Return to Course
+          </button>
+        </div>
+
+        <!-- Protected Canvas Container (with transparent top shield against save/drag) -->
+        <div id="canvas-wrapper" class="relative hidden shadow-2xl rounded-lg overflow-hidden bg-white max-w-full">
+          <canvas id="slide-canvas"></canvas>
+          <div class="absolute inset-0 z-10 bg-transparent" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <!-- Subtle Keyboard / Touch Hint -->
+      <div class="mt-2.5 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500 px-1">
+        <span>Use <strong class="text-slate-700">&larr; / &rarr;</strong> arrow keys or swipe horizontally to navigate pages.</span>
+        <span class="font-mono" id="viewer-watermark-info">Watermark Active</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- FOOTER                                                                -->
+  <!-- ===================================================================== -->
+  <footer class="border-t border-slate-200 bg-white py-4 px-4 text-center text-xs text-slate-500 mt-auto">
+    Protected Academic Slide Portal &bull; All slides are watermarked and restricted to authorized online viewing only.
+  </footer>
+
+  <!-- ===================================================================== -->
+  <!-- 6-DIGIT PASSCODE MODAL (No Student Name or Roll ID Fields)            -->
+  <!-- ===================================================================== -->
+  <div id="modal-password" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-slate-200 rounded-2xl shadow-2xl w-full max-w-sm p-6 relative">
+      <button
+        id="btn-modal-close"
+        type="button"
+        class="absolute top-4 right-4 p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition cursor-pointer"
+        aria-label="Close modal"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div class="w-11 h-11 rounded-xl bg-slate-900 text-sky-400 flex items-center justify-center mb-4">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+
+      <span id="modal-course-code" class="text-xs font-bold uppercase tracking-wider text-sky-700">ME 101</span>
+      <h3 id="modal-course-title" class="text-lg font-bold text-slate-900 mt-0.5 leading-snug">
+        Introduction to Mechanical Engineering
+      </h3>
+      <p class="text-xs text-slate-500 mt-1">
+        Enter the 6-digit course passcode provided in class.
+      </p>
+
+      <form id="form-password" class="mt-5" autocomplete="off">
+        <label for="input-passcode" class="block text-xs font-semibold text-slate-700 mb-1.5">
+          Course Passcode
+        </label>
+        <div class="relative">
+          <input
+            id="input-passcode"
+            type="password"
+            inputmode="numeric"
+            maxlength="16"
+            placeholder="••••••"
+            required
+            class="allow-input w-full text-center font-mono text-xl tracking-[0.35em] px-4 py-3 rounded-xl border border-slate-300 focus:border-slate-900 focus:ring-2 focus:ring-slate-900/15 outline-none transition"
+          />
+          <button
+            id="btn-toggle-pass-vis"
+            type="button"
+            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1 cursor-pointer"
+            title="Show/Hide Passcode"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+            </svg>
+          </button>
+        </div>
+
+        <p id="modal-error" class="hidden text-xs font-semibold text-rose-600 mt-2.5 flex items-center gap-1.5"></p>
+
+        <div class="mt-5 flex items-center gap-2.5">
+          <button
+            id="btn-modal-cancel"
+            type="button"
+            class="flex-1 px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            id="btn-modal-submit"
+            type="submit"
+            class="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-slate-800 disabled:opacity-60 transition cursor-pointer"
+          >
+            Unlock Course
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- PRIVACY CURTAIN OVERLAY (Focus Loss / Screenshot / DevTools Shield)   -->
+  <!-- ===================================================================== -->
+  <div id="privacy-curtain" class="hidden fixed inset-0 z-[9999] bg-slate-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-6 text-center text-white">
+    <div class="w-16 h-16 rounded-2xl bg-slate-900 border border-slate-700 flex items-center justify-center mb-5 shadow-lg">
+      <svg class="w-8 h-8 text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+      </svg>
+    </div>
+    <h2 class="text-xl sm:text-2xl font-bold tracking-tight">Protected View — Content Hidden</h2>
+    <p id="curtain-reason" class="text-sm sm:text-base text-slate-300 mt-2 max-w-md leading-relaxed">
+      Viewing paused because the window lost focus or a restricted action was detected.
+    </p>
+    <button
+      id="btn-curtain-resume"
+      type="button"
+      class="hidden mt-6 px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 text-sm font-bold transition cursor-pointer"
+    >
+      Click to Resume Viewing
+    </button>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- NON-BLOCKING TOAST NOTIFICATION (Replaces alert() cleanly)            -->
+  <!-- ===================================================================== -->
+  <div id="toast-box" class="pointer-events-none fixed bottom-5 left-1/2 -translate-x-1/2 z-[10000] transition-all duration-200 opacity-0 translate-y-2">
+    <div id="toast-inner" class="bg-slate-900 text-white border border-slate-700 shadow-xl rounded-xl px-4 py-2.5 text-xs sm:text-sm font-medium flex items-center gap-2 whitespace-nowrap">
+      <span class="w-2 h-2 rounded-full bg-amber-400 shrink-0"></span>
+      <span id="toast-msg">Action restricted</span>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION SCRIPT                                                    -->
+  <!-- ===================================================================== -->
+  <script>
+    /* =======================================================================
+     * 1. TEACHER CONFIGURATION — EDIT ONLY THIS SECTION
+     * -----------------------------------------------------------------------
+     * How to publish on GitHub Pages:
+     *   1. Export your PowerPoint slides as PDF and put them inside a folder
+     *      named `slide/` next to this `index.html` file.
+     *   2. Update the file paths, opening dates, and 6-digit passcodes below.
+     *   3. Change `PREVIEW_MODE` from `true` to `false`.
+     *   4. Commit & push `index.html` and the `slide/` folder to GitHub Pages.
+     * ======================================================================= */
+    const TEACHER_CONFIG = {
+      // Set to false before uploading to GitHub Pages. When true, bypasses the
+      // 5 PM–8 PM window & online server-time check and renders built-in sample
+      // engineering slides if the PDF in slide/ is not found yet.
+      PREVIEW_MODE: false,
+
+      // Enforces real HTTP server UTC time verification when PREVIEW_MODE is false
+      REQUIRE_SERVER_TIME: true,
+
+      // Maximum allowed difference between student device clock and server time (2 minutes)
+      MAX_CLOCK_DRIFT_MS: 120000,
+
+      // Daily access window in Bangladesh Standard Time (UTC+6): 5:00 PM to 8:00 PM
+      DAILY_WINDOW: {
+        startHour: 17,
+        startMin: 0,
+        endHour: 20,
+        endMin: 0
+      },
+
+      // Course catalog: add or edit courses and their PDF decks inside slide/
+      // Date format for `opens`: "YYYY-MM-DD" (opens 00:00 BDT) or "YYYY-MM-DDTHH:MM" (BDT)
+      COURSES: [
+        {
+          id: "me101",
+          code: "ME 101",
+          title: "Introduction to Mechanical Engineering",
+ 
+          password: "381983",
+          slides: [
+            {
+              lecture: "Lecture 01",
+              title: "IC Engine",
+              file: "slide/ic.pdf",
+              opens: "2026-11-20"
+            },
+            {
+              lecture: "Lecture 02",
+              title: "Gas Turbine",
+              file: "slide/gt.pdf",
+              opens: "2026-11-24"
+            },
+            {
+              lecture: "Lecture 03",
+              title: "Steam Turbine",
+              file: "slide/st.pdf",
+              opens: "2026-12-05"
+            },
+            {
+              lecture: "Energy System",
+              title: "Engineering Materials & Manufacturing Overview",
+              file: "slide/es.pdf",
+              opens: "2026-12-12T17:00"
+            }
+          ]
+        },
+        {
+          id: "me343",
+          code: "ME 343",
+          title: "Mechanics of Solids",
+          
+          password: "381976",
+          slides: [
+            {
+              lecture: "Lecture 01",
+              title: "Normal Stress, Shear Stress & Hooke's Law",
+              file: "slide/me343-lec1.pdf",
+              opens: "2026-11-18"
+            },
+            {
+              lecture: "Lecture 02",
+              title: "Shear Force & Bending Moment Diagrams (SFD & BMD)",
+              file: "slide/me343-lec2.pdf",
+              opens: "2026-11-23"
+            },
+            {
+              lecture: "Lecture 03",
+              title: "Torsion of Circular Shafts & Power Transmission",
+              file: "slide/me343-lec3.pdf",
+              opens: "2026-12-03"
+            },
+            {
+              lecture: "Lecture 04",
+              title: "Plane Stress Transformation & Mohr's Circle",
+              file: "slide/me343-lec4.pdf",
+              opens: "2026-12-10T17:00"
+            }
+          ]
+        }
+      ]
+    };
+
+    /* =======================================================================
+     * 2. PROTECTED APPLICATION CORE (IIFE to minimize global exposure)
+     * ======================================================================= */
+    (function () {
+      'use strict';
+
+      // Configure PDF.js worker from CDN
+      if (window.pdfjsLib) {
+        window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+          'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      }
+
+      // Constants for Bangladesh Standard Time (UTC+6)
+      const BDT_OFFSET_MS = 6 * 60 * 60 * 1000;
+      const BDT_TZ_OFFSET_MINUTES = -360; // JS getTimezoneOffset() for UTC+6 is -360
+
+      // Internal application state
+      const state = {
+        previewMode: Boolean(TEACHER_CONFIG.PREVIEW_MODE),
+        simulateClosedWindow: false,
+        serverOffsetMs: 0,          // (serverUtcMs - Date.now())
+        timeVerified: false,
+        lockoutReason: null,        // null | 'offline' | 'clock' | 'window'
+        unlockedCourseIds: new Set(),
+        sessionCodes: {},           // courseId -> 'SES-XXXXXX'
+        activeCourse: null,         // Course object
+        activeSlideIndex: -1,       // Index inside activeCourse.slides
+        pendingCourseModal: null,   // Course object currently in password modal
+        // Viewer state
+        pdfDoc: null,               // PDF.js document proxy
+        fallbackDeck: null,         // Built-in sample slide deck when PDF missing in preview
+        currentPage: 1,
+        totalPages: 1,
+        zoom: 1.0,
+        renderTask: null,
+        isRendering: false,
+        renderQueued: false,
+        // Protection state
+        curtainReason: null,        // null | 'blur' | 'screenshot' | 'devtools' | 'print'
+        devToolsOpen: false,
+        toastTimer: null,
+        touchStartX: 0,
+        touchStartY: 0
+      };
+
+      // DOM element references
+      const el = {
+        previewBanner: document.getElementById('preview-banner'),
+        btnToggleSimClosed: document.getElementById('btn-toggle-sim-closed'),
+        simClosedLabel: document.getElementById('sim-closed-label'),
+        liveClock: document.getElementById('live-bdt-clock'),
+        windowStatusBadge: document.getElementById('window-status-badge'),
+        windowStatusDot: document.getElementById('window-status-dot'),
+        windowStatusText: document.getElementById('window-status-text'),
+        windowTextInline: document.getElementById('window-text-inline'),
+
+        viewLoading: document.getElementById('view-loading'),
+        viewLockout: document.getElementById('view-lockout'),
+        viewCourses: document.getElementById('view-courses'),
+        viewCourseDetail: document.getElementById('view-course-detail'),
+        viewViewer: document.getElementById('view-viewer'),
+
+        lockoutIconWrap: document.getElementById('lockout-icon-wrap'),
+        lockoutTitle: document.getElementById('lockout-title'),
+        lockoutMessage: document.getElementById('lockout-message'),
+        lockoutTimePanel: document.getElementById('lockout-time-panel'),
+        lockoutCurrentBdt: document.getElementById('lockout-current-bdt'),
+        lockoutNextOpen: document.getElementById('lockout-next-open'),
+        btnLockoutRetry: document.getElementById('btn-lockout-retry'),
+
+        courseGrid: document.getElementById('course-grid'),
+
+        btnBackCourses: document.getElementById('btn-back-courses'),
+        detailCourseCode: document.getElementById('detail-course-code'),
+        detailSlideSummary: document.getElementById('detail-slide-summary'),
+        detailCourseTitle: document.getElementById('detail-course-title'),
+        detailSessionPill: document.getElementById('detail-session-pill'),
+        btnLockCourse: document.getElementById('btn-lock-course'),
+        slideList: document.getElementById('slide-list'),
+
+        btnViewerBack: document.getElementById('btn-viewer-back'),
+        viewerCourseBadge: document.getElementById('viewer-course-badge'),
+        viewerSlideTitle: document.getElementById('viewer-slide-title'),
+        viewerFallbackBadge: document.getElementById('viewer-fallback-badge'),
+        btnPrevPage: document.getElementById('btn-prev-page'),
+        btnNextPage: document.getElementById('btn-next-page'),
+        viewerPageCounter: document.getElementById('viewer-page-counter'),
+        btnZoomOut: document.getElementById('btn-zoom-out'),
+        btnZoomReset: document.getElementById('btn-zoom-reset'),
+        btnZoomIn: document.getElementById('btn-zoom-in'),
+        btnViewerExit: document.getElementById('btn-viewer-exit'),
+        viewerStage: document.getElementById('viewer-stage'),
+        viewerLoading: document.getElementById('viewer-loading'),
+        viewerError: document.getElementById('viewer-error'),
+        viewerErrorTitle: document.getElementById('viewer-error-title'),
+        viewerErrorMsg: document.getElementById('viewer-error-msg'),
+        btnErrorBack: document.getElementById('btn-error-back'),
+        canvasWrapper: document.getElementById('canvas-wrapper'),
+        canvas: document.getElementById('slide-canvas'),
+        viewerWatermarkInfo: document.getElementById('viewer-watermark-info'),
+
+        modalPassword: document.getElementById('modal-password'),
+        btnModalClose: document.getElementById('btn-modal-close'),
+        btnModalCancel: document.getElementById('btn-modal-cancel'),
+        modalCourseCode: document.getElementById('modal-course-code'),
+        modalCourseTitle: document.getElementById('modal-course-title'),
+        formPassword: document.getElementById('form-password'),
+        inputPasscode: document.getElementById('input-passcode'),
+        btnTogglePassVis: document.getElementById('btn-toggle-pass-vis'),
+        modalError: document.getElementById('modal-error'),
+        btnModalSubmit: document.getElementById('btn-modal-submit'),
+
+        privacyCurtain: document.getElementById('privacy-curtain'),
+        curtainReason: document.getElementById('curtain-reason'),
+        btnCurtainResume: document.getElementById('btn-curtain-resume'),
+
+        toastBox: document.getElementById('toast-box'),
+        toastMsg: document.getElementById('toast-msg')
+      };
+
+      /* =====================================================================
+       * 3. BANGLADESH TIME (UTC+6) & DATE UTILITIES
+       * ===================================================================== */
+
+      /** Returns the authoritative current UTC epoch milliseconds. */
+      function getNowUtcMs() {
+        return Date.now() + state.serverOffsetMs;
+      }
+
+      /** Returns a Date object shifted so its UTC getters represent BDT (UTC+6). */
+      function getBdtShiftedDate(utcMs = getNowUtcMs()) {
+        return new Date(utcMs + BDT_OFFSET_MS);
+      }
+
+      /** Pads an integer to 2 digits. */
+      function pad2(n) {
+        return String(n).padStart(2, '0');
+      }
+
+      /** Formats 24h hour/minute into 12-hour readable string (e.g., "5:00 PM"). */
+      function format12Hour(hour, minute) {
+        const suffix = hour >= 12 ? 'PM' : 'AM';
+        const h12 = hour % 12 === 0 ? 12 : hour % 12;
+        return `${h12}:${pad2(minute)} ${suffix}`;
+      }
+
+      /** Formats current BDT time as "HH:MM:SS PM BDT" for the header clock. */
+      function formatLiveBdtClock(utcMs = getNowUtcMs()) {
+        const d = getBdtShiftedDate(utcMs);
+        const h = d.getUTCHours();
+        const m = d.getUTCMinutes();
+        const s = d.getUTCSeconds();
+        const suffix = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 === 0 ? 12 : h % 12;
+        return `${pad2(h12)}:${pad2(m)}:${pad2(s)} ${suffix} BDT`;
+      }
+
+      /** Formats BDT timestamp for baked-in watermark: "YYYY-MM-DD HH:MM BDT". */
+      function formatWatermarkTimestamp(utcMs = getNowUtcMs()) {
+        const d = getBdtShiftedDate(utcMs);
+        return (
+          `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())} ` +
+          `${pad2(d.getUTCHours())}:${pad2(d.getUTCMinutes())} BDT`
+        );
+      }
+
+      /**
+       * Parses a slide's `opens` string ("YYYY-MM-DD" or "YYYY-MM-DDTHH:MM")
+       * explicitly as Bangladesh Standard Time (UTC+6) and returns UTC epoch ms.
+       */
+      function parseBdtOpenStringToUtcMs(str) {
+        if (!str || typeof str !== 'string') return 0;
+        const trimmed = str.trim();
+        const match = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2}))?)?$/);
+        if (!match) return 0;
+        const year = parseInt(match[1], 10);
+        const month = parseInt(match[2], 10) - 1;
+        const day = parseInt(match[3], 10);
+        const hour = match[4] !== undefined ? parseInt(match[4], 10) : 0;
+        const min = match[5] !== undefined ? parseInt(match[5], 10) : 0;
+        const sec = match[6] !== undefined ? parseInt(match[6], 10) : 0;
+        // Convert BDT wall-clock components to real UTC timestamp
+        return Date.UTC(year, month, day, hour, min, sec) - BDT_OFFSET_MS;
+      }
+
+      /** Formats an `opens` date string nicely (e.g., "Dec 5, 2026" or "Dec 12, 2026, 5:00 PM BDT"). */
+      function formatOpenDateLabel(str) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const match = (str || '').trim().match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/);
+        if (!match) return str;
+        const year = parseInt(match[1], 10);
+        const month = months[parseInt(match[2], 10) - 1] || '';
+        const day = parseInt(match[3], 10);
+        if (match[4] !== undefined && match[5] !== undefined) {
+          const hour = parseInt(match[4], 10);
+          const min = parseInt(match[5], 10);
+          return `${month} ${day}, ${year}, ${format12Hour(hour, min)} BDT`;
+        }
+        return `${month} ${day}, ${year}`;
+      }
+
+      /** Checks if a given slide deck is open right now in BDT. */
+      function isSlideOpen(slide, utcMs = getNowUtcMs()) {
+        return utcMs >= parseBdtOpenStringToUtcMs(slide.opens);
+      }
+
+      /** Checks if current BDT time is inside TEACHER_CONFIG.DAILY_WINDOW. */
+      function isWithinDailyWindow(utcMs = getNowUtcMs()) {
+        const d = getBdtShiftedDate(utcMs);
+        const curMins = d.getUTCHours() * 60 + d.getUTCMinutes();
+        const startMins = TEACHER_CONFIG.DAILY_WINDOW.startHour * 60 + TEACHER_CONFIG.DAILY_WINDOW.startMin;
+        const endMins = TEACHER_CONFIG.DAILY_WINDOW.endHour * 60 + TEACHER_CONFIG.DAILY_WINDOW.endMin;
+        return curMins >= startMins && curMins < endMins;
+      }
+
+      /** Returns a human-readable string describing when the daily window opens next. */
+      function getNextWindowOpenLabel(utcMs = getNowUtcMs()) {
+        const d = getBdtShiftedDate(utcMs);
+        const curMins = d.getUTCHours() * 60 + d.getUTCMinutes();
+        const startMins = TEACHER_CONFIG.DAILY_WINDOW.startHour * 60 + TEACHER_CONFIG.DAILY_WINDOW.startMin;
+        const startStr = format12Hour(TEACHER_CONFIG.DAILY_WINDOW.startHour, TEACHER_CONFIG.DAILY_WINDOW.startMin);
+        if (curMins < startMins) {
+          return `Today at ${startStr} BDT`;
+        }
+        return `Tomorrow at ${startStr} BDT`;
+      }
+
+      /** Generates a random session ID like "SES-7K4M9P" on course login. */
+      function generateSessionCode() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+        let out = 'SES-';
+        for (let i = 0; i < 6; i++) {
+          out += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return out;
+      }
+
+      /* =====================================================================
+       * 4. UI HELPERS (Toasts, View Switching, Header Clock)
+       * ===================================================================== */
+
+      function showToast(message) {
+        el.toastMsg.textContent = message;
+        el.toastBox.classList.remove('opacity-0', 'translate-y-2');
+        el.toastBox.classList.add('opacity-100', 'translate-y-0');
+        clearTimeout(state.toastTimer);
+        state.toastTimer = setTimeout(() => {
+          el.toastBox.classList.add('opacity-0', 'translate-y-2');
+          el.toastBox.classList.remove('opacity-100', 'translate-y-0');
+        }, 2600);
+      }
+
+      function showOnlyView(viewName) {
+        el.viewLoading.classList.add('hidden');
+        el.viewLockout.classList.add('hidden');
+        el.viewCourses.classList.add('hidden');
+        el.viewCourseDetail.classList.add('hidden');
+        el.viewViewer.classList.add('hidden');
+
+        if (viewName === 'loading') el.viewLoading.classList.remove('hidden');
+        if (viewName === 'lockout') el.viewLockout.classList.remove('hidden');
+        if (viewName === 'courses') el.viewCourses.classList.remove('hidden');
+        if (viewName === 'detail') el.viewCourseDetail.classList.remove('hidden');
+        if (viewName === 'viewer') el.viewViewer.classList.remove('hidden');
+      }
+
+      function updateHeaderClockAndBadge() {
+        const nowMs = getNowUtcMs();
+        el.liveClock.textContent = formatLiveBdtClock(nowMs);
+
+        const startStr = format12Hour(TEACHER_CONFIG.DAILY_WINDOW.startHour, TEACHER_CONFIG.DAILY_WINDOW.startMin);
+        const endStr = format12Hour(TEACHER_CONFIG.DAILY_WINDOW.endHour, TEACHER_CONFIG.DAILY_WINDOW.endMin);
+        if (el.windowTextInline) {
+          el.windowTextInline.textContent = `${startStr} – ${endStr} BDT`;
+        }
+
+        if (state.previewMode && !state.simulateClosedWindow) {
+          el.windowStatusDot.className = 'w-2 h-2 rounded-full bg-amber-400';
+          el.windowStatusBadge.className = 'inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold border border-amber-500/40 bg-amber-500/15 text-amber-200';
+          el.windowStatusText.textContent = `Preview Active (${startStr}–${endStr})`;
+        } else if (state.lockoutReason === 'offline') {
+          el.windowStatusDot.className = 'w-2 h-2 rounded-full bg-rose-400';
+          el.windowStatusBadge.className = 'inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold border border-rose-500/40 bg-rose-500/15 text-rose-200';
+          el.windowStatusText.textContent = 'Offline / Unverified';
+        } else if (state.lockoutReason === 'clock') {
+          el.windowStatusDot.className = 'w-2 h-2 rounded-full bg-rose-400';
+          el.windowStatusBadge.className = 'inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold border border-rose-500/40 bg-rose-500/15 text-rose-200';
+          el.windowStatusText.textContent = 'Clock / Timezone Error';
+        } else if (state.simulateClosedWindow || !isWithinDailyWindow(nowMs)) {
+          el.windowStatusDot.className = 'w-2 h-2 rounded-full bg-rose-400';
+          el.windowStatusBadge.className = 'inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold border border-rose-500/40 bg-rose-500/15 text-rose-200';
+          el.windowStatusText.textContent = `Closed (${startStr}–${endStr})`;
+        } else {
+          el.windowStatusDot.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
+          el.windowStatusBadge.className = 'inline-flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold border border-emerald-500/40 bg-emerald-500/15 text-emerald-200';
+          el.windowStatusText.textContent = `Open (${startStr}–${endStr})`;
+        }
+
+        // Keep lockout time display live if currently visible
+        if (!el.viewLockout.classList.contains('hidden')) {
+          el.lockoutCurrentBdt.textContent = formatLiveBdtClock(nowMs);
+          el.lockoutNextOpen.textContent = getNextWindowOpenLabel(nowMs);
+        }
+      }
+
+      /* =====================================================================
+       * 5. SERVER TIME VERIFICATION, TIMEZONE & DAILY WINDOW ENFORCEMENT
+       * ===================================================================== */
+
+      function triggerLockout(reason) {
+        state.lockoutReason = reason;
+        // Immediately wipe canvas and close any active viewer/modal
+        wipeCanvas();
+        destroyActivePdf();
+        closePasswordModal();
+
+        const startStr = format12Hour(TEACHER_CONFIG.DAILY_WINDOW.startHour, TEACHER_CONFIG.DAILY_WINDOW.startMin);
+        const endStr = format12Hour(TEACHER_CONFIG.DAILY_WINDOW.endHour, TEACHER_CONFIG.DAILY_WINDOW.endMin);
+
+        if (reason === 'offline') {
+          el.lockoutIconWrap.className = 'w-16 h-16 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-5';
+          el.lockoutTitle.textContent = 'Could not verify time — Internet connection required';
+          el.lockoutMessage.textContent =
+            'This portal requires an active internet connection on GitHub Pages to verify official server time before displaying lecture slides.';
+          el.lockoutTimePanel.classList.add('hidden');
+        } else if (reason === 'clock') {
+          el.lockoutIconWrap.className = 'w-16 h-16 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-5';
+          el.lockoutTitle.textContent = 'Automatic Date, Time & Time Zone Required';
+          el.lockoutMessage.textContent =
+            'Turn on automatic date, time, and Bangladesh time zone (UTC+6) in your device settings, then reload.';
+          el.lockoutTimePanel.classList.add('hidden');
+        } else {
+          // 'window'
+          el.lockoutIconWrap.className = 'w-16 h-16 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center mx-auto mb-5';
+          el.lockoutTitle.textContent = 'Access Window Closed';
+          el.lockoutMessage.textContent =
+            `Lecture slides are only available daily between ${startStr} and ${endStr} Bangladesh Standard Time (UTC+6). Please return during the active study window.`;
+          el.lockoutTimePanel.classList.remove('hidden');
+          el.lockoutCurrentBdt.textContent = formatLiveBdtClock();
+          el.lockoutNextOpen.textContent = getNextWindowOpenLabel();
+        }
+
+        showOnlyView('lockout');
+        updateHeaderClockAndBadge();
+      }
+
+      /**
+       * Verifies online server UTC time, device clock drift, Bangladesh timezone,
+       * and daily access window. Runs on startup and every 20 seconds.
+       */
+      async function verifyTimeAndAccess(isInitial = false) {
+        // Preview Mode handling
+        if (state.previewMode) {
+          state.serverOffsetMs = 0;
+          state.timeVerified = true;
+
+          if (state.simulateClosedWindow) {
+            triggerLockout('window');
+            return false;
+          }
+
+          if (state.lockoutReason !== null || isInitial) {
+            state.lockoutReason = null;
+            restoreUnlockedOrLandingView();
+          }
+          updateHeaderClockAndBadge();
+          return true;
+        }
+
+        // Production Mode: Block immediately if browser reports offline
+        if (!navigator.onLine) {
+          triggerLockout('offline');
+          return false;
+        }
+
+        // Fetch authoritative UTC time from the server's HTTP Date header
+        if (TEACHER_CONFIG.REQUIRE_SERVER_TIME) {
+          try {
+            const response = await fetch(location.href, {
+              method: 'HEAD',
+              cache: 'no-store'
+            });
+            const dateHeader = response.headers.get('date');
+            if (!dateHeader) {
+              triggerLockout('offline');
+              return false;
+            }
+            const serverUtcMs = Date.parse(dateHeader);
+            if (Number.isNaN(serverUtcMs)) {
+              triggerLockout('offline');
+              return false;
+            }
+
+            const localUtcMs = Date.now();
+            const driftMs = Math.abs(serverUtcMs - localUtcMs);
+            state.serverOffsetMs = serverUtcMs - localUtcMs;
+            state.timeVerified = true;
+
+            // Check device clock drift (> 2 min) OR non-Bangladesh timezone (must be UTC+6 => -360)
+            const tzOffset = new Date().getTimezoneOffset();
+            if (driftMs > TEACHER_CONFIG.MAX_CLOCK_DRIFT_MS || tzOffset !== BDT_TZ_OFFSET_MINUTES) {
+              triggerLockout('clock');
+              return false;
+            }
+          } catch (err) {
+            triggerLockout('offline');
+            return false;
+          }
+        } else {
+          // Even if REQUIRE_SERVER_TIME is false, enforce Bangladesh timezone
+          if (new Date().getTimezoneOffset() !== BDT_TZ_OFFSET_MINUTES) {
+            triggerLockout('clock');
+            return false;
+          }
+        }
+
+        // Enforce daily access window (5:00 PM – 8:00 PM BDT)
+        if (!isWithinDailyWindow(getNowUtcMs())) {
+          triggerLockout('window');
+          return false;
+        }
+
+        // All checks passed
+        if (state.lockoutReason !== null || isInitial) {
+          state.lockoutReason = null;
+          restoreUnlockedOrLandingView();
+        } else if (state.activeCourse && !el.viewCourseDetail.classList.contains('hidden')) {
+          // Refresh slide availability counts in case an opening timestamp just passed
+          renderCourseDetail();
+        }
+        updateHeaderClockAndBadge();
+        return true;
+      }
+
+      function restoreUnlockedOrLandingView() {
+        if (state.activeCourse && state.unlockedCourseIds.has(state.activeCourse.id)) {
+          renderCourseDetail();
+          showOnlyView('detail');
+        } else {
+          renderCourseCards();
+          showOnlyView('courses');
+        }
+      }
+
+      /* =====================================================================
+       * 6. COURSE LANDING & 6-DIGIT PASSCODE MODAL
+       * ===================================================================== */
+
+      function renderCourseCards() {
+        el.courseGrid.innerHTML = '';
+        const nowMs = getNowUtcMs();
+
+        TEACHER_CONFIG.COURSES.forEach((course) => {
+          const totalCount = course.slides.length;
+          const openCount = course.slides.filter((s) => isSlideOpen(s, nowMs)).length;
+          const isUnlocked = state.unlockedCourseIds.has(course.id);
+
+          const card = document.createElement('div');
+          card.className =
+            'bg-white border border-slate-200 rounded-2xl p-6 shadow-xs hover:shadow-md hover:border-slate-300 transition flex flex-col justify-between';
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold bg-slate-900 text-white tracking-wide">
+                  ${escapeHtml(course.code)}
+                </span>
+                <span class="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full ${
+                  isUnlocked
+                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                    : 'bg-slate-100 text-slate-600 border border-slate-200'
+                }">
+                  ${
+                    isUnlocked
+                      ? '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Unlocked'
+                      : '<svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg> Passcode Required'
+                  }
+                </span>
+              </div>
+              <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">
+                ${escapeHtml(course.title)}
+              </h3>
+              <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                ${escapeHtml(course.subtitle || '')}
+              </p>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+              <div class="text-xs font-medium text-slate-500">
+                <strong class="text-slate-800">${totalCount}</strong> slide deck${totalCount === 1 ? '' : 's'} &bull;
+                <strong class="text-emerald-700">${openCount}</strong> open now
+              </div>
+              <button
+                type="button"
+                class="course-open-btn inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold transition cursor-pointer"
+              >
+                <span>${isUnlocked ? 'Open Course' : 'Enter Passcode'}</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          `;
+
+          card.querySelector('.course-open-btn').addEventListener('click', () => {
+            if (state.unlockedCourseIds.has(course.id)) {
+              openCourseDetail(course);
+            } else {
+              openPasswordModal(course);
+            }
+          });
+
+          el.courseGrid.appendChild(card);
+        });
+      }
+
+      function openPasswordModal(course) {
+        state.pendingCourseModal = course;
+        el.modalCourseCode.textContent = course.code;
+        el.modalCourseTitle.textContent = course.title;
+        el.inputPasscode.value = '';
+        el.inputPasscode.type = 'password';
+        el.modalError.classList.add('hidden');
+        el.modalError.textContent = '';
+        el.btnModalSubmit.disabled = false;
+        el.btnModalSubmit.textContent = 'Unlock Course';
+        el.modalPassword.classList.remove('hidden');
+        setTimeout(() => el.inputPasscode.focus(), 40);
+      }
+
+      function closePasswordModal() {
+        state.pendingCourseModal = null;
+        el.modalPassword.classList.add('hidden');
+        el.inputPasscode.value = '';
+      }
+
+      el.formPassword.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (!state.pendingCourseModal) return;
+
+        const entered = el.inputPasscode.value.trim();
+        const targetCourse = state.pendingCourseModal;
+
+        el.btnModalSubmit.disabled = true;
+        el.btnModalSubmit.textContent = 'Verifying...';
+        el.modalError.classList.add('hidden');
+
+        if (entered === String(targetCourse.password)) {
+          // Success: generate session code for watermark traceability
+          state.unlockedCourseIds.add(targetCourse.id);
+          if (!state.sessionCodes[targetCourse.id]) {
+            state.sessionCodes[targetCourse.id] = generateSessionCode();
+          }
+          closePasswordModal();
+          openCourseDetail(targetCourse);
+        } else {
+          // Brief 500ms delay on wrong attempt to deter rapid guessing
+          setTimeout(() => {
+            el.btnModalSubmit.disabled = false;
+            el.btnModalSubmit.textContent = 'Unlock Course';
+            el.modalError.textContent = 'Incorrect course passcode. Please check and try again.';
+            el.modalError.classList.remove('hidden');
+            el.inputPasscode.select();
+          }, 500);
+        }
+      });
+
+      /* =====================================================================
+       * 7. COURSE DETAIL & SLIDE LIST (Never exposes PDF paths in DOM)
+       * ===================================================================== */
+
+      function openCourseDetail(course) {
+        state.activeCourse = course;
+        renderCourseDetail();
+        showOnlyView('detail');
+      }
+
+      function renderCourseDetail() {
+        const course = state.activeCourse;
+        if (!course) return;
+
+        const nowMs = getNowUtcMs();
+        const totalSlides = course.slides.length;
+        const openSlides = course.slides.filter((s) => isSlideOpen(s, nowMs)).length;
+
+        el.detailCourseCode.textContent = course.code;
+        el.detailCourseTitle.textContent = course.title;
+        el.detailSlideSummary.textContent = `${totalSlides} slides added • ${openSlides} open now`;
+        el.detailSessionPill.textContent = state.sessionCodes[course.id] || 'SES-ACTIVE';
+
+        el.slideList.innerHTML = '';
+
+        course.slides.forEach((slide, index) => {
+          const open = isSlideOpen(slide, nowMs);
+          const row = document.createElement('div');
+
+          if (open) {
+            row.className =
+              'bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 shadow-xs hover:border-slate-300 transition flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4';
+            row.innerHTML = `
+              <div class="flex items-start gap-3.5 min-w-0">
+                <div class="w-11 h-11 rounded-xl bg-sky-50 border border-sky-200 text-sky-700 flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      ${escapeHtml(slide.lecture || 'Lecture ' + (index + 1))}
+                    </span>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Open Now
+                    </span>
+                  </div>
+                  <h3 class="text-base font-bold text-slate-900 mt-1 leading-snug">
+                    ${escapeHtml(slide.title)}
+                  </h3>
+                  <p class="text-xs text-slate-500 mt-1">
+                    Released ${escapeHtml(formatOpenDateLabel(slide.opens))}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                class="view-slide-btn shrink-0 w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold transition cursor-pointer"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span>View Slides</span>
+              </button>
+            `;
+
+            // Bind click handler strictly in JS closure (no PDF path in DOM attributes)
+            row.querySelector('.view-slide-btn').addEventListener('click', () => {
+              openSlideViewer(index);
+            });
+          } else {
+            // Locked slide: keep real title hidden until release
+            row.className =
+              'bg-slate-100/80 border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 opacity-90';
+            row.innerHTML = `
+              <div class="flex items-start gap-3.5 min-w-0">
+                <div class="w-11 h-11 rounded-xl bg-slate-200 text-slate-500 flex items-center justify-center shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-slate-500">
+                      ${escapeHtml(slide.lecture || 'Lecture ' + (index + 1))}
+                    </span>
+                    <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-200 text-slate-700">
+                      Locked
+                    </span>
+                  </div>
+                  <h3 class="text-base font-semibold text-slate-500 italic mt-1">
+                    Hidden until release
+                  </h3>
+                  <p class="text-xs font-medium text-slate-600 mt-1">
+                    Opens ${escapeHtml(formatOpenDateLabel(slide.opens))}
+                  </p>
+                </div>
+              </div>
+              <div class="shrink-0 inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-200/80 text-slate-500 text-xs font-semibold">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Scheduled</span>
+              </div>
+            `;
+          }
+
+          el.slideList.appendChild(row);
+        });
+      }
+
+      /* =====================================================================
+       * 8. PROTECTED PDF-TO-CANVAS VIEWER & BAKED-IN WATERMARK
+       * ===================================================================== */
+
+      function destroyActivePdf() {
+        if (state.renderTask) {
+          try { state.renderTask.cancel(); } catch (_) {}
+          state.renderTask = null;
+        }
+        if (state.pdfDoc) {
+          try { state.pdfDoc.destroy(); } catch (_) {}
+          state.pdfDoc = null;
+        }
+        state.fallbackDeck = null;
+        state.activeSlideIndex = -1;
+        state.isRendering = false;
+        state.renderQueued = false;
+      }
+
+      function wipeCanvas() {
+        const ctx = el.canvas.getContext('2d');
+        if (ctx) {
+          ctx.clearRect(0, 0, el.canvas.width, el.canvas.height);
+        }
+        el.canvas.width = 1;
+        el.canvas.height = 1;
+      }
+
+      async function openSlideViewer(slideIndex) {
+        const course = state.activeCourse;
+        if (!course || !course.slides[slideIndex]) return;
+        const slide = course.slides[slideIndex];
+
+        // Double-check release time right before opening
+        if (!isSlideOpen(slide, getNowUtcMs())) {
+          showToast('This slide deck is not open yet.');
+          renderCourseDetail();
+          return;
+        }
+
+        destroyActivePdf();
+        state.activeSlideIndex = slideIndex;
+        state.currentPage = 1;
+        state.totalPages = 1;
+        state.zoom = 1.0;
+
+        el.viewerCourseBadge.textContent = course.code;
+        el.viewerSlideTitle.textContent = `${slide.lecture}: ${slide.title}`;
+        el.viewerFallbackBadge.classList.add('hidden');
+        el.viewerError.classList.add('hidden');
+        el.canvasWrapper.classList.add('hidden');
+        el.viewerLoading.classList.remove('hidden');
+        el.viewerLoading.classList.add('flex');
+        updateViewerControls();
+        showOnlyView('viewer');
+
+        const sessionCode = state.sessionCodes[course.id] || 'SES-000000';
+        el.viewerWatermarkInfo.textContent = `${course.code} • ${sessionCode}`;
+
+        // Fetch PDF as ArrayBuffer (never via iframe/embed/src)
+        try {
+          if (!window.pdfjsLib) {
+            throw new Error('PDF.js library unavailable');
+          }
+          const response = await fetch(slide.file, { cache: 'no-store' });
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+          const arrayBuffer = await response.arrayBuffer();
+          const loadingTask = window.pdfjsLib.getDocument({
+            data: new Uint8Array(arrayBuffer),
+            disableAutoFetch: true,
+            disableStream: true
+          });
+          state.pdfDoc = await loadingTask.promise;
+          state.totalPages = state.pdfDoc.numPages;
+          state.currentPage = 1;
+
+          el.viewerLoading.classList.add('hidden');
+          el.viewerLoading.classList.remove('flex');
+          el.canvasWrapper.classList.remove('hidden');
+          updateViewerControls();
+          await renderCurrentPage();
+        } catch (err) {
+          // If Preview Mode is ON, gracefully render built-in sample engineering slides
+          if (state.previewMode) {
+            state.fallbackDeck = buildSampleEngineeringDeck(course.code, slide.lecture, slide.title);
+            state.totalPages = state.fallbackDeck.length;
+            state.currentPage = 1;
+
+            el.viewerFallbackBadge.classList.remove('hidden');
+            el.viewerLoading.classList.add('hidden');
+            el.viewerLoading.classList.remove('flex');
+            el.canvasWrapper.classList.remove('hidden');
+            updateViewerControls();
+            await renderCurrentPage();
+          } else {
+            // Production Mode: show clean missing PDF message
+            el.viewerLoading.classList.add('hidden');
+            el.viewerLoading.classList.remove('flex');
+            el.viewerErrorTitle.textContent = 'PDF file not found in slide/ folder';
+            el.viewerErrorMsg.textContent =
+              'This lecture PDF could not be loaded from the slide/ folder. Please check back later or notify your instructor.';
+            el.viewerError.classList.remove('hidden');
+          }
+        }
+      }
+
+      function updateViewerControls() {
+        el.viewerPageCounter.textContent = `Page ${state.currentPage} / ${state.totalPages}`;
+        el.btnPrevPage.disabled = state.currentPage <= 1;
+        el.btnNextPage.disabled = state.currentPage >= state.totalPages;
+        el.btnZoomReset.textContent = `${Math.round(state.zoom * 100)}%`;
+      }
+
+      /** Renders the active page (PDF or Preview Sample) and paints the baked-in watermark. */
+      async function renderCurrentPage() {
+        // Do not render if privacy curtain is active or viewer is hidden
+        if (state.curtainReason || el.viewViewer.classList.contains('hidden')) return;
+        if (!state.pdfDoc && !state.fallbackDeck) return;
+
+        if (state.isRendering) {
+          state.renderQueued = true;
+          if (state.renderTask) {
+            try { state.renderTask.cancel(); } catch (_) {}
+          }
+          return;
+        }
+
+        state.isRendering = true;
+        state.renderQueued = false;
+
+        try {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const stageWidth = Math.max(300, el.viewerStage.clientWidth - 36);
+
+          if (state.pdfDoc) {
+            const page = await state.pdfDoc.getPage(state.currentPage);
+            const baseViewport = page.getViewport({ scale: 1 });
+            // Fit nicely to container width at 100% zoom, then apply user zoom
+            const fitScale = Math.min(stageWidth / baseViewport.width, 1.5);
+            const cssScale = Math.max(0.35, fitScale * state.zoom);
+            const viewport = page.getViewport({ scale: cssScale * dpr });
+
+            el.canvas.width = Math.floor(viewport.width);
+            el.canvas.height = Math.floor(viewport.height);
+            el.canvas.style.width = `${Math.floor(viewport.width / dpr)}px`;
+            el.canvas.style.height = `${Math.floor(viewport.height / dpr)}px`;
+
+            const ctx = el.canvas.getContext('2d', { alpha: false });
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, el.canvas.width, el.canvas.height);
+
+            state.renderTask = page.render({ canvasContext: ctx, viewport });
+            await state.renderTask.promise;
+            state.renderTask = null;
+
+            // Paint baked-in diagonal tiled watermark directly into canvas pixels
+            paintBakedInWatermark(ctx, el.canvas.width, el.canvas.height, dpr);
+          } else if (state.fallbackDeck) {
+            const baseW = 1120;
+            const baseH = 630; // 16:9 widescreen academic slide
+            const fitScale = Math.min(stageWidth / baseW, 1.0);
+            const cssScale = Math.max(0.3, fitScale * state.zoom);
+            const cssW = Math.floor(baseW * cssScale);
+            const cssH = Math.floor(baseH * cssScale);
+
+            el.canvas.width = Math.floor(cssW * dpr);
+            el.canvas.height = Math.floor(cssH * dpr);
+            el.canvas.style.width = `${cssW}px`;
+            el.canvas.style.height = `${cssH}px`;
+
+            const ctx = el.canvas.getContext('2d', { alpha: false });
+            ctx.save();
+            ctx.scale((cssW * dpr) / baseW, (cssH * dpr) / baseH);
+            drawSampleSlidePage(ctx, state.fallbackDeck[state.currentPage - 1], state.currentPage, state.totalPages);
+            ctx.restore();
+
+            // Paint baked-in diagonal tiled watermark directly into canvas pixels
+            paintBakedInWatermark(ctx, el.canvas.width, el.canvas.height, dpr);
+          }
+        } catch (err) {
+          if (err && err.name !== 'RenderingCancelledException') {
+            showToast('Unable to render slide page.');
+          }
+        } finally {
+          state.isRendering = false;
+          if (state.renderQueued) {
+            state.renderQueued = false;
+            renderCurrentPage();
+          }
+        }
+      }
+
+      /**
+       * Draws a semi-transparent diagonal tiled watermark directly onto the canvas 2D
+       * context so removing DOM elements via Inspect Element cannot strip it.
+       */
+      function paintBakedInWatermark(ctx, width, height, dpr) {
+        const courseCode = state.activeCourse ? state.activeCourse.code : 'ME';
+        const sessionCode = (state.activeCourse && state.sessionCodes[state.activeCourse.id]) || 'SES-000000';
+        const timestamp = formatWatermarkTimestamp(getNowUtcMs());
+        const text = `${courseCode} • ${sessionCode} • ${timestamp}`;
+
+        ctx.save();
+        const fontSize = Math.max(13, Math.round(Math.min(width, height) * 0.022));
+        ctx.font = `600 ${fontSize}px "JetBrains Mono", monospace`;
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.13)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        const angle = -Math.PI / 6; // -30 degrees diagonal
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate(angle);
+
+        const textWidth = ctx.measureText(text).width;
+        const stepX = Math.max(textWidth + 90 * dpr, 320 * dpr);
+        const stepY = Math.max(fontSize * 5.2, 110 * dpr);
+        const diag = Math.hypot(width, height);
+
+        for (let y = -diag; y <= diag; y += stepY) {
+          const offsetX = Math.abs(Math.round(y / stepY)) % 2 === 0 ? 0 : stepX / 2;
+          for (let x = -diag; x <= diag; x += stepX) {
+            ctx.fillText(text, x + offsetX, y);
+          }
+        }
+        ctx.restore();
+      }
+
+      /* =====================================================================
+       * 9. BUILT-IN SAMPLE ENGINEERING SLIDES (Preview Mode Fallback Only)
+       * ===================================================================== */
+
+      function buildSampleEngineeringDeck(courseCode, lecture, title) {
+        if (courseCode === 'ME 343') {
+          return [
+            {
+              courseCode,
+              lecture,
+              heading: title,
+              subheading: '1. Axial Stress, Normal Strain & Hooke’s Law',
+              equation: 'σ = F / A     |     ε = ΔL / L₀     |     E = σ / ε',
+              bullets: [
+                'Normal stress (σ) measures internal resisting force per unit cross-sectional area.',
+                'Within the proportional limit, stress is linearly proportional to axial strain (Hooke’s Law).',
+                'Factor of Safety: F.S. = σ_yield / σ_allowable ensures safe structural operation.',
+                'Take class notes carefully — derivations and worked numerical examples are discussed live.'
+              ],
+              diagram: 'stress_strain'
+            },
+            {
+              courseCode,
+              lecture,
+              heading: 'Equilibrium & Internal Resultants in Beams',
+              subheading: '2. Shear Force (V) and Bending Moment (M) Relations',
+              equation: 'dV / dx = -w(x)     |     dM / dx = V(x)     |     σ_b = -My / I',
+              bullets: [
+                'Sectioning a beam exposes internal shear force V(x) and bending moment M(x).',
+                'Maximum bending moment occurs where shear force V(x) crosses zero.',
+                'Flexure formula links bending stress directly to distance y from the neutral axis.',
+                'Sketch free-body diagrams before computing support reactions R_A and R_B.'
+              ],
+              diagram: 'beam'
+            },
+            {
+              courseCode,
+              lecture,
+              heading: 'Plane Stress Transformation',
+              subheading: '3. Principal Stresses & Mohr’s Circle Construction',
+              equation: 'σ₁,₂ = (σ_x + σ_y)/2 ± √[((σ_x - σ_y)/2)² + τ_xy²]',
+              bullets: [
+                'Stress components vary with orientation θ of the inclined plane element.',
+                'Principal planes experience zero shear stress and extremum normal stresses σ₁, σ₂.',
+                'Maximum in-plane shear stress equals the radius R of Mohr’s Circle.',
+                'Review sign conventions: clockwise shear on right face plots above the σ-axis.'
+              ],
+              diagram: 'mohr'
+            }
+          ];
+        }
+
+        // Default: ME 101 sample slides
+        return [
+          {
+            courseCode,
+            lecture,
+            heading: title,
+            subheading: '1. Foundations of Mechanical Engineering & System Thinking',
+            equation: 'ΣF = m · a     |     P = T · ω     |     η = W_out / Q_in',
+            bullets: [
+              'Mechanical engineering bridges mechanics, thermo-fluids, materials, and design.',
+              'Every design balances functionality, safety factor, manufacturability, and cost.',
+              'SI units consistency (N, Pa, J, W, K) prevents critical calculation errors.',
+              'Use this portal for revision only — complete derivations are covered on the board.'
+            ],
+            diagram: 'design_cycle'
+          },
+          {
+            courseCode,
+            lecture,
+            heading: 'Conservation of Energy in Closed Systems',
+            subheading: '2. First Law of Thermodynamics & Boundary Work',
+            equation: 'ΔE = Q - W     |     W_b = ∫ P dV     |     ΔU = m · c_v · ΔT',
+            bullets: [
+              'Energy can neither be created nor destroyed; it only transforms across boundaries.',
+              'Heat added to the system (+Q) and work done by the system (+W) follow standard sign rules.',
+              'Moving boundary work in a piston-cylinder equals the area under the P–V curve.',
+              'Distinguish clearly between path functions (Q, W) and state properties (U, H, S).'
+            ],
+            diagram: 'piston'
+          },
+          {
+            courseCode,
+            lecture,
+            heading: 'Mechanical Power Transmission',
+            subheading: '3. Gear Ratios, Speed Reduction & Torque Multiplication',
+            equation: 'ω₁ / ω₂ = N₂ / N₁ = d₂ / d₁     |     T₂ = T₁ · (N₂ / N₁) · η',
+            bullets: [
+              'Meshing spur gears transfer rotational power with zero slip at the pitch point.',
+              'Increasing the driven gear tooth count (N₂ > N₁) reduces angular velocity while multiplying torque.',
+              'Real gearboxes experience friction losses captured by mechanical efficiency η.',
+              'Identify pitch circle diameter, module (m = d/N), and center distance in class.'
+            ],
+            diagram: 'gears'
+          }
+        ];
+      }
+
+      /** Draws a crisp, high-contrast academic slide (1120x630 logical space) onto the canvas. */
+      function drawSampleSlidePage(ctx, slide, pageNum, totalPages) {
+        const W = 1120;
+        const H = 630;
+
+        // Crisp white slide background
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, W, H);
+
+        // Top navy header bar
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(0, 0, W, 92);
+
+        // Accent bar
+        ctx.fillStyle = '#0284c7';
+        ctx.fillRect(0, 92, W, 5);
+
+        // Header text
+        ctx.fillStyle = '#38bdf8';
+        ctx.font = '700 16px Inter, sans-serif';
+        ctx.fillText(`${slide.courseCode}  •  ${slide.lecture.toUpperCase()}`, 44, 34);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '700 26px "Times New Roman", Georgia, serif';
+        ctx.fillText(slide.heading, 44, 70);
+
+        // Subheading
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '700 22px "Times New Roman", Georgia, serif';
+        ctx.fillText(slide.subheading, 44, 142);
+
+        // Key Equation Box
+        ctx.fillStyle = '#f8fafc';
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, 44, 162, 610, 56, 10, true, true);
+        ctx.fillStyle = '#0369a1';
+        ctx.font = '700 19px "Times New Roman", Georgia, serif';
+        ctx.fillText(slide.equation, 64, 197);
+
+        // Bullet points (left column)
+        ctx.fillStyle = '#1e293b';
+        ctx.font = '400 18px "Times New Roman", Georgia, serif';
+        let yCursor = 258;
+        slide.bullets.forEach((b) => {
+          // Bullet dot
+          ctx.fillStyle = '#0284c7';
+          ctx.beginPath();
+          ctx.arc(54, yCursor - 6, 4.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Wrapped bullet text
+          ctx.fillStyle = '#1e293b';
+          yCursor = drawWrappedText(ctx, b, 72, yCursor, 580, 26) + 18;
+        });
+
+        // Right-hand Technical Diagram Box
+        ctx.fillStyle = '#f8fafc';
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1.5;
+        roundRect(ctx, 684, 152, 392, 396, 12, true, true);
+        drawTechnicalDiagram(ctx, slide.diagram, 684, 152, 392, 396);
+
+        // Footer bar
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(44, 578);
+        ctx.lineTo(W - 44, 578);
+        ctx.stroke();
+
+        ctx.fillStyle = '#64748b';
+        ctx.font = '500 13px Inter, sans-serif';
+        ctx.fillText('Department of Mechanical Engineering — Protected Sample Preview Slide', 44, 604);
+        ctx.textAlign = 'right';
+        ctx.fillText(`Slide ${pageNum} of ${totalPages}`, W - 44, 604);
+        ctx.textAlign = 'left';
+      }
+
+      /** Draws clean schematic engineering diagrams in the right panel of sample slides. */
+      function drawTechnicalDiagram(ctx, type, x, y, w, h) {
+        ctx.save();
+        ctx.translate(x, y);
+
+        // Caption header
+        ctx.fillStyle = '#475569';
+        ctx.font = '700 13px Inter, sans-serif';
+        ctx.textAlign = 'center';
+
+        if (type === 'stress_strain') {
+          ctx.fillText('Fig. Typical Ductile Stress–Strain Curve', w / 2, 32);
+          // Axes
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(58, 330);
+          ctx.lineTo(58, 70);
+          ctx.moveTo(58, 330);
+          ctx.lineTo(350, 330);
+          ctx.stroke();
+
+          // Axis labels
+          ctx.fillStyle = '#0f172a';
+          ctx.font = 'italic 700 16px "Times New Roman", serif';
+          ctx.fillText('σ', 40, 82);
+          ctx.fillText('ε', 350, 354);
+
+          // Curve
+          ctx.strokeStyle = '#0284c7';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(58, 330);
+          ctx.lineTo(118, 175); // Elastic linear region
+          ctx.bezierCurveTo(135, 165, 165, 172, 185, 155); // Yielding
+          ctx.bezierCurveTo(220, 115, 255, 105, 285, 128); // Ultimate strength
+          ctx.lineTo(322, 172); // Fracture
+          ctx.stroke();
+
+          // Key points
+          const pts = [
+            { px: 118, py: 175, label: 'σ_y (Yield)' },
+            { px: 256, py: 112, label: 'σ_u (Ultimate)' },
+            { px: 322, py: 172, label: 'Fracture' }
+          ];
+          pts.forEach((p) => {
+            ctx.fillStyle = '#dc2626';
+            ctx.beginPath();
+            ctx.arc(p.px, p.py, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#334155';
+            ctx.font = '600 12px Inter, sans-serif';
+            ctx.fillText(p.label, p.px, p.py - 12);
+          });
+        } else if (type === 'beam') {
+          ctx.fillText('Fig. Simply Supported Beam with Point Load P', w / 2, 32);
+          // Beam body
+          ctx.fillStyle = '#cbd5e1';
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = 2;
+          ctx.fillRect(55, 175, 282, 22);
+          ctx.strokeRect(55, 175, 282, 22);
+
+          // Pin support (left)
+          ctx.fillStyle = '#0f172a';
+          ctx.beginPath();
+          ctx.moveTo(70, 197);
+          ctx.lineTo(54, 226);
+          ctx.lineTo(86, 226);
+          ctx.closePath();
+          ctx.fill();
+
+          // Roller support (right)
+          ctx.beginPath();
+          ctx.arc(322, 211, 13, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(302, 226);
+          ctx.lineTo(342, 226);
+          ctx.stroke();
+
+          // Point load arrow P
+          ctx.strokeStyle = '#dc2626';
+          ctx.fillStyle = '#dc2626';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(196, 95);
+          ctx.lineTo(196, 170);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(188, 158);
+          ctx.lineTo(196, 173);
+          ctx.lineTo(204, 158);
+          ctx.fill();
+          ctx.font = '700 18px "Times New Roman", serif';
+          ctx.fillText('P', 196, 84);
+
+          // Bending moment preview triangle below
+          ctx.strokeStyle = '#0284c7';
+          ctx.lineWidth = 2;
+          ctx.fillStyle = 'rgba(2, 132, 199, 0.12)';
+          ctx.beginPath();
+          ctx.moveTo(70, 330);
+          ctx.lineTo(196, 265);
+          ctx.lineTo(322, 330);
+          ctx.closePath();
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = '#0369a1';
+          ctx.font = '600 13px Inter, sans-serif';
+          ctx.fillText('BMD: M_max = P·L / 4', 196, 355);
+        } else if (type === 'mohr') {
+          ctx.fillText('Fig. Mohr’s Circle for Plane Stress', w / 2, 32);
+          const cx = 200;
+          const cy = 205;
+          const r = 92;
+          // Axes
+          ctx.strokeStyle = '#475569';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.moveTo(42, cy);
+          ctx.lineTo(356, cy);
+          ctx.moveTo(120, 72);
+          ctx.lineTo(120, 345);
+          ctx.stroke();
+
+          // Circle
+          ctx.strokeStyle = '#0284c7';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Diameter line (2 theta)
+          const px1 = cx + r * Math.cos(-0.65);
+          const py1 = cy + r * Math.sin(-0.65);
+          const px2 = cx - r * Math.cos(-0.65);
+          const py2 = cy - r * Math.sin(-0.65);
+          ctx.strokeStyle = '#dc2626';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(px1, py1);
+          ctx.lineTo(px2, py2);
+          ctx.stroke();
+
+          // Center & principal labels
+          ctx.fillStyle = '#0f172a';
+          ctx.font = '700 14px "Times New Roman", serif';
+          ctx.fillText('σ₁', cx + r + 16, cy + 5);
+          ctx.fillText('σ₂', cx - r - 16, cy + 5);
+          ctx.fillText('C (σ_avg, 0)', cx, cy + 20);
+          ctx.fillText('+σ', 348, cy - 8);
+          ctx.fillText('τ', 108, 82);
+        } else if (type === 'piston') {
+          ctx.fillText('Fig. Closed Piston–Cylinder System', w / 2, 32);
+          // Cylinder walls
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(116, 95);
+          ctx.lineTo(116, 310);
+          ctx.lineTo(276, 310);
+          ctx.lineTo(276, 95);
+          ctx.stroke();
+
+          // Gas fill
+          ctx.fillStyle = 'rgba(2, 132, 199, 0.14)';
+          ctx.fillRect(118, 178, 156, 130);
+
+          // Piston head
+          ctx.fillStyle = '#64748b';
+          ctx.fillRect(119, 150, 154, 28);
+          ctx.strokeStyle = '#0f172a';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(119, 150, 154, 28);
+
+          // Piston rod
+          ctx.fillStyle = '#94a3b8';
+          ctx.fillRect(186, 75, 20, 75);
+          ctx.strokeRect(186, 75, 20, 75);
+
+          // Gas label & Heat arrow
+          ctx.fillStyle = '#0369a1';
+          ctx.font = '700 15px Inter, sans-serif';
+          ctx.fillText('Ideal Gas (P, V, T)', 196, 250);
+
+          ctx.strokeStyle = '#dc2626';
+          ctx.fillStyle = '#dc2626';
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(196, 362);
+          ctx.lineTo(196, 318);
+          ctx.stroke();
+          ctx.font = '700 14px Inter, sans-serif';
+          ctx.fillText('+Q (Heat In)', 196, 380);
+        } else if (type === 'gears') {
+          ctx.fillText('Fig. Meshing Spur Gear Pair', w / 2, 32);
+          drawGear(ctx, 135, 215, 58, 10, '#0284c7');
+          drawGear(ctx, 258, 215, 82, 14, '#0f172a');
+          ctx.fillStyle = '#0284c7';
+          ctx.font = '700 14px Inter, sans-serif';
+          ctx.fillText('Pinion (N₁, ω₁)', 135, 318);
+          ctx.fillStyle = '#0f172a';
+          ctx.fillText('Gear (N₂, ω₂)', 258, 336);
+        } else {
+          // Engineering design cycle
+          ctx.fillText('Fig. Iterative Mechanical Design Process', w / 2, 32);
+          const steps = ['1. Problem Definition', '2. Conceptual Design', '3. Analysis & CAD', '4. Prototyping & Testing'];
+          steps.forEach((label, idx) => {
+            const bx = 66;
+            const by = 72 + idx * 76;
+            ctx.fillStyle = idx % 2 === 0 ? '#0f172a' : '#0284c7';
+            roundRect(ctx, bx, by, 260, 48, 10, true, false);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '600 14px Inter, sans-serif';
+            ctx.fillText(label, bx + 130, by + 29);
+
+            if (idx < steps.length - 1) {
+              ctx.strokeStyle = '#64748b';
+              ctx.lineWidth = 2;
+              ctx.beginPath();
+              ctx.moveTo(196, by + 48);
+              ctx.lineTo(196, by + 72);
+              ctx.stroke();
+            }
+          });
+        }
+        ctx.restore();
+      }
+
+      function drawGear(ctx, cx, cy, r, teeth, color) {
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.06)';
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        for (let i = 0; i < teeth * 2; i++) {
+          const angle = (i * Math.PI) / teeth;
+          const rad = i % 2 === 0 ? r + 9 : r - 4;
+          const px = cx + Math.cos(angle) * rad;
+          const py = cy + Math.sin(angle) * rad;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, r * 0.3, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      function roundRect(ctx, x, y, w, h, r, fill, stroke) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.arcTo(x + w, y, x + w, y + h, r);
+        ctx.arcTo(x + w, y + h, x, y + h, r);
+        ctx.arcTo(x, y + h, x, y, r);
+        ctx.arcTo(x, y, x + w, y, r);
+        ctx.closePath();
+        if (fill) ctx.fill();
+        if (stroke) ctx.stroke();
+      }
+
+      function drawWrappedText(ctx, text, x, y, maxWidth, lineHeight) {
+        const words = text.split(' ');
+        let line = '';
+        let curY = y;
+        for (let i = 0; i < words.length; i++) {
+          const testLine = line + words[i] + ' ';
+          if (ctx.measureText(testLine).width > maxWidth && i > 0) {
+            ctx.fillText(line.trim(), x, curY);
+            line = words[i] + ' ';
+            curY += lineHeight;
+          } else {
+            line = testLine;
+          }
+        }
+        ctx.fillText(line.trim(), x, curY);
+        return curY + lineHeight;
+      }
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      /* =====================================================================
+       * 10. BROWSER-LEVEL RESTRICTIONS, ANTI-SCREENSHOT & DEVTOOLS GUARD
+       * ===================================================================== */
+
+      function showPrivacyCurtain(reason, message, showResumeBtn = false) {
+        state.curtainReason = reason;
+        // Immediately wipe rendered slide pixels when curtain activates
+        if (!el.viewViewer.classList.contains('hidden')) {
+          wipeCanvas();
+        }
+        el.curtainReason.textContent = message;
+        if (showResumeBtn) {
+          el.btnCurtainResume.classList.remove('hidden');
+        } else {
+          el.btnCurtainResume.classList.add('hidden');
+        }
+        el.privacyCurtain.classList.remove('hidden');
+      }
+
+      function hidePrivacyCurtain() {
+        // Never dismiss if DevTools is actively detected in production mode
+        if (state.devToolsOpen && !state.previewMode) return;
+        state.curtainReason = null;
+        el.privacyCurtain.classList.add('hidden');
+        // Re-render current slide cleanly if inside the viewer
+        if (!el.viewViewer.classList.contains('hidden') && (state.pdfDoc || state.fallbackDeck)) {
+          renderCurrentPage();
+        }
+      }
+
+      /** Clears clipboard on PrintScreen and flashes privacy shield. */
+      function handleScreenshotAttempt() {
+        showPrivacyCurtain(
+          'screenshot',
+          'Screenshot shortcut detected. Slide content has been obscured and clipboard clearing was triggered.',
+          true
+        );
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText('').catch(() => {});
+          }
+        } catch (_) {}
+        showToast('Screenshots are restricted on this portal.');
+      }
+
+      // Disable right-click, dragging, selection, and clipboard operations
+      document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        showToast('Right-click is disabled in Protected View.');
+      });
+
+      document.addEventListener('dragstart', (e) => e.preventDefault());
+
+      document.addEventListener('selectstart', (e) => {
+        if (e.target && e.target.classList && e.target.classList.contains('allow-input')) return;
+        e.preventDefault();
+      });
+
+      ['copy', 'cut', 'paste'].forEach((evt) => {
+        document.addEventListener(evt, (e) => {
+          e.preventDefault();
+          showToast('Copy and paste are disabled.');
+        });
+      });
+
+      // Block restricted keyboard shortcuts & handle slide arrow navigation
+      document.addEventListener('keydown', (e) => {
+        const key = (e.key || '').toLowerCase();
+        const mod = e.ctrlKey || e.metaKey;
+
+        // Screenshot keys: PrintScreen, Cmd+Shift+3/4/5, Win+Shift+S / Meta+Shift+S
+        if (
+          e.key === 'PrintScreen' ||
+          e.keyCode === 44 ||
+          (e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(key))
+        ) {
+          e.preventDefault();
+          handleScreenshotAttempt();
+          return;
+        }
+
+        // DevTools & View Source & Print & Save & Find & Copy shortcuts
+        if (
+          e.key === 'F12' ||
+          e.key === 'F3' ||
+          (mod && ['s', 'p', 'c', 'x', 'u', 'f'].includes(key)) ||
+          (mod && e.shiftKey && ['i', 'j', 'c'].includes(key))
+        ) {
+          e.preventDefault();
+          e.stopPropagation();
+          showToast('This shortcut is disabled in Protected View.');
+          return;
+        }
+
+        // Slide page navigation with Left / Right arrow keys when viewer is open
+        if (
+          !el.viewViewer.classList.contains('hidden') &&
+          !state.curtainReason &&
+          el.modalPassword.classList.contains('hidden')
+        ) {
+          if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            goToPage(state.currentPage + 1);
+          } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            goToPage(state.currentPage - 1);
+          }
+        }
+      }, true);
+
+      // Catch PrintScreen on keyup as well (many OSes fire PrintScreen only on keyup)
+      document.addEventListener('keyup', (e) => {
+        if (e.key === 'PrintScreen' || e.keyCode === 44) {
+          handleScreenshotAttempt();
+        }
+      }, true);
+
+      // Print event handler: wipe canvas immediately before browser print dialog
+      window.addEventListener('beforeprint', () => {
+        showPrivacyCurtain('print', 'Printing lecture slides is disabled.', true);
+      });
+
+      // Tab visibility & window focus protection
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          showPrivacyCurtain(
+            'blur',
+            'Slide content is hidden while this tab is inactive.',
+            false
+          );
+        } else if (state.curtainReason === 'blur') {
+          hidePrivacyCurtain();
+        }
+      });
+
+      window.addEventListener('blur', () => {
+        // Avoid triggering blur curtain if simply clicking inside the same document
+        showPrivacyCurtain(
+          'blur',
+          'Slide content is hidden while the browser window is out of focus.',
+          true
+        );
+      });
+
+      window.addEventListener('focus', () => {
+        if (state.curtainReason === 'blur') {
+          hidePrivacyCurtain();
+        }
+      });
+
+      // Desktop DevTools size-gap heuristic (outerWidth/innerWidth or outerHeight/innerHeight > 160px)
+      function checkDevToolsHeuristic() {
+        // Suppress in Preview Mode or embedded split-screen iframes where outerWidth differs from iframe width
+        if (state.previewMode || window.self !== window.top) {
+          state.devToolsOpen = false;
+          return;
+        }
+        if (window.screen && window.screen.width > 768 && window.outerWidth > 0 && window.innerWidth > 0) {
+          const widthGap = window.outerWidth - window.innerWidth;
+          const heightGap = window.outerHeight - window.innerHeight;
+          const detected = widthGap > 160 || heightGap > 160;
+
+          if (detected && !state.devToolsOpen) {
+            state.devToolsOpen = true;
+            showPrivacyCurtain(
+              'devtools',
+              'Developer Tools appear to be open. Close Developer Tools to continue viewing slides.',
+              false
+            );
+          } else if (!detected && state.devToolsOpen) {
+            state.devToolsOpen = false;
+            if (state.curtainReason === 'devtools') {
+              hidePrivacyCurtain();
+            }
+          }
+        }
+      }
+
+      /* =====================================================================
+       * 11. EVENT LISTENERS & NAVIGATION CONTROLS
+       * ===================================================================== */
+
+      function goToPage(targetPage) {
+        if (targetPage < 1 || targetPage > state.totalPages || targetPage === state.currentPage) return;
+        state.currentPage = targetPage;
+        updateViewerControls();
+        renderCurrentPage();
+      }
+
+      function adjustZoom(delta) {
+        const nextZoom = Math.min(2.2, Math.max(0.6, +(state.zoom + delta).toFixed(2)));
+        if (nextZoom === state.zoom) return;
+        state.zoom = nextZoom;
+        updateViewerControls();
+        renderCurrentPage();
+      }
+
+      function lockAndExitActiveCourse() {
+        if (state.activeCourse) {
+          state.unlockedCourseIds.delete(state.activeCourse.id);
+          delete state.sessionCodes[state.activeCourse.id];
+          state.activeCourse = null;
+        }
+        wipeCanvas();
+        destroyActivePdf();
+        renderCourseCards();
+        showOnlyView('courses');
+        showToast('Course locked.');
+      }
+
+      // Preview Mode "Simulate Closed Window" toggle
+      el.btnToggleSimClosed.addEventListener('click', () => {
+        state.simulateClosedWindow = !state.simulateClosedWindow;
+        el.simClosedLabel.textContent = state.simulateClosedWindow
+          ? 'Exit Closed Window Simulation'
+          : 'Simulate Closed Window (Outside 5–8 PM)';
+        verifyTimeAndAccess(false);
+      });
+
+      // Lockout screen Reload / Re-Verify button
+      el.btnLockoutRetry.addEventListener('click', () => {
+        if (state.previewMode && state.simulateClosedWindow) {
+          state.simulateClosedWindow = false;
+          el.simClosedLabel.textContent = 'Simulate Closed Window (Outside 5–8 PM)';
+          verifyTimeAndAccess(false);
+        } else {
+          location.reload();
+        }
+      });
+
+      // Modal events
+      el.btnModalClose.addEventListener('click', closePasswordModal);
+      el.btnModalCancel.addEventListener('click', closePasswordModal);
+      el.modalPassword.addEventListener('click', (e) => {
+        if (e.target === el.modalPassword) closePasswordModal();
+      });
+      el.btnTogglePassVis.addEventListener('click', () => {
+        el.inputPasscode.type = el.inputPasscode.type === 'password' ? 'text' : 'password';
+      });
+
+      // Course detail navigation
+      el.btnBackCourses.addEventListener('click', () => {
+        renderCourseCards();
+        showOnlyView('courses');
+      });
+      el.btnLockCourse.addEventListener('click', lockAndExitActiveCourse);
+
+      // Viewer toolbar controls
+      el.btnViewerBack.addEventListener('click', () => {
+        wipeCanvas();
+        destroyActivePdf();
+        renderCourseDetail();
+        showOnlyView('detail');
+      });
+      el.btnErrorBack.addEventListener('click', () => {
+        wipeCanvas();
+        destroyActivePdf();
+        renderCourseDetail();
+        showOnlyView('detail');
+      });
+      el.btnViewerExit.addEventListener('click', lockAndExitActiveCourse);
+      el.btnPrevPage.addEventListener('click', () => goToPage(state.currentPage - 1));
+      el.btnNextPage.addEventListener('click', () => goToPage(state.currentPage + 1));
+      el.btnZoomOut.addEventListener('click', () => adjustZoom(-0.2));
+      el.btnZoomIn.addEventListener('click', () => adjustZoom(0.2));
+      el.btnZoomReset.addEventListener('click', () => {
+        state.zoom = 1.0;
+        updateViewerControls();
+        renderCurrentPage();
+      });
+
+      // Touch swipe navigation on mobile devices inside the slide stage
+      el.viewerStage.addEventListener('touchstart', (e) => {
+        if (e.changedTouches && e.changedTouches.length === 1) {
+          state.touchStartX = e.changedTouches[0].screenX;
+          state.touchStartY = e.changedTouches[0].screenY;
+        }
+      }, { passive: true });
+
+      el.viewerStage.addEventListener('touchend', (e) => {
+        if (!e.changedTouches || e.changedTouches.length !== 1) return;
+        const dx = e.changedTouches[0].screenX - state.touchStartX;
+        const dy = e.changedTouches[0].screenY - state.touchStartY;
+        if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+          if (dx < 0) goToPage(state.currentPage + 1);
+          else goToPage(state.currentPage - 1);
+        }
+      }, { passive: true });
+
+      // Curtain Resume button
+      el.btnCurtainResume.addEventListener('click', hidePrivacyCurtain);
+
+      // Network offline / online listeners
+      window.addEventListener('offline', () => {
+        if (!state.previewMode) {
+          triggerLockout('offline');
+        }
+      });
+
+      window.addEventListener('online', () => {
+        if (!state.previewMode) {
+          verifyTimeAndAccess(false);
+        }
+      });
+
+      // Responsive re-render on resize (debounced) + DevTools check
+      let resizeTimer = null;
+      window.addEventListener('resize', () => {
+        checkDevToolsHeuristic();
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          if (!el.viewViewer.classList.contains('hidden') && !state.curtainReason) {
+            renderCurrentPage();
+          }
+        }, 180);
+      });
+
+      /* =====================================================================
+       * 12. INITIALIZATION
+       * ===================================================================== */
+      async function init() {
+        if (state.previewMode) {
+          el.previewBanner.classList.remove('hidden');
+        }
+
+        // Start 1-second live Bangladesh Time clock
+        updateHeaderClockAndBadge();
+        setInterval(updateHeaderClockAndBadge, 1000);
+
+        // Initial time & window verification
+        await verifyTimeAndAccess(true);
+
+        // Re-verify server time, clock drift & 5–8 PM BDT window every 20 seconds
+        setInterval(() => {
+          verifyTimeAndAccess(false);
+        }, 20000);
+
+        // Periodic DevTools heuristic check (production desktop only)
+        setInterval(checkDevToolsHeuristic, 1000);
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
