@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pranto &amp; Biva — Wedding Invitation</title>
+
+  <!-- Google Fonts: Authentic Arabic Calligraphy + Editorial & Modern Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Tailwind Theme Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            peacock: '#06373a',
+            magenta: '#7b1348',
+            marigold: '#e5a01d',
+            coral: '#d9534f',
+            emeraldDeep: '#0d5c46',
+            ivory: '#fffcf7',
+            ink: '#1a1817',
+          },
+          fontFamily: {
+            arabicRuqaa: ['"Aref Ruqaa"', '"Amiri"', 'serif'],
+            arabicAmiri: ['"Amiri"', 'serif'],
+            editorial: ['"Playfair Display"', 'Georgia', 'serif'],
+            display: ['"Syne"', 'sans-serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          maxWidth: {
+            editorial: '1160px',
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Custom Styles: Aurora Mesh, Split-Archway 3D Doors, Shimmer, Fluid Typography & Print -->
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      background-color: #06373a;
+      color: #fffcf7;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
+    /* Authentic Arabic Typography: Generous line-height so diacritics (harakat) never clip */
+    .arabic-text {
+      font-family: 'Aref Ruqaa', 'Amiri', serif;
+      line-height: 2.15;
+      letter-spacing: 0;
+      padding-block: 0.2rem;
+    }
+
+    /* Fluid Responsive Type Scale */
+    .fluid-hero-names {
+      font-size: clamp(2.85rem, 7.6vw, 6.4rem);
+      line-height: 1.05;
+    }
+    .fluid-section-heading {
+      font-size: clamp(1.85rem, 3.8vw, 3.1rem);
+      line-height: 1.12;
+    }
+    .fluid-arabic-hero {
+      font-size: clamp(1.45rem, 3.3vw, 2.45rem);
+    }
+    .fluid-arabic-dua {
+      font-size: clamp(1.3rem, 2.8vw, 2.05rem);
+    }
+
+    /* Animated Gradient Shimmer on Hero Names */
+    .shimmer-names {
+      background: linear-gradient(
+        110deg,
+        #fffcf7 0%,
+        #f7d07a 28%,
+        #fffcf7 50%,
+        #f59e9c 74%,
+        #e5a01d 100%
+      );
+      background-size: 220% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: textShimmer 7s linear infinite;
+    }
+    @keyframes textShimmer {
+      to { background-position: 220% center; }
+    }
+
+    /* Vibrant Jewel-Tone Aurora Mesh Background */
+    .aurora-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 12% 16%, rgba(123, 19, 72, 0.62) 0%, transparent 46%),
+        radial-gradient(circle at 86% 14%, rgba(229, 160, 29, 0.34) 0%, transparent 42%),
+        radial-gradient(circle at 80% 82%, rgba(13, 92, 70, 0.68) 0%, transparent 48%),
+        radial-gradient(circle at 18% 84%, rgba(217, 83, 79, 0.32) 0%, transparent 44%),
+        linear-gradient(145deg, #06373a 0%, #092631 48%, #2b0c24 100%);
+    }
+
+    /* Subtle Floating Ambient Color Orbs */
+    .aurora-orb {
+      position: fixed;
+      border-radius: 9999px;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.38;
+      will-change: transform;
+    }
+    .orb-1 {
+      width: 34vw;
+      height: 34vw;
+      max-width: 460px;
+      max-height: 460px;
+      top: -8%;
+      left: -6%;
+      background: radial-gradient(circle, #e5a01d, transparent 70%);
+      animation: orbFloatA 16s ease-in-out infinite alternate;
+    }
+    .orb-2 {
+      width: 38vw;
+      height: 38vw;
+      max-width: 520px;
+      max-height: 520px;
+      bottom: -10%;
+      right: -8%;
+      background: radial-gradient(circle, #7b1348, transparent 70%);
+      animation: orbFloatB 19s ease-in-out infinite alternate;
+    }
+    @keyframes orbFloatA {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(6vw, 5vh) scale(1.12); }
+    }
+    @keyframes orbFloatB {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(-5vw, -6vh) scale(1.1); }
+    }
+
+    /* ===================================================================== */
+    /* SPLIT-ARCHWAY 3D CURTAIN ENTRANCE OVERLAY                             */
+    /* ===================================================================== */
+    #curtain-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1400px;
+      overflow: hidden;
+      transition: visibility 0.2s linear 1.2s;
+    }
+    #curtain-overlay.is-open {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .curtain-door {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50.5%;
+      will-change: transform;
+      transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1);
+      background-image: radial-gradient(rgba(229, 160, 29, 0.14) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+    .curtain-door-left {
+      left: 0;
+      transform-origin: left center;
+      background-color: #06373a;
+      background-image:
+        radial-gradient(circle at 92% 45%, rgba(229, 160, 29, 0.28), transparent 52%),
+        radial-gradient(circle at 18% 82%, rgba(123, 19, 72, 0.6), transparent 55%),
+        linear-gradient(155deg, #06373a 0%, #1d0c24 100%);
+      border-right: 1px solid rgba(229, 160, 29, 0.45);
+    }
+    .curtain-door-right {
+      right: 0;
+      transform-origin: right center;
+      background-color: #06373a;
+      background-image:
+        radial-gradient(circle at 8% 45%, rgba(229, 160, 29, 0.28), transparent 52%),
+        radial-gradient(circle at 82% 82%, rgba(13, 92, 70, 0.65), transparent 55%),
+        linear-gradient(205deg, #06373a 0%, #1d0c24 100%);
+      border-left: 1px solid rgba(229, 160, 29, 0.45);
+    }
+
+    /* 3D Door Swing + Parting */
+    #curtain-overlay.is-open .curtain-door-left {
+      transform: translateX(-102%) rotateY(-28deg);
+    }
+    #curtain-overlay.is-open .curtain-door-right {
+      transform: translateX(102%) rotateY(28deg);
+    }
+
+    #curtain-medallion {
+      position: relative;
+      z-index: 5;
+      transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), filter 0.5s ease;
+    }
+    #curtain-overlay.is-unsealing #curtain-medallion,
+    #curtain-overlay.is-open #curtain-medallion {
+      opacity: 0;
+      transform: scale(1.14);
+      filter: blur(10px);
+    }
+
+    .halo-spin {
+      animation: spinSlow 24s linear infinite;
+    }
+    @keyframes spinSlow {
+      to { transform: rotate(360deg); }
+    }
+
+    .seal-glow {
+      animation: pulseGlow 2.8s ease-in-out infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(229, 160, 29, 0.45), 0 12px 34px rgba(0, 0, 0, 0.45); }
+      50% { box-shadow: 0 0 0 18px rgba(229, 160, 29, 0), 0 16px 42px rgba(123, 19, 72, 0.45); }
+    }
+
+    /* ===================================================================== */
+    /* STAGGERED HERO CASCADE & SCROLL REVEAL                                */
+    /* ===================================================================== */
+    .hero-cascade {
+      opacity: 0;
+      transform: translateY(24px);
+      filter: blur(8px);
+      transition:
+        opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    body.revealed .hero-cascade {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(28px) scale(0.98);
+      filter: blur(5px);
+      transition:
+        opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .scroll-reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+
+    /* ===================================================================== */
+    /* DESKTOP 3D TILT CARDS WITH DYNAMIC SHEEN                              */
+    /* ===================================================================== */
+    .tilt-card {
+      position: relative;
+      transform-style: preserve-3d;
+      will-change: transform;
+      transition: transform 0.22s ease-out, box-shadow 0.3s ease;
+    }
+    .tilt-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      background: radial-gradient(
+        circle at var(--sheen-x, 50%) var(--sheen-y, 50%),
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.06) 34%,
+        transparent 64%
+      );
+    }
+    .tilt-card.is-tilting::after {
+      opacity: 1;
+    }
+
+    /* Floating Pill Active State */
+    .nav-pill.active {
+      background: linear-gradient(135deg, #e5a01d, #d9534f, #7b1348);
+      color: #fffcf7;
+      box-shadow: 0 6px 18px rgba(123, 19, 72, 0.42);
+    }
+
+    /* Customize Drawer Slide Transition */
+    #customize-drawer {
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    /* Reduced Motion Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .hero-cascade, .scroll-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+    }
+
+    /* Clean Print / Save as PDF Styling */
+    @media print {
+      #curtain-overlay,
+      #confetti-canvas,
+      #scroll-progress-wrap,
+      #floating-nav,
+      #open-customize-btn,
+      #customize-backdrop,
+      #customize-drawer,
+      #toast-container,
+      .no-print {
+        display: none !important;
+      }
+      .aurora-backdrop, .aurora-orb {
+        display: none !important;
+      }
+      body {
+        background: #fffcf7 !important;
+        color: #1a1817 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .shimmer-names {
+        background: none !important;
+        color: #06373a !important;
+        -webkit-text-fill-color: #06373a !important;
+      }
+      .hero-cascade, .scroll-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+      section, footer {
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-marigold/30 selection:text-ivory">
+
+  <!-- Vibrant Jewel-Tone Aurora Backdrop & Ambient Orbs -->
+  <div class="aurora-backdrop" aria-hidden="true"></div>
+  <div class="aurora-orb orb-1" aria-hidden="true"></div>
+  <div class="aurora-orb orb-2" aria-hidden="true"></div>
+
+  <!-- Confetti Burst Canvas (Triggers once on opening the archway doors) -->
+  <canvas
+    id="confetti-canvas"
+    class="fixed inset-0 w-full h-full pointer-events-none z-[80]"
+    aria-hidden="true"
+  ></canvas>
+
+  <!-- Top Scroll-Progress Gradient Bar -->
+  <div id="scroll-progress-wrap" class="fixed top-0 left-0 right-0 h-1 z-50 bg-white/10">
+    <div
+      id="scroll-progress-bar"
+      class="h-full w-0 bg-gradient-to-r from-marigold via-coral via-magenta to-emerald-400 transition-[width] duration-75"
+    ></div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- SPLIT-ARCHWAY CURTAIN ENTRANCE OVERLAY                                -->
+  <!-- ===================================================================== -->
+  <div
+    id="curtain-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Open Wedding Invitation"
+  >
+    <!-- Ornamental Left & Right Split Doors -->
+    <div class="curtain-door curtain-door-left"></div>
+    <div class="curtain-door curtain-door-right"></div>
+
+    <!-- Central Mughal Arch Frame + Monogram + Single CTA -->
+    <div id="curtain-medallion" class="w-full max-w-sm mx-4 text-center">
+      <div class="relative rounded-[2.25rem] border border-marigold/45 bg-peacock/85 backdrop-blur-xl px-7 py-10 shadow-2xl overflow-hidden">
+        <!-- Mughal-Inspired Arch SVG Accent -->
+        <svg
+          class="pointer-events-none absolute inset-0 w-full h-full opacity-35"
+          viewBox="0 0 360 440"
+          preserveAspectRatio="none"
+          fill="none"
+          aria-hidden="true"
+        >
+          <defs>
+            <linearGradient id="mughalArch" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#e5a01d" />
+              <stop offset="50%" stop-color="#d9534f" />
+              <stop offset="100%" stop-color="#10b981" />
+            </linearGradient>
+          </defs>
+          <path
+            d="M22 422 L22 150 C22 82, 98 48, 180 16 C262 48, 338 82, 338 150 L338 422 Z"
+            stroke="url(#mughalArch)"
+            stroke-width="2"
+          />
+          <path
+            d="M36 410 L36 156 C36 96, 106 64, 180 34 C254 64, 324 96, 324 156 L324 410 Z"
+            stroke="#e5a01d"
+            stroke-opacity="0.45"
+            stroke-width="1"
+            stroke-dasharray="4 4"
+          />
+        </svg>
+
+        <!-- Jewel-Tone & Gold Monogram -->
+        <div class="relative mx-auto w-36 h-36 flex items-center justify-center mb-8">
+          <svg
+            class="halo-spin absolute inset-0 w-full h-full text-marigold/85"
+            viewBox="0 0 160 160"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle cx="80" cy="80" r="74" stroke="currentColor" stroke-width="1.2" stroke-dasharray="5 6" />
+            <circle cx="80" cy="80" r="64" stroke="#d9534f" stroke-opacity="0.65" stroke-width="1" />
+            <polygon points="80,4 84,12 80,18 76,12" fill="#e5a01d" />
+            <polygon points="80,156 84,148 80,142 76,148" fill="#e5a01d" />
+            <polygon points="4,80 12,84 18,80 12,76" fill="#10b981" />
+            <polygon points="156,80 148,84 142,80 148,76" fill="#10b981" />
+          </svg>
+
+          <div class="seal-glow relative w-28 h-28 rounded-full bg-gradient-to-br from-marigold via-coral to-magenta p-[3px] flex items-center justify-center">
+            <div class="w-full h-full rounded-full bg-gradient-to-br from-peacock to-magenta/90 flex items-center justify-center border border-marigold/60">
+              <span class="font-display text-2xl sm:text-3xl font-extrabold tracking-wider bg-gradient-to-r from-marigold via-ivory to-coral bg-clip-text text-transparent">
+                P &amp; B
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Single Open Invitation CTA -->
+        <button
+          id="open-invite-btn"
+          type="button"
+          class="group relative inline-flex items-center justify-center gap-3 rounded-full bg-gradient-to-r from-marigold via-coral to-magenta px-8 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-[0.2em] text-ivory shadow-xl transition-all duration-300 hover:scale-[1.04] active:scale-[0.97] focus:outline-none focus:ring-2 focus:ring-marigold focus:ring-offset-2 focus:ring-offset-peacock"
+        >
+          <span>Open Invitation</span>
+          <svg class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================================================================== -->
+  <!-- MINIMAL FLOATING PILL NAVIGATION (4 LINKS)                            -->
+  <!-- ===================================================================== -->
+  <nav
+    id="floating-nav"
+    aria-label="Section Navigation"
+    class="fixed bottom-4 sm:bottom-auto sm:top-5 left-1/2 -translate-x-1/2 z-40 rounded-full border border-white/20 bg-peacock/75 backdrop-blur-xl px-1.5 py-1.5 shadow-2xl"
+  >
+    <ul class="flex items-center gap-1 text-[11px] sm:text-xs font-semibold tracking-wide">
+      <li><a href="#top" data-section="top" class="nav-pill active block rounded-full px-3.5 sm:px-4 py-2 text-ivory/90 hover:text-white transition-all">Top</a></li>
+      <li><a href="#couple" data-section="couple" class="nav-pill block rounded-full px-3.5 sm:px-4 py-2 text-ivory/80 hover:text-white transition-all">Couple</a></li>
+      <li><a href="#events" data-section="events" class="nav-pill block rounded-full px-3.5 sm:px-4 py-2 text-ivory/80 hover:text-white transition-all">Events</a></li>
+      <li><a href="#contact" data-section="contact" class="nav-pill block rounded-full px-3.5 sm:px-4 py-2 text-ivory/80 hover:text-white transition-all">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN CONTENT — STRICTLY 4 CLEAN SECTIONS                              -->
+  <!-- ===================================================================== -->
+  <main class="relative z-10 w-full pb-20 sm:pb-8">
+
+    <!-- =================================================================== -->
+    <!-- SECTION 1: HERO (100svh Balanced Editorial Frame)                   -->
+    <!-- =================================================================== -->
+    <section
+      id="top"
+      class="min-h-[100svh] w-full flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 pt-12 sm:pt-24 pb-10"
+    >
+      <div class="w-full max-w-editorial mx-auto">
+        <div class="relative rounded-[2.25rem] border border-white/20 bg-white/[0.08] backdrop-blur-xl px-6 py-12 sm:px-12 sm:py-16 lg:py-20 text-center shadow-2xl overflow-hidden">
+          <!-- Jewel Gradient Accent Line -->
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-emeraldDeep via-marigold via-coral to-magenta"></div>
+
+          <!-- Arabic Bismillah (Appears ONLY ONCE) -->
+          <div class="hero-cascade" style="transition-delay: 0.1s;">
+            <p dir="rtl" lang="ar" class="arabic-text fluid-arabic-hero font-bold text-marigold drop-shadow-sm">
+              بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+            </p>
+            <p class="text-[11px] sm:text-xs text-ivory/75 tracking-wide mt-0.5 mb-8">
+              In the name of Allah, the Most Gracious, the Most Merciful
+            </p>
+          </div>
+
+          <!-- Short Eyebrow -->
+          <p
+            class="hero-cascade inline-block rounded-full border border-marigold/40 bg-marigold/15 px-4 py-1 text-[10px] sm:text-xs font-bold uppercase tracking-[0.32em] text-marigold mb-5"
+            style="transition-delay: 0.22s;"
+          >
+            Wedding Invitation
+          </p>
+
+          <!-- Editorial Display Names with Subtle Gradient Shimmer -->
+          <h1
+            class="hero-cascade font-editorial fluid-hero-names font-bold tracking-tight shimmer-names mb-5"
+            style="transition-delay: 0.34s;"
+          >
+            Pranto <span class="italic font-normal">&amp;</span> Biva
+          </h1>
+
+          <!-- Single Crisp Invitation Line -->
+          <p
+            class="hero-cascade text-sm sm:text-base md:text-lg text-ivory/85 max-w-xl mx-auto mb-10 font-light tracking-wide"
+            style="transition-delay: 0.44s;"
+          >
+            Together with their families, request the honour of your presence.
+          </p>
+
+          <!-- Compact Live Countdown Pill Strip -->
+          <div
+            class="hero-cascade inline-grid grid-cols-4 gap-2 sm:gap-4 rounded-2xl sm:rounded-full border border-white/20 bg-peacock/70 backdrop-blur-md px-4 py-3.5 sm:px-8 sm:py-4 shadow-xl"
+            style="transition-delay: 0.56s;"
+            aria-label="Countdown to Nikah"
+          >
+            <div class="px-2 sm:px-3">
+              <span id="cd-days" class="block font-display text-xl sm:text-3xl font-extrabold text-marigold leading-none">00</span>
+              <span class="mt-1 block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-ivory/70">Days</span>
+            </div>
+            <div class="px-2 sm:px-3 border-l border-white/15">
+              <span id="cd-hours" class="block font-display text-xl sm:text-3xl font-extrabold text-coral leading-none">00</span>
+              <span class="mt-1 block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-ivory/70">Hours</span>
+            </div>
+            <div class="px-2 sm:px-3 border-l border-white/15">
+              <span id="cd-mins" class="block font-display text-xl sm:text-3xl font-extrabold text-pink-300 leading-none">00</span>
+              <span class="mt-1 block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-ivory/70">Mins</span>
+            </div>
+            <div class="px-2 sm:px-3 border-l border-white/15">
+              <span id="cd-secs" class="block font-display text-xl sm:text-3xl font-extrabold text-emerald-300 leading-none">00</span>
+              <span class="mt-1 block text-[9px] sm:text-[10px] uppercase tracking-[0.2em] text-ivory/70">Secs</span>
+            </div>
+          </div>
+
+          <!-- Subtle Scroll Cue -->
+          <div class="hero-cascade mt-10 no-print" style="transition-delay: 0.68s;">
+            <a
+              href="#couple"
+              aria-label="Scroll to Couple section"
+              class="inline-flex flex-col items-center gap-1.5 text-ivory/55 hover:text-marigold transition-colors"
+            >
+              <span class="text-[10px] uppercase tracking-[0.28em]">Scroll</span>
+              <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 2: COUPLE & FAMILIES (Symmetrical Cards + Central Emblem)   -->
+    <!-- =================================================================== -->
+    <section id="couple" class="w-full px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="max-w-editorial mx-auto">
+        <div class="scroll-reveal text-center mb-10 sm:mb-12">
+          <h2 class="font-editorial fluid-section-heading font-bold text-ivory">
+            Couple &amp; Families
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-11 gap-6 items-stretch">
+          <!-- GROOM CARD -->
+          <article class="scroll-reveal tilt-card lg:col-span-5 rounded-[2rem] bg-ivory text-ink p-7 sm:p-9 shadow-2xl border border-emerald-200/60 flex flex-col justify-between overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-peacock via-emeraldDeep to-marigold"></div>
+            <div>
+              <span class="inline-block rounded-full bg-teal-100 text-peacock px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] mb-5">
+                Groom
+              </span>
+              <h3 class="font-editorial text-2xl sm:text-3xl font-bold text-peacock leading-snug mb-6">
+                Md. Mahamudul Hasan Pranto
+              </h3>
+              <div class="rounded-2xl bg-teal-50/75 border border-teal-200/70 p-5">
+                <p class="text-[10px] uppercase tracking-[0.22em] font-bold text-emeraldDeep mb-2">
+                  Son of
+                </p>
+                <p class="font-editorial text-lg sm:text-xl font-semibold text-ink">
+                  Md. Shahadat Hossain Khan
+                </p>
+                <p class="text-xs text-ink/50 my-1">&amp;</p>
+                <p class="font-editorial text-lg sm:text-xl font-semibold text-ink">
+                  Mst. Mahamuda Akter Monju
+                </p>
+              </div>
+            </div>
+          </article>
+
+          <!-- CENTRAL ORNAMENTAL "&" EMBLEM -->
+          <div class="scroll-reveal lg:col-span-1 flex items-center justify-center py-1">
+            <div class="w-16 h-16 rounded-full border border-marigold/60 bg-gradient-to-br from-magenta via-coral to-marigold p-[2px] shadow-xl flex items-center justify-center">
+              <div class="w-full h-full rounded-full bg-peacock flex items-center justify-center">
+                <span class="font-editorial italic text-3xl text-marigold leading-none">&amp;</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- BRIDE CARD -->
+          <article class="scroll-reveal tilt-card lg:col-span-5 rounded-[2rem] bg-ivory text-ink p-7 sm:p-9 shadow-2xl border border-rose-200/60 flex flex-col justify-between overflow-hidden">
+            <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-magenta via-coral to-marigold"></div>
+            <div>
+              <span class="inline-block rounded-full bg-rose-100 text-magenta px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.24em] mb-5">
+                Bride
+              </span>
+              <h3 class="font-editorial text-2xl sm:text-3xl font-bold text-magenta leading-snug mb-6">
+                Zarin Tasnim Biva
+              </h3>
+              <div class="rounded-2xl bg-rose-50/75 border border-rose-200/70 p-5">
+                <p class="text-[10px] uppercase tracking-[0.22em] font-bold text-magenta mb-2">
+                  Daughter of
+                </p>
+                <p class="font-editorial text-lg sm:text-xl font-semibold text-ink">
+                  Md. Abdul Kader
+                </p>
+                <p class="text-xs text-ink/50 my-1">&amp;</p>
+                <p class="font-editorial text-lg sm:text-xl font-semibold text-ink">
+                  Farzana Yasmin
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 3: CEREMONIES & VENUES (3 Color-Coded Equal-Height Cards)   -->
+    <!-- =================================================================== -->
+    <section id="events" class="w-full px-4 sm:px-6 lg:px-8 py-14 sm:py-20">
+      <div class="max-w-editorial mx-auto">
+        <div class="scroll-reveal text-center mb-10 sm:mb-12">
+          <h2 class="font-editorial fluid-section-heading font-bold text-ivory">
+            Ceremonies &amp; Venues
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+
+          <!-- CARD 1: GAYE HOLUD & MEHENDI (Marigold, Turmeric & Emerald) -->
+          <article class="scroll-reveal tilt-card rounded-[2rem] bg-ivory text-ink shadow-2xl border border-amber-300/60 overflow-hidden flex flex-col justify-between">
+            <div class="bg-gradient-to-br from-amber-500 via-yellow-600 to-emerald-700 px-6 py-6 text-ivory">
+              <p class="text-[10px] uppercase tracking-[0.26em] text-amber-100 font-bold mb-1">01</p>
+              <h3 class="font-editorial text-2xl font-bold leading-snug">Gaye Holud &amp; Mehendi</h3>
+            </div>
+
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <dl class="space-y-3.5 text-sm">
+                <div>
+                  <dt class="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-bold">Date</dt>
+                  <dd id="ev-holud-date" class="font-semibold text-ink mt-0.5">Wednesday, December 23, 2026</dd>
+                </div>
+                <div>
+                  <dt class="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-bold">Time</dt>
+                  <dd id="ev-holud-time" class="font-semibold text-ink mt-0.5">6:30 PM Onwards</dd>
+                </div>
+                <div>
+                  <dt class="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-bold">Venue</dt>
+                  <dd id="ev-holud-venue" class="font-semibold text-ink mt-0.5">Family Residence Courtyard, Uttara, Dhaka</dd>
+                </div>
+              </dl>
+
+              <div class="mt-6 pt-5 border-t border-amber-200/70 space-y-2.5 no-print">
+                <a
+                  id="ev-holud-map"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-500 via-yellow-600 to-emerald-700 px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white shadow-md hover:brightness-110 active:scale-[0.98] transition-all"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                  </svg>
+                  <span>Get Directions</span>
+                </a>
+                <button
+                  type="button"
+                  data-ics="holud"
+                  class="ics-btn w-full inline-flex items-center justify-center gap-2 rounded-full border border-amber-400/70 bg-amber-50/70 px-4 py-2.5 text-xs font-semibold text-amber-900 hover:bg-amber-100 transition-colors"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                  </svg>
+                  <span>Add to Calendar</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- CARD 2: NIKAH & WEDDING (Royal Crimson, Magenta & Gold) -->
+          <article class="scroll-reveal tilt-card rounded-[2rem] bg-ivory text-ink shadow-2xl border-2 border-marigold overflow-hidden flex flex-col justify-between">
+            <div class="bg-gradient-to-br from-rose-700 via-magenta to-amber-500 px-6 py-6 text-ivory">
+              <p class="text-[10px] uppercase tracking-[0.26em] text-rose-100 font-bold mb-1">02</p>
+              <h3 class="font-editorial text-2xl font-bold leading-snug">Nikah &amp; Wedding</h3>
+            </div>
+
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <dl class="space-y-3.5 text-sm">
+                <div>
+                  <dt class="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-bold">Date</dt>
+                  <dd id="ev-nikah-date" class="font-semibold text-ink mt-0.5">Friday, December 25, 2026</dd>
+                </div>
+                <div>
+                  <dt class="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-bold">Time</dt>
+                  <dd id="ev-nikah-time" class="font-semibold text-ink mt-0.5">1:30 PM (After Jummah)</dd>
+                </div>
+                <div>
+                  <dt class="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-bold">Venue</dt>
+                  <dd id="ev-nikah-venue" class="font-semibold text-ink mt-0.5">Grand Emerald Convention Hall, Gulshan, Dhaka</dd>
+                </div>
+              </dl>
+
+              <div class="mt-6 pt-5 border-t border-rose-200/70 space-y-2.5 no-print">
+                <a
+                  id="ev-nikah-map"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-700 via-magenta to-amber-500 px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white shadow-md hover:brightness-110 active:scale-[0.98] transition-all"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                  </svg>
+                  <span>Get Directions</span>
+                </a>
+                <button
+                  type="button"
+                  data-ics="nikah"
+                  class="ics-btn w-full inline-flex items-center justify-center gap-2 rounded-full border border-rose-300 bg-rose-50/70 px-4 py-2.5 text-xs font-semibold text-rose-900 hover:bg-rose-100 transition-colors"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                  </svg>
+                  <span>Add to Calendar</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- CARD 3: WALIMA & RECEPTION (Peacock Teal, Indigo & Pearl) -->
+          <article class="scroll-reveal tilt-card md:col-span-2 lg:col-span-1 rounded-[2rem] bg-ivory text-ink shadow-2xl border border-teal-300/60 overflow-hidden flex flex-col justify-between">
+            <div class="bg-gradient-to-br from-teal-700 via-indigo-700 to-slate-600 px-6 py-6 text-ivory">
+              <p class="text-[10px] uppercase tracking-[0.26em] text-teal-100 font-bold mb-1">03</p>
+              <h3 class="font-editorial text-2xl font-bold leading-snug">Walima &amp; Reception</h3>
+            </div>
+
+            <div class="p-6 flex-1 flex flex-col justify-between">
+              <dl class="space-y-3.5 text-sm">
+                <div>
+                  <dt class="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-bold">Date</dt>
+                  <dd id="ev-walima-date" class="font-semibold text-ink mt-0.5">Sunday, December 27, 2026</dd>
+                </div>
+                <div>
+                  <dt class="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-bold">Time</dt>
+                  <dd id="ev-walima-time" class="font-semibold text-ink mt-0.5">7:30 PM Onwards</dd>
+                </div>
+                <div>
+                  <dt class="text-[10px] uppercase tracking-[0.2em] text-ink/50 font-bold">Venue</dt>
+                  <dd id="ev-walima-venue" class="font-semibold text-ink mt-0.5">The Royal Pavilion Banquet, Banani, Dhaka</dd>
+                </div>
+              </dl>
+
+              <div class="mt-6 pt-5 border-t border-teal-200/70 space-y-2.5 no-print">
+                <a
+                  id="ev-walima-map"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-teal-700 via-indigo-700 to-slate-600 px-5 py-3 text-xs font-bold uppercase tracking-[0.16em] text-white shadow-md hover:brightness-110 active:scale-[0.98] transition-all"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                  </svg>
+                  <span>Get Directions</span>
+                </a>
+                <button
+                  type="button"
+                  data-ics="walima"
+                  class="ics-btn w-full inline-flex items-center justify-center gap-2 rounded-full border border-teal-300 bg-teal-50/70 px-4 py-2.5 text-xs font-semibold text-indigo-900 hover:bg-teal-100 transition-colors"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
+                  </svg>
+                  <span>Add to Calendar</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- SECTION 4: COMPACT CONTACT & BLESSING FOOTER                        -->
+    <!-- =================================================================== -->
+    <footer id="contact" class="w-full px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+      <div class="max-w-editorial mx-auto">
+        <div class="scroll-reveal rounded-[2rem] border border-white/20 bg-peacock/75 backdrop-blur-xl px-6 py-10 sm:px-10 sm:py-12 text-center shadow-2xl">
+
+          <!-- Quick-Call Family Contact Pills -->
+          <div class="flex flex-wrap items-center justify-center gap-3 mb-8">
+            <a
+              id="call-groom-link"
+              href="tel:+8801700000000"
+              class="inline-flex items-center gap-2.5 rounded-full border border-emerald-400/40 bg-emeraldDeep/40 px-5 py-2.5 text-xs sm:text-sm font-medium text-ivory hover:bg-emeraldDeep/65 transition-colors"
+            >
+              <svg class="w-4 h-4 text-marigold shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+              </svg>
+              <span>Groom&rsquo;s Family: <strong id="call-groom-num">+880 17XX-XXXXXX</strong></span>
+            </a>
+
+            <a
+              id="call-bride-link"
+              href="tel:+8801800000000"
+              class="inline-flex items-center gap-2.5 rounded-full border border-pink-400/40 bg-magenta/40 px-5 py-2.5 text-xs sm:text-sm font-medium text-ivory hover:bg-magenta/65 transition-colors"
+            >
+              <svg class="w-4 h-4 text-marigold shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z" />
+              </svg>
+              <span>Bride&rsquo;s Family: <strong id="call-bride-num">+880 18XX-XXXXXX</strong></span>
+            </a>
+          </div>
+
+          <!-- Arabic Sunnah Wedding Dua (Appears ONLY ONCE) -->
+          <div class="border-y border-white/15 py-7 mb-7 max-w-2xl mx-auto">
+            <p dir="rtl" lang="ar" class="arabic-text fluid-arabic-dua font-bold text-marigold mb-2">
+              بَارَكَ اللَّهُ لَكَ وَبَارَكَ عَلَيْكَ وَجَمَعَ بَيْنَكُمَا فِي خَيْرٍ
+            </p>
+            <p class="font-editorial italic text-sm sm:text-base text-ivory/85">
+              May Allah bless you and unite you in goodness.
+            </p>
+          </div>
+
+          <!-- Subtle Print / Save PDF Button -->
+          <button
+            id="print-btn"
+            type="button"
+            class="no-print inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.16em] text-ivory hover:bg-white/20 transition-colors"
+          >
+            <svg class="w-4 h-4 text-marigold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659" />
+            </svg>
+            <span>Print / Save PDF</span>
+          </button>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ===================================================================== -->
+  <!-- DISCREET FLOATING CUSTOMIZE GEAR BUTTON                               -->
+  <!-- ===================================================================== -->
+  <button
+    id="open-customize-btn"
+    type="button"
+    title="Customize Details"
+    aria-label="Customize Details"
+    class="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-40 w-11 h-11 rounded-full bg-gradient-to-br from-marigold via-coral to-magenta text-white shadow-2xl flex items-center justify-center hover:rotate-45 active:scale-95 transition-all duration-300"
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  </button>
+
+  <!-- ===================================================================== -->
+  <!-- SLIDE-OVER CUSTOMIZE DETAILS DRAWER                                   -->
+  <!-- ===================================================================== -->
+  <div
+    id="customize-backdrop"
+    class="fixed inset-0 z-50 bg-black/55 backdrop-blur-xs hidden opacity-0 transition-opacity duration-300"
+  ></div>
+
+  <aside
+    id="customize-drawer"
+    class="fixed top-0 right-0 z-[60] h-full w-full max-w-md bg-ivory text-ink shadow-2xl translate-x-full flex flex-col"
+    aria-label="Customize Wedding Details"
+  >
+    <div class="flex items-center justify-between px-6 py-5 border-b border-ink/10 bg-white">
+      <h4 class="font-editorial text-2xl font-bold text-peacock">Customize Details</h4>
+      <button
+        id="close-customize-btn"
+        type="button"
+        class="p-2 rounded-full text-ink/65 hover:bg-ink/10 transition"
+        aria-label="Close drawer"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4 text-sm">
+      <div class="rounded-2xl bg-white border border-ink/10 p-4 space-y-2">
+        <label for="cfg-countdown" class="block text-[11px] uppercase tracking-[0.2em] font-bold text-magenta">Nikah Countdown Target</label>
+        <input id="cfg-countdown" type="datetime-local" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm focus:border-magenta focus:outline-none" />
+      </div>
+
+      <div class="rounded-2xl bg-white border border-amber-200 p-4 space-y-2">
+        <p class="text-[11px] uppercase tracking-[0.2em] font-bold text-amber-700">01. Gaye Holud &amp; Mehendi</p>
+        <input id="cfg-holud-date" type="text" placeholder="Date" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-holud-time" type="text" placeholder="Time" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-holud-venue" type="text" placeholder="Venue Name & Address" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-holud-map" type="url" placeholder="Google Maps URL (optional)" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-xs" />
+      </div>
+
+      <div class="rounded-2xl bg-white border border-rose-200 p-4 space-y-2">
+        <p class="text-[11px] uppercase tracking-[0.2em] font-bold text-rose-700">02. Nikah &amp; Wedding</p>
+        <input id="cfg-nikah-date" type="text" placeholder="Date" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-nikah-time" type="text" placeholder="Time" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-nikah-venue" type="text" placeholder="Venue Name & Address" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-nikah-map" type="url" placeholder="Google Maps URL (optional)" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-xs" />
+      </div>
+
+      <div class="rounded-2xl bg-white border border-teal-200 p-4 space-y-2">
+        <p class="text-[11px] uppercase tracking-[0.2em] font-bold text-teal-700">03. Walima &amp; Reception</p>
+        <input id="cfg-walima-date" type="text" placeholder="Date" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-walima-time" type="text" placeholder="Time" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-walima-venue" type="text" placeholder="Venue Name & Address" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-walima-map" type="url" placeholder="Google Maps URL (optional)" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-xs" />
+      </div>
+
+      <div class="rounded-2xl bg-white border border-ink/10 p-4 space-y-2">
+        <p class="text-[11px] uppercase tracking-[0.2em] font-bold text-peacock">Family Contacts</p>
+        <input id="cfg-contact-groom" type="text" placeholder="Groom's Family Phone" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+        <input id="cfg-contact-bride" type="text" placeholder="Bride's Family Phone" class="w-full rounded-xl border border-ink/15 px-3 py-2 text-sm" />
+      </div>
+    </div>
+
+    <div class="px-6 py-4 border-t border-ink/10 bg-white space-y-2.5">
+      <button
+        id="save-customize-btn"
+        type="button"
+        class="w-full rounded-full bg-gradient-to-r from-peacock via-magenta to-marigold py-3 text-xs font-bold uppercase tracking-[0.2em] text-white shadow-md hover:brightness-110 transition"
+      >
+        Save Changes
+      </button>
+      <button
+        id="reset-customize-btn"
+        type="button"
+        class="w-full rounded-full border border-rose-300 py-2.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 transition"
+      >
+        Reset to Defaults
+      </button>
+    </div>
+  </aside>
+
+  <!-- Toast Notification Container -->
+  <div
+    id="toast-container"
+    class="fixed top-16 sm:top-auto sm:bottom-8 left-1/2 -translate-x-1/2 z-[90] pointer-events-none flex flex-col items-center gap-2 w-[calc(100%-2rem)] max-w-sm"
+    aria-live="polite"
+  ></div>
+
+  <!-- ===================================================================== -->
+  <!-- APPLICATION SCRIPT                                                    -->
+  <!-- ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      /* =====================================================================
+       * DEFAULT_CONFIG — Edit these values once before hosting on GitHub Pages
+       * (Simply rename this file to index.html and push to a public repo).
+       * Leave any *MapUrl empty ("") to auto-open Google Maps search for the venue.
+       * ===================================================================== */
+      const DEFAULT_CONFIG = {
+        countdownISO: '2026-12-25T13:30',
+
+        // 01. Gaye Holud & Mehendi
+        holudDate: 'Wednesday, December 23, 2026',
+        holudTime: '6:30 PM Onwards',
+        holudVenue: 'Family Residence Courtyard, Uttara, Dhaka',
+        holudMapUrl: '',
+        holudICSStart: '20261223T183000',
+        holudICSEnd: '20261223T223000',
+
+        // 02. Nikah & Wedding
+        nikahDate: 'Friday, December 25, 2026',
+        nikahTime: '1:30 PM (After Jummah)',
+        nikahVenue: 'Grand Emerald Convention Hall, Gulshan, Dhaka',
+        nikahMapUrl: '',
+        nikahICSStart: '20261225T133000',
+        nikahICSEnd: '20261225T173000',
+
+        // 03. Walima & Reception
+        walimaDate: 'Sunday, December 27, 2026',
+        walimaTime: '7:30 PM Onwards',
+        walimaVenue: 'The Royal Pavilion Banquet, Banani, Dhaka',
+        walimaMapUrl: '',
+        walimaICSStart: '20261227T193000',
+        walimaICSEnd: '20261227T230000',
+
+        // Family Contact Numbers
+        contactGroom: '+880 17XX-XXXXXX',
+        contactBride: '+880 18XX-XXXXXX',
+      };
+
+      const STORAGE_KEY = 'pranto_biva_clean_config_v4';
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isTouchDevice = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+
+      let config = loadConfig();
+
+      /* ---------------------------------------------------------------------
+       * STORAGE, MAPS URL & TOAST HELPERS
+       * --------------------------------------------------------------------- */
+      function loadConfig() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          return raw ? { ...DEFAULT_CONFIG, ...JSON.parse(raw) } : { ...DEFAULT_CONFIG };
+        } catch (err) {
+          return { ...DEFAULT_CONFIG };
+        }
+      }
+
+      function saveConfig(next) {
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+        } catch (err) {
+          // Safely ignore storage errors in restricted environments
+        }
+      }
+
+      function buildMapUrl(customUrl, venue) {
+        const clean = (customUrl || '').trim();
+        if (/^https?:\/\//i.test(clean)) return clean;
+        return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((venue || 'Dhaka').trim())}`;
+      }
+
+      function showToast(message) {
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const toast = document.createElement('div');
+        toast.className =
+          'rounded-full border border-marigold/60 bg-peacock/95 text-ivory px-5 py-2.5 text-xs sm:text-sm font-medium shadow-2xl opacity-0 translate-y-2 transition-all duration-300 text-center';
+        toast.textContent = message;
+        container.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.remove('opacity-0', 'translate-y-2'));
+        setTimeout(() => {
+          toast.classList.add('opacity-0', 'translate-y-2');
+          setTimeout(() => toast.remove(), 320);
+        }, 2800);
+      }
+
+      /* ---------------------------------------------------------------------
+       * 1. SPLIT-ARCHWAY 3D CURTAIN REVEAL & CONFETTI BURST
+       * --------------------------------------------------------------------- */
+      const curtainOverlay = document.getElementById('curtain-overlay');
+      const openInviteBtn = document.getElementById('open-invite-btn');
+
+      document.body.style.overflow = 'hidden';
+
+      openInviteBtn.addEventListener('click', () => {
+        curtainOverlay.classList.add('is-unsealing');
+        if (!prefersReducedMotion) launchConfettiBurst();
+
+        setTimeout(() => {
+          curtainOverlay.classList.add('is-open');
+          document.body.style.overflow = '';
+          document.body.classList.add('revealed');
+        }, prefersReducedMotion ? 10 : 200);
+      });
+
+      function launchConfettiBurst() {
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const w = (canvas.width = window.innerWidth);
+        const h = (canvas.height = window.innerHeight);
+        const colors = ['#e5a01d', '#d9534f', '#7b1348', '#10b981', '#f7d07a', '#fffcf7'];
+
+        const particles = Array.from({ length: 84 }, (_, i) => {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 3.5 + Math.random() * 10.5;
+          return {
+            x: w / 2,
+            y: h / 2,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed - 3.2,
+            size: 4 + Math.random() * 5.5,
+            rot: Math.random() * Math.PI * 2,
+            vRot: (Math.random() - 0.5) * 0.25,
+            color: colors[i % colors.length],
+            alpha: 1,
+          };
+        });
+
+        let frame = 0;
+        function tick() {
+          frame++;
+          ctx.clearRect(0, 0, w, h);
+          let alive = false;
+
+          for (const p of particles) {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.22;
+            p.vx *= 0.985;
+            p.rot += p.vRot;
+            p.alpha = Math.max(0, 1 - frame / 90);
+
+            if (p.alpha > 0.02) {
+              alive = true;
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.rot);
+              ctx.globalAlpha = p.alpha;
+              ctx.fillStyle = p.color;
+              ctx.fillRect(-p.size / 2, -p.size / 3, p.size, p.size * 0.62);
+              ctx.restore();
+            }
+          }
+
+          if (alive) requestAnimationFrame(tick);
+          else ctx.clearRect(0, 0, w, h);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      /* ---------------------------------------------------------------------
+       * 2. SCROLL PROGRESS BAR & ACTIVE PILL NAVIGATION
+       * --------------------------------------------------------------------- */
+      const progressBar = document.getElementById('scroll-progress-bar');
+      const navLinks = document.querySelectorAll('.nav-pill');
+      const sections = ['top', 'couple', 'events', 'contact']
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+      function handleScroll() {
+        const scrollTop = window.scrollY;
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        progressBar.style.width = maxScroll > 0 ? `${Math.min(100, (scrollTop / maxScroll) * 100)}%` : '0%';
+
+        let activeId = 'top';
+        const threshold = scrollTop + window.innerHeight * 0.4;
+        for (const sec of sections) {
+          if (sec.offsetTop <= threshold) activeId = sec.id;
+        }
+        navLinks.forEach((link) => {
+          link.classList.toggle('active', link.dataset.section === activeId);
+        });
+      }
+
+      window.addEventListener('scroll', handleScroll, { passive: true });
+      handleScroll();
+
+      /* ---------------------------------------------------------------------
+       * 3. SCROLL-TRIGGERED REVEAL (IntersectionObserver)
+       * --------------------------------------------------------------------- */
+      const revealNodes = document.querySelectorAll('.scroll-reveal');
+      if ('IntersectionObserver' in window && !prefersReducedMotion) {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.14, rootMargin: '0px 0px -24px 0px' }
+        );
+        revealNodes.forEach((node) => observer.observe(node));
+      } else {
+        revealNodes.forEach((node) => node.classList.add('is-visible'));
+      }
+
+      /* ---------------------------------------------------------------------
+       * 4. DESKTOP 3D TILT HOVER EFFECT (Disabled gracefully on touch)
+       * --------------------------------------------------------------------- */
+      if (!isTouchDevice && !prefersReducedMotion) {
+        document.querySelectorAll('.tilt-card').forEach((card) => {
+          let rafId = null;
+
+          card.addEventListener('mousemove', (e) => {
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(() => {
+              const rect = card.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              const rx = (y / rect.height - 0.5) * -7;
+              const ry = (x / rect.width - 0.5) * 7;
+
+              card.classList.add('is-tilting');
+              card.style.setProperty('--sheen-x', `${(x / rect.width) * 100}%`);
+              card.style.setProperty('--sheen-y', `${(y / rect.height) * 100}%`);
+              card.style.transform = `perspective(950px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateY(-3px)`;
+            });
+          });
+
+          card.addEventListener('mouseleave', () => {
+            if (rafId) cancelAnimationFrame(rafId);
+            card.classList.remove('is-tilting');
+            card.style.transform = '';
+          });
+        });
+      }
+
+      /* ---------------------------------------------------------------------
+       * 5. APPLY CONFIG TO DOM & LIVE COUNTDOWN
+       * --------------------------------------------------------------------- */
+      function applyConfig() {
+        document.getElementById('ev-holud-date').textContent = config.holudDate;
+        document.getElementById('ev-holud-time').textContent = config.holudTime;
+        document.getElementById('ev-holud-venue').textContent = config.holudVenue;
+        document.getElementById('ev-holud-map').href = buildMapUrl(config.holudMapUrl, config.holudVenue);
+
+        document.getElementById('ev-nikah-date').textContent = config.nikahDate;
+        document.getElementById('ev-nikah-time').textContent = config.nikahTime;
+        document.getElementById('ev-nikah-venue').textContent = config.nikahVenue;
+        document.getElementById('ev-nikah-map').href = buildMapUrl(config.nikahMapUrl, config.nikahVenue);
+
+        document.getElementById('ev-walima-date').textContent = config.walimaDate;
+        document.getElementById('ev-walima-time').textContent = config.walimaTime;
+        document.getElementById('ev-walima-venue').textContent = config.walimaVenue;
+        document.getElementById('ev-walima-map').href = buildMapUrl(config.walimaMapUrl, config.walimaVenue);
+
+        document.getElementById('call-groom-num').textContent = config.contactGroom;
+        document.getElementById('call-bride-num').textContent = config.contactBride;
+        document.getElementById('call-groom-link').href = `tel:${config.contactGroom.replace(/[^+\d]/g, '')}`;
+        document.getElementById('call-bride-link').href = `tel:${config.contactBride.replace(/[^+\d]/g, '')}`;
+
+        updateCountdown();
+      }
+
+      function updateCountdown() {
+        const target = new Date(config.countdownISO).getTime();
+        const diff = target - Date.now();
+
+        const dEl = document.getElementById('cd-days');
+        const hEl = document.getElementById('cd-hours');
+        const mEl = document.getElementById('cd-mins');
+        const sEl = document.getElementById('cd-secs');
+
+        if (isNaN(target) || diff <= 0) {
+          dEl.textContent = hEl.textContent = mEl.textContent = sEl.textContent = '00';
+          return;
+        }
+
+        dEl.textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
+        hEl.textContent = String(Math.floor((diff / 3600000) % 24)).padStart(2, '0');
+        mEl.textContent = String(Math.floor((diff / 60000) % 60)).padStart(2, '0');
+        sEl.textContent = String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+      }
+
+      applyConfig();
+      setInterval(updateCountdown, 1000);
+
+      /* ---------------------------------------------------------------------
+       * 6. ADD TO CALENDAR (.ics) DOWNLOADER
+       * --------------------------------------------------------------------- */
+      document.querySelectorAll('.ics-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const key = btn.dataset.ics;
+          const events = {
+            holud: {
+              summary: 'Gaye Holud & Mehendi — Pranto & Biva',
+              start: config.holudICSStart,
+              end: config.holudICSEnd,
+              location: config.holudVenue,
+            },
+            nikah: {
+              summary: 'Nikah & Wedding — Pranto & Biva',
+              start: config.nikahICSStart,
+              end: config.nikahICSEnd,
+              location: config.nikahVenue,
+            },
+            walima: {
+              summary: 'Walima & Reception — Pranto & Biva',
+              start: config.walimaICSStart,
+              end: config.walimaICSEnd,
+              location: config.walimaVenue,
+            },
+          };
+
+          const ev = events[key];
+          if (!ev) return;
+
+          const ics = [
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//PrantoBivaWedding//EN',
+            'BEGIN:VEVENT',
+            `DTSTART:${ev.start}`,
+            `DTEND:${ev.end}`,
+            `SUMMARY:${ev.summary}`,
+            `LOCATION:${ev.location}`,
+            'END:VEVENT',
+            'END:VCALENDAR',
+          ].join('\r\n');
+
+          const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `pranto-biva-${key}.ics`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          showToast('Calendar file (.ics) downloaded.');
+        });
+      });
+
+      /* ---------------------------------------------------------------------
+       * 7. CUSTOMIZE DRAWER & PRINT
+       * --------------------------------------------------------------------- */
+      const drawer = document.getElementById('customize-drawer');
+      const backdrop = document.getElementById('customize-backdrop');
+
+      function populateDrawer() {
+        document.getElementById('cfg-countdown').value = config.countdownISO;
+        document.getElementById('cfg-holud-date').value = config.holudDate;
+        document.getElementById('cfg-holud-time').value = config.holudTime;
+        document.getElementById('cfg-holud-venue').value = config.holudVenue;
+        document.getElementById('cfg-holud-map').value = config.holudMapUrl;
+        document.getElementById('cfg-nikah-date').value = config.nikahDate;
+        document.getElementById('cfg-nikah-time').value = config.nikahTime;
+        document.getElementById('cfg-nikah-venue').value = config.nikahVenue;
+        document.getElementById('cfg-nikah-map').value = config.nikahMapUrl;
+        document.getElementById('cfg-walima-date').value = config.walimaDate;
+        document.getElementById('cfg-walima-time').value = config.walimaTime;
+        document.getElementById('cfg-walima-venue').value = config.walimaVenue;
+        document.getElementById('cfg-walima-map').value = config.walimaMapUrl;
+        document.getElementById('cfg-contact-groom').value = config.contactGroom;
+        document.getElementById('cfg-contact-bride').value = config.contactBride;
+      }
+
+      function openDrawer() {
+        populateDrawer();
+        backdrop.classList.remove('hidden');
+        requestAnimationFrame(() => {
+          backdrop.classList.remove('opacity-0');
+          drawer.classList.remove('translate-x-full');
+        });
+      }
+
+      function closeDrawer() {
+        backdrop.classList.add('opacity-0');
+        drawer.classList.add('translate-x-full');
+        setTimeout(() => backdrop.classList.add('hidden'), 320);
+      }
+
+      document.getElementById('open-customize-btn').addEventListener('click', openDrawer);
+      document.getElementById('close-customize-btn').addEventListener('click', closeDrawer);
+      backdrop.addEventListener('click', closeDrawer);
+
+      document.getElementById('save-customize-btn').addEventListener('click', () => {
+        config = {
+          ...config,
+          countdownISO: document.getElementById('cfg-countdown').value || DEFAULT_CONFIG.countdownISO,
+          holudDate: document.getElementById('cfg-holud-date').value.trim() || DEFAULT_CONFIG.holudDate,
+          holudTime: document.getElementById('cfg-holud-time').value.trim() || DEFAULT_CONFIG.holudTime,
+          holudVenue: document.getElementById('cfg-holud-venue').value.trim() || DEFAULT_CONFIG.holudVenue,
+          holudMapUrl: document.getElementById('cfg-holud-map').value.trim(),
+          nikahDate: document.getElementById('cfg-nikah-date').value.trim() || DEFAULT_CONFIG.nikahDate,
+          nikahTime: document.getElementById('cfg-nikah-time').value.trim() || DEFAULT_CONFIG.nikahTime,
+          nikahVenue: document.getElementById('cfg-nikah-venue').value.trim() || DEFAULT_CONFIG.nikahVenue,
+          nikahMapUrl: document.getElementById('cfg-nikah-map').value.trim(),
+          walimaDate: document.getElementById('cfg-walima-date').value.trim() || DEFAULT_CONFIG.walimaDate,
+          walimaTime: document.getElementById('cfg-walima-time').value.trim() || DEFAULT_CONFIG.walimaTime,
+          walimaVenue: document.getElementById('cfg-walima-venue').value.trim() || DEFAULT_CONFIG.walimaVenue,
+          walimaMapUrl: document.getElementById('cfg-walima-map').value.trim(),
+          contactGroom: document.getElementById('cfg-contact-groom').value.trim() || DEFAULT_CONFIG.contactGroom,
+          contactBride: document.getElementById('cfg-contact-bride').value.trim() || DEFAULT_CONFIG.contactBride,
+        };
+        saveConfig(config);
+        applyConfig();
+        closeDrawer();
+        showToast('Wedding details updated.');
+      });
+
+      document.getElementById('reset-customize-btn').addEventListener('click', () => {
+        config = { ...DEFAULT_CONFIG };
+        saveConfig(config);
+        applyConfig();
+        populateDrawer();
+        showToast('Reset to default details.');
+      });
+
+      document.getElementById('print-btn').addEventListener('click', () => {
+        window.print();
+      });
+    })();
+  </script>
+</body>
+</html>
